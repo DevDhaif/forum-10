@@ -35,6 +35,8 @@ class ThreadController extends Controller
     public function store(Request $request)
     {
         //
+
+
     }
 
     /**
@@ -43,6 +45,8 @@ class ThreadController extends Controller
     public function show(Thread $thread)
     {
         //
+        return view('threads.show', compact('thread'));
+
     }
 
     /**
@@ -68,4 +72,6 @@ class ThreadController extends Controller
     {
         //
     }
+
+
 }

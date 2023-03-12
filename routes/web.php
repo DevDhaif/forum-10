@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,5 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/threads', [ThreadController::class, 'index'])->name('threads.index');
+
+Route::get('/threads', [ThreadController::class, 'index'])->name('threads');
+Route::get('/threads/{thread}', [ThreadController::class, 'show'])->name('threads.show');
+
+Route::post('/threads/{thread}/replies', [ReplyController::class, 'store'])->name('threads.store');
+
 require __DIR__.'/auth.php';

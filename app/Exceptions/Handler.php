@@ -2,17 +2,21 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use League\CommonMark\Environment\Environment;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+
     /**
      * A list of exception types with their corresponding custom log levels.
      *
      * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
      */
-    protected $levels = [
+     protected $levels = [
         //
     ];
 
@@ -44,5 +48,14 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+        // if environment is testing, throw an exception
+        // if (app()->environment() === 'testing') {
+        //     $this->renderable(function (Throwable $e) {
+        //         throw $e;
+        //     });
+        // }
     }
+
+    // a function to  throw an exception if the environment is testing
+
 }
