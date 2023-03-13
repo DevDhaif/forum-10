@@ -18,16 +18,14 @@ class ParticipateInForumTest extends TestCase
     use RefreshDatabase;
     use DatabaseMigrations;
 
-    // public function test_an_unauthenticated_user_may_not_add_replies(): void
-    // {
-    //     $this->expectException('Illuminate\Auth\AuthenticationException');
-    //     $this->post('threads/1/replies', []);
-    // }
+
     public function test_an_authenticated_user_can_participate_in_forum(): void
     {
-        $this->be($user = User::factory()->create());
-        $thread = Thread::factory()->create();
-        $reply = Reply::factory()->make();
+
+        $this->be($user = create(User::class));
+        $thread =create(Thread::class);
+        $reply = make(Reply::class);
+
         $this->post($thread->path().'/replies', $reply->toArray());
         $response = $this->get($thread->path())->assertSee($reply->body);
     }

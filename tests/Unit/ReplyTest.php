@@ -13,23 +13,16 @@ use function PHPUnit\Framework\assertTrue;
 
 class ReplyTest extends TestCase
 {
-    
+
     use RefreshDatabase;
     use DatabaseMigrations;
 
-    /**
-     * A basic unit test example.
-     */
-    // public function setUp(): void
-    // {
-    //     parent::setUp();
-    //     $this->user = User::factory()->create();
-    //     $this->thread = Thread::factory()->create();
-    // }
-    // function to test that a reply has an owner
     public function test_it_has_an_owner()
     {
-        $reply = Reply::factory()->create();
+        $reply = create(Reply::class);
+        // fwrite(STDERR, print_r($reply->toArray(), true));
         $this->assertInstanceOf(User::class, $reply->owner);
     }
 }
+
+

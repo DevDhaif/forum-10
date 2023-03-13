@@ -31,9 +31,17 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/threads', [ThreadController::class, 'index'])->name('threads');
-Route::get('/threads/{thread}', [ThreadController::class, 'show'])->name('threads.show');
+// Route::get('/threads', [ThreadController::class, 'index'])->name('threads');
+// Route::get('/threads/create', [ThreadController::class, 'create'])
+//     ->name('threads.create');
+// Route::post("/threads/", [ThreadController::class, 'store'])->name('threads.store');
+// Route::get('/threads/{thread}', [ThreadController::class, 'show'])
+//     ->name('threads.show');
 
-Route::post('/threads/{thread}/replies', [ReplyController::class, 'store'])->name('threads.store');
+Route::resource('/threads' , ThreadController::class);
+
+
+Route::post('/threads/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
+
 
 require __DIR__.'/auth.php';

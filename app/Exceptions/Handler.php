@@ -49,11 +49,13 @@ class Handler extends ExceptionHandler
             //
         });
         // if environment is testing, throw an exception
-        // if (app()->environment() === 'testing') {
-        //     $this->renderable(function (Throwable $e) {
-        //         throw $e;
-        //     });
-        // }
+
+        if (app()->environment() === 'testing') {
+            $this->renderable(function (Throwable $e) {
+                throw $e;
+            });
+        }
+
     }
 
     // a function to  throw an exception if the environment is testing

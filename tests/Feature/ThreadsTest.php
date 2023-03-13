@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
 use App\Models\User;
@@ -21,8 +22,10 @@ class ThreadsTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
-        $this->thread = Thread::factory()->create();
+
+        $this->user = create(User::class);
+        $this->thread = create(Thread::class);
+
         $this->actingAs($this->user);
     }
 
@@ -45,7 +48,9 @@ class ThreadsTest extends TestCase
     /** @test */
     public function a_user_can_read_replies_on_a_thread()
     {
-        $reply = Reply::factory()->create(['thread_id' => $this->thread->id]);
+        $reply = create(Reply::class, ['thread_id' => $this->thread->id ]);
+        // fwrite(STDERR, print_r($reply->toArray(), true));
+
         $response = $this->get("/threads/" . $this->thread->id);
         $response->assertSee($reply->owner->name);
     }
@@ -53,10 +58,17 @@ class ThreadsTest extends TestCase
     /** @test */
     public function a_thread_has_replies()
     {
-        $reply = Reply::factory()->create(['thread_id' => $this->thread->id]);
+        $reply = create(Reply::class, ['thread_id' => $this->thread->id]);
+
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->thread->replies);
     }
-
+/** @test */
+    public function a_thread_must_have_a_channel(): void
+    {
+        $channel = create(Channel::class );
+        $thread = create(Thread::class , ['channel_id' => $channel->id]);
+        $this->assertInstanceOf(Channel::class , $thread->channel);
+    }
     /** @test */
     public function a_thread_has_creator()
     {

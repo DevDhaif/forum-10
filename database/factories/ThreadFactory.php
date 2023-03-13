@@ -18,6 +18,7 @@ class ThreadFactory extends Factory
     {
         return [
             'user_id' => \App\Models\User::factory(),
+            'channel_id' => \App\Models\Channel::factory(),
             'title' => $this->faker->sentence,
             'body' => $this->faker->paragraph,
         ];

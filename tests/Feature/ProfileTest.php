@@ -81,6 +81,8 @@ class ProfileTest extends TestCase
 
     public function test_correct_password_must_be_provided_to_delete_account(): void
     {
+        $this->expectException('Illuminate\Validation\ValidationException');
+
         $user = User::factory()->create();
 
         $response = $this
@@ -89,11 +91,12 @@ class ProfileTest extends TestCase
             ->delete('/profile', [
                 'password' => 'wrong-password',
             ]);
-
         $response
             ->assertSessionHasErrorsIn('userDeletion', 'password')
             ->assertRedirect('/profile');
 
         $this->assertNotNull($user->fresh());
+
+
     }
 }
