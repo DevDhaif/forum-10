@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-    <div class="mx-auto ">
+    <div class="mx-auto">
         @foreach ($threads as $thread)
             <div class="bg-white p-6  rounded-lg shadow mb-4">
                 <div class="space-y-4">

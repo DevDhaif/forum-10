@@ -28,7 +28,7 @@
             @endif --}}
 
             <!-- Page Content -->
-            <main class="container max-w-4xl mx-auto p-8">
+            <main class="container max-w-screen-xl mx-auto p-4">
                 {{-- content --}}
 
                 @yield('content')

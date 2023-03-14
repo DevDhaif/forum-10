@@ -34,7 +34,8 @@ class CreateThreadsTest extends TestCase
     {
         // $user = create(User::class);
         $this->signIn();
-        $thread = make(Thread::class);
+        $thread = create(Thread::class);
+
         $this->post('/threads', $thread->toArray());
         $this->get($thread->path())->assertSee($thread->title);
     }

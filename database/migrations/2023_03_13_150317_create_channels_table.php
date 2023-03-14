@@ -12,7 +12,10 @@ return new class () extends Migration {
     {
         Schema::create('channels', function (Blueprint $table) {
             $table->id();
-            $table->char('name');
+
+            $table->string('name');
+            $table->string('slug');
+
             $table->timestamps();
         });
     }

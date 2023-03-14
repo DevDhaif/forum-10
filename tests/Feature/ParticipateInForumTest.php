@@ -19,10 +19,15 @@ class ParticipateInForumTest extends TestCase
     use DatabaseMigrations;
 
 
+    public function test_un_authenticated_user_may_not_add_replies() : void{
+        $this->expectException('Illuminate\Auth\AuthenticationException');
+            $this->post('/threads/channel/1/replies' , [])
+            ->assertRedirect('/login');
+    }
     public function test_an_authenticated_user_can_participate_in_forum(): void
     {
+        $this->signIn();
 
-        $this->be($user = create(User::class));
         $thread =create(Thread::class);
         $reply = make(Reply::class);
 

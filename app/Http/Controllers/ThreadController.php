@@ -23,7 +23,7 @@ class ThreadController extends Controller
         // dd($threads);
         return view('threads.index',
         [
-            'threads' => $threads
+            'threads' => $threads,
         ]);
     }
 
@@ -33,7 +33,9 @@ class ThreadController extends Controller
     public function create()
     {
         //
-        return view('threads.create');
+        $channels = Channel::all();
+        return view('threads.create', compact('channels'));
+        // return view('threads.create');
     }
 
     /**
@@ -58,7 +60,7 @@ class ThreadController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Thread $thread)
+    public function show($channelId, Thread $thread)
     {
         //
         return view('threads.show', compact('thread'));

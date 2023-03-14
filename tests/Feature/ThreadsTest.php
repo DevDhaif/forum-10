@@ -39,9 +39,9 @@ class ThreadsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_view_a_single_thread()
+    public function a_user_can_view_a_single_thread() : void
     {
-        $response = $this->get("/threads/" . $this->thread->id);
+        $response = $this->get("/threads/" . $this->thread->channel . '/' .$this->thread->id);
         $response->assertSee($this->thread->title);
     }
 
@@ -51,7 +51,7 @@ class ThreadsTest extends TestCase
         $reply = create(Reply::class, ['thread_id' => $this->thread->id ]);
         // fwrite(STDERR, print_r($reply->toArray(), true));
 
-        $response = $this->get("/threads/" . $this->thread->id);
+        $response = $this->get("/threads/" . $this->thread->channel . '/' . $this->thread->id);
         $response->assertSee($reply->owner->name);
     }
 
@@ -83,5 +83,13 @@ class ThreadsTest extends TestCase
             'user_id' => $this->user->id,
         ]);
         $this->assertCount(1, $this->thread->replies);
+    }
+
+    /** @test */
+    public  function a_thread_can_make_a_string_path() : void{
+        $thread = create(Thread::class,[ 'channel_id' => 1]);
+        $this->assertEquals('/threads/' . $thread->channel->slug . '/' . $thread->id ,$thread->path());
+        // fwrite(STDERR, print_r($thread->path(), true));
+
     }
 }

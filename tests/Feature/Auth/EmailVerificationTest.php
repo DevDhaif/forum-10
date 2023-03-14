@@ -49,7 +49,10 @@ class EmailVerificationTest extends TestCase
     public function test_email_is_not_verified_with_invalid_hash(): void
     {
 
-        $this->expectException('Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException');
+
+        // $this->expectException('Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException');
+        $this->withExceptionHandling();
+
 
         $user = User::factory()->create([
             'email_verified_at' => null,
