@@ -36,13 +36,13 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/threads', [ThreadController::class, 'index'])->name('threads');
+Route::get('/threads/{channel}' , [ThreadController::class, 'index'])->name('channelThreads');
 Route::get('/threads/create', [ThreadController::class, 'create'])
     ->name('threads.create');
 Route::post("/threads/", [ThreadController::class, 'store'])->name('threads.store');
 Route::get('/threads/{thread}', [ThreadController::class, 'show'])
     ->name('threads.show');
 Route::get("/threads/{channel}/{thread}", [ThreadController::class,'show']);
-
 
 // Route::resource('/threads' , ThreadController::class);
 

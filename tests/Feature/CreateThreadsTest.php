@@ -34,9 +34,35 @@ class CreateThreadsTest extends TestCase
     {
         // $user = create(User::class);
         $this->signIn();
-        $thread = create(Thread::class);
 
-        $this->post('/threads', $thread->toArray());
-        $this->get($thread->path())->assertSee($thread->title);
+        $thread = make(Thread::class);
+        $response = $this->post('/threads', $thread->toArray());
+        // dd($response->headers->get('Location'));
+
+
+        $this->get($response->headers->get('Location'))->assertSee($thread->title);
+    }
+
+    /** @test */
+    public function a_thread_requires_a_title () :void{
+        $this->publishThread(['title' => null])->assertSessionHasErrors('title');
+    }
+
+    /** @test */
+    public function a_thread_requires_a_body () :void{
+        $this->publishThread(['body' => null])->assertSessionHasErrors('body');
+    }
+
+    /** @test */
+    public function a_thread_requires_a_valid_channel () :void{
+        $channels = Channel::factory(5)->create();
+        $this->publishThread(['channel_id' => null])->assertSessionHasErrors('channel_id');
+        $this->publishThread(['channel_id' => 6])->assertSessionHasErrors('channel_id');
+    }
+
+    public function publishThread($overrides = []){
+        $this->signIn()->withExceptionHandling();
+        $thread = make(Thread::class, $overrides);
+        return $this->post('/threads', $thread->toArray());
     }
 }

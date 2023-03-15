@@ -16,11 +16,14 @@ class ThreadController extends Controller
     {
         $this->middleware('auth')->except(['index', 'show']);
     }
-    public function index()
+    public function index(Channel $channel)
     {
-
-        $threads = Thread::all()->sortByDesc('created_at');
-        // dd($threads);
+        if($channel->exists){
+            $threads = $channel->threads()->latest()->get();
+                }
+        else{
+            $threads = Thread::all()->sortByDesc('created_at');
+        }
         return view('threads.index',
         [
             'threads' => $threads,
@@ -43,6 +46,16 @@ class ThreadController extends Controller
      */
     public function store(Request $request)
     {
+
+
+        $this->validate(
+            $request,
+            [
+                'title' => 'required',
+                'body' => 'required',
+                'channel_id' => 'required|exists:channels,id'
+            ]
+        );
 
         $thread = Thread::create([
             'user_id' => auth()->id(),
