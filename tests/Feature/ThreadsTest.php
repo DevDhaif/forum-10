@@ -91,7 +91,7 @@ class ThreadsTest extends TestCase
         $this->assertEquals('/threads/' . $thread->channel->slug . '/' . $thread->id ,$thread->path());
         // fwrite(STDERR, print_r($thread->path(), true));
     }
-    public function test_a_user_can_filter_threads_according_to_a_tag () :void{
+    public function test_a_user_can_filter_threads_according_to_a_channel () :void{
         $channel = create(Channel::class);
         $threadNotInChannel = create(Thread::class);
         $threadInChannel = create(Thread::class , ['channel_id' => $channel->id]);

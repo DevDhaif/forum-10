@@ -24,8 +24,7 @@ class CreateThreadsTest extends TestCase
     {
         $this->expectException('Illuminate\Auth\AuthenticationException');
         // fwrite(STDERR, print_r($thread->toArray(), true));
-        // $thread = make(Thread::class);
-        $this->get('/threads/create')
+         $this->get('/threads/create')
             ->assertRedirect('/login');
         $this->post('/threads')
             ->assertRedirect('/login');
