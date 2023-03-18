@@ -12,15 +12,56 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex sm:items-center">
+
+                    {{-- dropdown to choose all threads or my threads --}}
+
                     <x-nav-link href="/threads" :active="request()->routeIs('threads')">
                         {{ __('threads') }}
                     </x-nav-link>
 
-                    <x-nav-link href="/threads/create" :active="request()->routeIs('threads.create')">
+                    <x-nav-link  href="/threads/create" :active="request()->routeIs('threads.create')">
                         {{ __('new thread') }}
                     </x-nav-link>
+                    {{-- dropdown to choose all threads or my threads --}}
+                    <div :active="request()->routeIs('threads/')"
+                        {{-- add clases to the dropdown if active --}}
+                        active="inline-flex capitalize  items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out"
+                        class="inline-flex capitalize  items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                        <div>
+                            <button
+                            class="{{ request()->routeIs("/threads?by={{ auth()->user()->name }}") ?
+                            'inline-flex capitalize  items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out' :
+                            'inline-flex capitalize items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out'
+                              }}"
+                            id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
+                                type="button">Dropdown button <svg class="w-4 h-4 ml-2" aria-hidden="true"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg></button>
+                            <!-- Dropdown menu -->
+                            <div id="dropdown"
+                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
 
-                    <div :active="request()->routeIs('threads.channel')" class=" active:bg-gray-100 dark:active:bg-gray-600 dark:active:text-white">
+                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="dropdownDefaultButton">
+                                    <li>
+                                        <a href="/threads?by={{ auth()->user()->name }}"
+                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">My Threads</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('threads') }}"
+                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">All Threads</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div :active="request()->routeIs('threads.channel')" class="inline-flex capitalize  items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out">
                         <div>
                             <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
                                 class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"

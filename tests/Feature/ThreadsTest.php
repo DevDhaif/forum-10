@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Summary of namespace Tests\Feature
+ */
 namespace Tests\Feature;
 
 use App\Models\Channel;
@@ -8,9 +11,14 @@ use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use LogicException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use PHPUnit\Framework\ExpectationFailedException;
 use Tests\TestCase;
 
+/**
+ * Summary of ThreadsTest
+ */
 class ThreadsTest extends TestCase
 {
     /**
@@ -19,6 +27,10 @@ class ThreadsTest extends TestCase
     use RefreshDatabase;
     use DatabaseMigrations;
     // a setup function to run before each test to create a user and sign them in and a thread
+    /**
+     * Summary of setUp
+     * @return void
+     */
     public function setUp(): void
     {
         parent::setUp();
@@ -91,6 +103,12 @@ class ThreadsTest extends TestCase
         $this->assertEquals('/threads/' . $thread->channel->slug . '/' . $thread->id ,$thread->path());
         // fwrite(STDERR, print_r($thread->path(), true));
     }
+    /**
+     * @return void
+     * @throws LogicException
+     * @throws BadRequestException
+     * @throws ExpectationFailedException
+     */
     public function test_a_user_can_filter_threads_according_to_a_channel () :void{
         $channel = create(Channel::class);
         $threadNotInChannel = create(Thread::class);
@@ -99,6 +117,10 @@ class ThreadsTest extends TestCase
             ->assertSee($threadInChannel->title)
             ->assertDontSee($threadNotInChannel);
     }
+    /**
+     * Summary of test_a_user_can_filter_threads_by_any_username
+     * @return void
+     */
     public function test_a_user_can_filter_threads_by_any_username () : void {
         $this->signIn(create(User::class , ['name' => 'Dhaif']));
 
