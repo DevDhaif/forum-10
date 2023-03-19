@@ -2,58 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\ThreadFilters;
 use App\Models\Channel;
 use App\Models\Thread;
 
 use App\Models\User;
-
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\DB;
-
 
 class ThreadController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
     public function __construct()
     {
         $this->middleware('auth')->except(['index', 'show' , 'create']);
-
     }
-
-    public function index(Channel $channel)
+    public function index(Channel $channel , ThreadFilters $filters)
     {
+        // $threads = $this->getThreads($channel);
         if($channel->exists){
             $threads = $channel->threads()->latest();
         }
         else{
             $threads = Thread::latest();
         }
-        if($username = request('by')){
-            $user =  User::where('name' , $username)->firstOrFail();
-            $threads->where('user_id' , $user->id);
-        }
-        $threads = $threads->get();
+        // if($username = request('by')){
+        //     $user =  User::where('name' , $username)->firstOrFail();
+        //     $threads->where('user_id' , $user->id);
+        // }
+        $threads = $threads->filter($filters)->get();
         return view('threads.index',
         [
             'threads' => $threads,
         ]);
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
-        // $channels = Channel::all();
         return view('threads.create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $this->validate(
@@ -72,28 +57,16 @@ class ThreadController extends Controller
         ]);
         return redirect($thread->path());
     }
-    /**
-     * Display the specified resource.
-     */
     public function show($channelId, Thread $thread)
     {
         return view('threads.show', compact('thread'));
     }
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Thread $thread)
     {
     }
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Thread $thread)
     {
     }
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Thread $thread)
     {
     }

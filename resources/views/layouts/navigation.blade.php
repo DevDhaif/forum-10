@@ -14,79 +14,69 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex sm:items-center">
 
                     {{-- dropdown to choose all threads or my threads --}}
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                <span class="capitalize">Filter</span>
 
-                    <x-nav-link href="/threads" :active="request()->routeIs('threads')">
-                        {{ __('threads') }}
-                    </x-nav-link>
+                                <div class="ml-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('threads')">
+                                All Threads
+                            </x-dropdown-link>
+                            {{-- if there is no user logged in, then the link will not be shown --}}
+                            @auth
+                            <x-dropdown-link href="threads?by={{ auth()->user()->name }}">
+                                My Threads
+                            </x-dropdown-link>
+                            @endauth
+
+                        </x-slot>
+                    </x-dropdown>
+
 
                     <x-nav-link  href="/threads/create" :active="request()->routeIs('threads.create')">
                         {{ __('new thread') }}
                     </x-nav-link>
-                    {{-- dropdown to choose all threads or my threads --}}
-                    <div :active="request()->routeIs('threads/')"
-                        {{-- add clases to the dropdown if active --}}
-                        active="inline-flex capitalize  items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out"
-                        class="inline-flex capitalize  items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                        <div>
+
+
+
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
                             <button
-                            class="{{ request()->routeIs("/threads?by={{ auth()->user()->name }}") ?
-                            'inline-flex capitalize  items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out' :
-                            'inline-flex capitalize items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out'
-                              }}"
-                            id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                                type="button">Dropdown button <svg class="w-4 h-4 ml-2" aria-hidden="true"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg></button>
-                            <!-- Dropdown menu -->
-                            <div id="dropdown"
-                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                <span class="capitalize">Choose channel</span>
 
-                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                    aria-labelledby="dropdownDefaultButton">
-                                    <li>
-                                        <a href="/threads?by={{ auth()->user()->name }}"
-                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">My Threads</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('threads') }}"
-                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">All Threads</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                                <div class="ml-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
 
-
-
-                    <div :active="request()->routeIs('threads.channel')" class="inline-flex capitalize  items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out">
-                        <div>
-                            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                                class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-                                type="button">Dropdown button <svg class="w-4 h-4 ml-2" aria-hidden="true"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg></button>
-                            <!-- Dropdown menu -->
-                            <div id="dropdown"
-                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-
-                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                    aria-labelledby="dropdownDefaultButton">
-                                    @foreach ($channels as $channel)
-                                    <li>
-                                        <a href="{{ route('threads.channel', $channel->slug) }}"
-                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ $channel->name }}</a>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                        <x-slot name="content">
+                            @foreach ('App\Models\Channel'::all() as $channel)
+                            <x-dropdown-link :href="route('threads.channel', $channel->slug)">
+                                {{ $channel->name }}
+                            </x-dropdown-link>
+                            @endforeach
+                        </x-slot>
+                    </x-dropdown>
                 </div>
             </div>
             <!-- Settings Dropdown -->

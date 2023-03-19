@@ -21,7 +21,11 @@ class Thread extends Model
     }
     public function channel(){
         return $this->belongsTo(Channel::class);
-    } 
+    }
+
+    public function scopeFilter($query , $filters){
+        return $filters->apply($query);
+    }
 
     public function creator(){
         return $this->belongsTo(User::class , 'user_id');
