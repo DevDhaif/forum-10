@@ -27,4 +27,5 @@ class ThreadFilters
                 $user = User::where('name', $username)->firstOrFail();
                 return $builder->where('user_id', $user->id);
             }
+            
 }
