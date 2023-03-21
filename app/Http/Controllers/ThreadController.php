@@ -13,22 +13,20 @@ class ThreadController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show' , 'create']);
+        $this->middleware('auth')->except(['index', 'show' ]);
     }
-    public function index(Channel $channel , ThreadFilters $filters)
-    {
-        // $threads = $this->getThreads($channel);
+
+    public function getThreads(Channel $channel ,  ThreadFilters $filters){
+        $threads = Thread::latest()->filter($filters);
         if($channel->exists){
-            $threads = $channel->threads()->latest();
+            $threads->where('channel_id', $channel->id);
         }
-        else{
-            $threads = Thread::latest();
-        }
-        // if($username = request('by')){
-        //     $user =  User::where('name' , $username)->firstOrFail();
-        //     $threads->where('user_id' , $user->id);
-        // }
-        $threads = $threads->filter($filters)->get();
+        return $threads->get();
+    }
+
+    public function index(Channel $channel  , ThreadFilters $filters)
+    {
+        $threads = $this->getThreads($channel , $filters);
         return view('threads.index',
         [
             'threads' => $threads,
