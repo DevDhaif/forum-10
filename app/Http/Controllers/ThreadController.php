@@ -23,7 +23,6 @@ class ThreadController extends Controller
         }
         return $threads->get();
     }
-// WIP - 2021-03-19 11:39:00 PM 
     public function index(Channel $channel  , ThreadFilters $filters)
     {
         $threads = $this->getThreads($channel , $filters);
