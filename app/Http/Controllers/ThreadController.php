@@ -56,6 +56,10 @@ class ThreadController extends Controller
     }
     public function show($channelId, Thread $thread)
     {
+
+        return $thread->getReplyCountAttribute();
+        dd($thread->replies);
+
         return view('threads.show', compact('thread'));
     }
     public function edit(Thread $thread)

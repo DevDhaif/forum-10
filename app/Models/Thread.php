@@ -16,22 +16,32 @@ class Thread extends Model
         return "/threads/{$this->channel->slug}/{$this->id}";
     }
 
-    public function replies(){
+    public function replies()
+    {
         return $this->hasMany(Reply::class);
     }
-    public function channel(){
+
+        public function getReplyCountAttribute()
+        {
+            return $this->replies()->count();
+        }
+    public function channel()
+    {
         return $this->belongsTo(Channel::class);
     }
 
-    public function scopeFilter($query , $filters){
+    public function scopeFilter($query, $filters)
+    {
         return $filters->apply($query);
     }
 
-    public function creator(){
-        return $this->belongsTo(User::class , 'user_id');
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function addReply($reply){
+    public function addReply($reply)
+    {
         $this->replies()->create($reply);
     }
 }

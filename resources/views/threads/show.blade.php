@@ -39,7 +39,8 @@
 
         <div class="w-1/4">
             <div class="bg-white p-4 rounded shadow">
-                <p class="text-gray-600 text-sm">This thread was published {{ $thread->created_at->diffForHumans() }} by <a href="{{ $thread->creator->path() }}" class="text-blue-600 text-sm">{{ $thread->creator->name }}</a> and currently has {{ $thread->replies_count }} {{ Str::plural('comment', $thread->replies_count) }}.</p>
+                <p class="text-gray-600 text-sm">This thread was published {{ $thread->created_at->diffForHumans() }} by <a href="{{ $thread->creator->path() }}" class="text-blue-600 text-sm">{{ $thread->creator->name }}</a> and
+                    currently has {{ $thread->replies()->count() }} {{ Str::plural('comment', $thread->replies()->count()) }} . </p>
             </div>
         </div>
     </div>
