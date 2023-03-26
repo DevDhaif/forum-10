@@ -21,17 +21,13 @@ class Thread extends Model
         });
     }
 
-    // static::addGlobalScope('replyCount' , function ($builder){
-    //     $builder->withCount('replies');
-    // });
-
     public function path()
     {
         return "/threads/{$this->channel->slug}/{$this->id}";
     }
 
     public function replies()
-    {
+    { 
         return $this->hasMany(Reply::class);
     }
     public function channel()

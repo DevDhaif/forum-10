@@ -2,7 +2,7 @@
 
 
 use App\Http\Controllers\ChannelController;
-
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
@@ -46,7 +46,7 @@ Route::post("/threads/", [ThreadController::class, 'store'])->name('threads.stor
 // Route::get('/threads/{thread}', [ThreadController::class, 'show'])
 //     ->name('threads.show');
 Route::get("/threads/{channel}/{thread}", [ThreadController::class,'show']);
-
+Route::post('replies/{reply}/favorites', [FavoriteController::class, 'store'])->name('replies.favorite');
 Route::post('/threads/{channel}/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
 
 require __DIR__.'/auth.php';
