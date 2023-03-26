@@ -129,4 +129,16 @@ class ThreadsTest extends TestCase
 
         $this->get('/threads?by=Dhaif')->assertSee($threadByDhaif->title)->assertDontSee($anotherThread->title);
     }
+
+    public function test_a_user_can_filter_threads_by_popularity () : void{
+        $threadTwo = create(Thread::class);
+        create(Reply::class , ['thread_id' => $threadTwo->id] , 2);
+        $threadThree = create(Thread::class);
+        create(Reply::class , ['thread_id' => $threadThree->id] , 3);
+
+        $threadZero = $this->thread;
+        $response = $this->getJson('threads?popular=1')->json(); 
+
+        $this->assertEquals([3,2,0],array_column($response , 'replies_count'));
+    }
 }

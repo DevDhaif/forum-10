@@ -8,6 +8,7 @@ use App\Models\Thread;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ThreadController extends Controller
 {
@@ -22,10 +23,17 @@ class ThreadController extends Controller
             $threads->where('channel_id', $channel->id);
         }
         return $threads->get();
+
     }
     public function index(Channel $channel  , ThreadFilters $filters)
     {
         $threads = $this->getThreads($channel , $filters);
+
+        if (request()->wantsJson()) {
+            return $threads;
+        }
+        // get the sql query
+
         return view('threads.index',
         [
             'threads' => $threads,

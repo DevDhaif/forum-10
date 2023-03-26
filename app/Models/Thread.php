@@ -14,10 +14,17 @@ class Thread extends Model
     protected static function boot()
     {
         parent::boot();
+        // order by replies_count desc
+
         static::addGlobalScope('replyCount' , function ($builder){
             $builder->withCount('replies');
         });
     }
+
+    // static::addGlobalScope('replyCount' , function ($builder){
+    //     $builder->withCount('replies');
+    // });
+
     public function path()
     {
         return "/threads/{$this->channel->slug}/{$this->id}";

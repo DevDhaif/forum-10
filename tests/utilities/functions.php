@@ -5,12 +5,12 @@ use App\Models\Channel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-function create($class, $attributes = [])
+function create($class, $attributes = [] , $times =null)
 {
-    return $class::factory()->create($attributes);
+    return $class::factory($times)->create($attributes);
 }
 
-function make($class, $attributes = [])
+function make($class, $attributes = [] , $times =null)
 {
-    return $class::factory()->make($attributes);
+    return $class::factory($times)->make($attributes);
 }

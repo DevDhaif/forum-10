@@ -35,6 +35,9 @@
                             <x-dropdown-link :href="route('threads')">
                                 All Threads
                             </x-dropdown-link>
+                            <x-dropdown-link href="?popular=1">
+                                By Popularity
+                            </x-dropdown-link>
                             {{-- if there is no user logged in, then the link will not be shown --}}
                             @auth
                             <x-dropdown-link href="threads?by={{ auth()->user()->name }}">

@@ -10,10 +10,19 @@
         @foreach ($threads as $thread)
             <div class="bg-white p-6  rounded-lg shadow mb-4">
                 <div class="space-y-4">
-                    <a href="{{ $thread->path() }}" class="text-blue-600 text-sm mt-6">
-                        {{ $thread->title }}
-                    </a>
-                    <a href="#" class="text-red-500 px-4"> {{ $thread->channel->name ?? '' }} </a>
+                    <div class="flex w-full justify-between items-center mt-4 py-4">
+                        <div>
+                            <a href="{{ $thread->path() }}" class="flex-1 text-blue-600 text-sm ">
+                                {{ $thread->title }}
+                            </a>
+                            <a href="#" class="text-red-500 px-4"> {{ $thread->channel->name ?? '' }} </a>
+                        </div>
+                        <p class="text-gray-600 text-sm ">
+                            Published {{ $thread->created_at->diffForHumans() }} by <a href="{{ $thread->creator->path() }}"
+                                class="text-blue-600 text-sm">{{ $thread->creator->name }}</a> and   has {{ $thread->replies_count }}
+                            {{ Str::plural('reply', $thread->replies_count) }}.
+                         </p>
+                    </div>
                     <p class="text-gray-600 text-sm mt-6">
                         {{ $thread->body }}
                     </p>
