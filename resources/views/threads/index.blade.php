@@ -18,8 +18,10 @@
                             <a href="#" class="text-red-500 px-4"> {{ $thread->channel->name ?? '' }} </a>
                         </div>
                         <p class="text-gray-600 text-sm ">
-                            Published {{ $thread->created_at->diffForHumans() }} by <a href="{{ $thread->creator->path() }}"
-                                class="text-blue-600 text-sm">{{ $thread->creator->name }}</a> and   has {{ $thread->replies_count }}
+                            Published {{ $thread->created_at->diffForHumans() }} 
+                            by <a href="{{ $thread->creator->path() }}"
+                                class="text-blue-600 text-sm">
+                                {{ $thread->creator->name }}</a> and   has {{ $thread->replies_count }}
                             {{ Str::plural('reply', $thread->replies_count) }}.
                          </p>
                     </div>
