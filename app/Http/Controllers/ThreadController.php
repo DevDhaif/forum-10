@@ -19,11 +19,14 @@ class ThreadController extends Controller
 
     public function getThreads(Channel $channel ,  ThreadFilters $filters){
 
-        $threads = Thread::with(['channel', 'replies' , 'creator'
-        ])->latest()->filter($filters);
+
+        $threads = Thread:: latest()->filter($filters);
+
 
         if($channel->exists){
-            $threads->where('channel_id', $channel->id)->with(['channel', 'replies' , 'creator']);
+
+            $threads->where('channel_id', $channel->id)->with(['channel',  'creator']);
+
 
         }
         return $threads->get();
@@ -69,10 +72,12 @@ class ThreadController extends Controller
     public function show($channelId, Thread $thread)
     {
 
+
         return view('threads.show', [
             'thread' => $thread,
-            'replies' => $thread->replies()->paginate(2)
+            'replies' => $thread->replies()->paginate(20)
         ]);
+
 
     }
     public function edit(Thread $thread)
