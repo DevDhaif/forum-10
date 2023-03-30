@@ -15,6 +15,7 @@ use LogicException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use PHPUnit\Framework\ExpectationFailedException;
 use Tests\TestCase;
+//  use testcase from phpunit
 
 /**
  * Summary of ThreadsTest
@@ -137,8 +138,28 @@ class ThreadsTest extends TestCase
         create(Reply::class , ['thread_id' => $threadThree->id] , 3);
 
         $threadZero = $this->thread;
-        $response = $this->getJson('threads?popular=1')->json(); 
+        $response = $this->getJson('threads?popular=1')->json();
 
         $this->assertEquals([3,2,0],array_column($response , 'replies_count'));
+    }
+
+    public function test_a_user_can_delete_a_thread () : void{
+        $user = create(User::class);
+        $this->actingAs($user);
+
+        $thread = create(Thread::class , ['user_id' => $user->id]);
+        $reply  =  create(Reply::class , ['thread_id' => $thread->id]);
+
+        $response = $this->json('DELETE' , $thread->path());
+        $this->assertDatabaseMissing('threads' ,  ['id' => $thread->id]);
+        $this->assertDatabaseMissing('replies' ,  ['id' => $reply->id]);
+        $response->assertStatus(204);
+    }
+
+    public function test_guests_may_not_delete_threads () : void{
+        $this->withExceptionHandling();
+        $thread = create(Thread::class);
+        $response = $this->delete($thread->path());
+        $response->assertRedirect('/login'); 
     }
 }

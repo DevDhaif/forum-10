@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,13 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public function show(Request $request, User $user): View
+    {
+        return view('profile.show', [
+            'profileUser' => $user,
+            'threads' => $user->threads()->paginate(10),
+        ]);
+    }
     /**
      * Display the user's profile form.
      */

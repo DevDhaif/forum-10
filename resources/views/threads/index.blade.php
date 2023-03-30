@@ -18,16 +18,24 @@
                             <a href="#" class="text-red-500 px-4"> {{ $thread->channel->name ?? '' }} </a>
                         </div>
                         <p class="text-gray-600 text-sm ">
-                            Published {{ $thread->created_at->diffForHumans() }} 
+                            Published {{ $thread->created_at->diffForHumans() }}
                             by <a href="{{ $thread->creator->path() }}"
                                 class="text-blue-600 text-sm">
                                 {{ $thread->creator->name }}</a> and   has {{ $thread->replies_count }}
                             {{ Str::plural('reply', $thread->replies_count) }}.
                          </p>
                     </div>
+                    {{-- turncate the body show only 100 characters --}}
+
                     <p class="text-gray-600 text-sm mt-6">
-                        {{ $thread->body }}
+                        {{ Str::limit($thread->body, 100) }}
+                        {{-- if the body is less than 100 characters then show the body --}}
+                        @if (strlen($thread->body) > 100)
+                            <a href="{{ $thread->path() }}" class="text-blue-600 text-sm">Read more</a>
+                        @endif
+
                     </p>
+
 
 
                 </div>

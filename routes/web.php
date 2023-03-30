@@ -46,7 +46,10 @@ Route::post("/threads/", [ThreadController::class, 'store'])->name('threads.stor
 // Route::get('/threads/{thread}', [ThreadController::class, 'show'])
 //     ->name('threads.show');
 Route::get("/threads/{channel}/{thread}", [ThreadController::class,'show']);
+Route::delete("/threads/{channel}/{thread}", [ThreadController::class,'destroy']);
 Route::post('replies/{reply}/favorites', [FavoriteController::class, 'store'])->name('replies.favorite');
 Route::post('/threads/{channel}/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
+
+Route::get('/profiles/{user}', [ProfileController::class, 'show'])->name('profile.show');
 
 require __DIR__.'/auth.php';
