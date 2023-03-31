@@ -23,7 +23,7 @@ class ThreadController extends Controller
         if ($channel->exists) {
             $threads->where('channel_id', $channel->id)->with(['channel',  'creator']);
         }
-        return $threads->get();
+        return $threads->with(['channel',  'creator'])->get();
     }
     public function index(Channel $channel, ThreadFilters $filters)
     {
@@ -75,7 +75,11 @@ class ThreadController extends Controller
     }
     public function destroy($channel, Thread $thread)
     {
-            $thread->delete();
+
+        $this->authorize('update', $thread);
+
+        $thread->delete();
+
         if (request()->wantsJson()) {
             return response([], 204);
         }

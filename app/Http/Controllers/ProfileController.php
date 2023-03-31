@@ -12,12 +12,15 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function show(Request $request, User $user): View
+    public function show(Request $request, User $user)
     {
+        $activities = $user->activity()->latest()->with('subject')->get();
         return view('profile.show', [
             'profileUser' => $user,
             'threads' => $user->threads()->paginate(10),
+            'activities' => $activities,
         ]);
+
     }
     /**
      * Display the user's profile form.

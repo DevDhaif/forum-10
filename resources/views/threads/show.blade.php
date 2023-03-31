@@ -6,19 +6,15 @@
                 <p class="flex-1 text-gray-600 text-sm">Published {{ $thread->created_at->diffForHumans() }} by <a
                         href="{{ route('profile.show' , $thread->creator) }}" class="text-blue-600 text-sm">{{ $thread->creator->name }}</a>
                     and currently has {{ $thread->replies_count }} {{ Str::plural('reply', $thread->replies_count) }}.</p>
-                    
-                @if (auth()->check() && auth()->user()->is($thread->creator))
-                    
+                @can ('update' , $thread)
                 <div class="">
                     <form action="{{ $thread->path() }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="bg-red-500 text-white rounded py-2 px-2 hover:bg-red-600">Delete
-                            Thread</button>
+                        <button type="submit" class="bg-red-500 text-white rounded py-2 px-2 hover:bg-red-600">Delete Thread</button>
                     </form>
                 </div>
-                @endif
-
+                @endcan
             </div>
             <div class="bg-white p-4 rounded shadow">
                 <p>{{ $thread->title }}</p>
@@ -52,7 +48,6 @@
                 {{ $replies->links() }}
             </div>
         </div>
-
         <div class="w-1/4">
             <div class="bg-white p-4 rounded shadow">
                 <p class="text-gray-600 text-sm">This thread was published {{ $thread->created_at->diffForHumans() }} by <a
