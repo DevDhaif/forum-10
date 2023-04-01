@@ -58,6 +58,7 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+        // yes there is
 
         Auth::logout();
 
