@@ -4,7 +4,7 @@
         <p class="text-sm">created a reply on
            <a href="{{ $activity->subject->path() }}" class="text-blue-500">
                {{ $activity->subject->thread->title }}
-           </a> 
+           </a>
            {{ $activity->subject->created_at->diffForHumans() }}
        </p>
     </div>

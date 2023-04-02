@@ -21,13 +21,18 @@ class ThreadController extends Controller
     {
         $threads = Thread::latest()->filter($filters);
         if ($channel->exists) {
-            $threads->where('channel_id', $channel->id)->with(['channel',  'creator']);
+
+            $threads->where('channel_id', $channel->id);
+
         }
-        return $threads->with(['channel',  'creator'])->get();
+
+        return $threads;
+
     }
     public function index(Channel $channel, ThreadFilters $filters)
     {
-        $threads = $this->getThreads($channel, $filters);
+        $threads = $this->getThreads($channel, $filters)->get();
+
         if (request()->wantsJson()) {
             return $threads;
         }

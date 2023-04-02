@@ -14,13 +14,14 @@ class ProfileController extends Controller
 {
     public function show(Request $request, User $user)
     {
-        $activities = $user->activity()->latest()->with('subject')->get();
+
+        $activities = $user->activity()->latest()->with('subject')->get()->groupBy(function ($activity) {
+            return $activity->created_at->format('Y-m-d');
+        });
         return view('profile.show', [
             'profileUser' => $user,
-            'threads' => $user->threads()->paginate(10),
             'activities' => $activities,
         ]);
-
     }
     /**
      * Display the user's profile form.
