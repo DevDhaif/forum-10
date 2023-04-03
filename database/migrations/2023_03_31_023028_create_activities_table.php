@@ -13,10 +13,9 @@ return new class () extends Migration {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_id')->index()->cascadeOnDelete();
+            $table->unsignedBigInteger('user_id')->index();
             //  auto delete all activities when an activity is deleted
-            $table->foreignId('subject_id')->constrained()->cascadeOnDelete()->index();
-
+            $table->unsignedBigInteger('subject_id')->index();
             $table->string('subject_type', 50);
             $table->string('type', 50);
             $table->timestamps();

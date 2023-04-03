@@ -19,7 +19,7 @@ class ProfilesTest extends TestCase
     public function test_a_user_has_a_profile()
     {
         $user = create(User::class);
-
+        
         $this->get("/profiles/{$user->name}")
             ->assertSee($user->name);
     }

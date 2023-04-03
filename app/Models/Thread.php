@@ -27,12 +27,21 @@ class Thread extends Model
 
         static::deleting(function ($thread) {
             $thread->replies->each->delete();
+
+            // delete the activity assosiated with the thread
+            $thread->activity()->delete();
+
         });
     }
 
     public function path()
     {
         return "/threads/{$this->channel->slug}/{$this->id}";
+    }
+
+    public function activity()
+    {
+        return $this->morphMany(Activity::class, 'subject');
     }
 
     public function replies()
