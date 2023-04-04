@@ -28,8 +28,6 @@ class Thread extends Model
         static::deleting(function ($thread) {
             $thread->replies->each->delete();
 
-            // delete the activity assosiated with the thread
-            $thread->activity()->delete();
 
         });
     }

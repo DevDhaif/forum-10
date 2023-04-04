@@ -17,7 +17,7 @@
                 {{ $date }}
                 @foreach ($activity as $record)
 
-                    <div class="flex border border-gray-300 mt-4 gap-x-4   justify-between">
+                    <div class="flex border border-gray-300 mt-4 gap-x-4   justify-between ">
                         @include("profile.partials.activity.{$record->type}" , ['activity' => $record])
                     </div>
                 @endforeach

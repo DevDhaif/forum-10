@@ -6,6 +6,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Activity;
 use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
@@ -158,9 +159,10 @@ class ThreadsTest extends TestCase
         $reply  =  create(Reply::class, ['thread_id' => $thread->id]);
 
         $response = $this->json('DELETE', $thread->path());
-        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing("threads", ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
-        // $response->assertStatus(204);
+        $this->assertEquals(0, Activity::count());
+        $response->assertStatus(204);
     }
 
     public function test_unauthorized_users_may_not_delete_threads(): void
