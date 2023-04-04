@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,13 +16,9 @@ class ProfileController extends Controller
     public function show(Request $request, User $user)
     {
 
-        $activities = $user->activity()->latest()->with('subject')->get()->groupBy(function ($activity) {
-            return $activity->created_at->format('Y-m-d');
-        });
-
         return view('profile.show', [
             'profileUser' => $user,
-            'activities' => $activities,
+            'activities' => Activity::feed($user, 50),
         ]);
 
     }
