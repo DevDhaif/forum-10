@@ -14,34 +14,23 @@
 
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css','resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
+        {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
+        <script defer>
+            flowbite.init();
+        </script> --}}
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            {{-- @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif --}}
-
             <!-- Page Content -->
             <main class="container max-w-screen-xl mx-auto p-4">
                 {{-- content --}}
-
                 @yield('content')
             </main>
         </div>
-
         {{-- node_modules/flowbite/dist/flowbite.min.js --}}
         {{-- <script src="../../node_modules/flowbite/dist/flowbite.min.js"></script> --}}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
-        <script>
-            flowbite.init();
-        </script>
+
     </body>
 </html>
