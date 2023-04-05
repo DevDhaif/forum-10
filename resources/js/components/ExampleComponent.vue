@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container px-6 py-6 mx-auto text-white bg-gray-700">
         <div class="row justify-content-center ">
             <div class="col-md-8">
                 <div class="card">
