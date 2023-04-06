@@ -1,6 +1,6 @@
 <template>
     <div class="p-4 bg-yellow-100 text-yellow-800 rounded-md shadow-md fixed bottom-20 right-20" v-show="show">
-            {{body}}
+             {{ body }}
     </div>
 </template>
 
@@ -18,11 +18,26 @@ export default {
     created() {
 
         if (this.message ){
-                this.body = this.message;
-                this.show = true;
-                setTimeout(()=>{
-                    this.show = false;
-                },2000);
+                this.flash(this.message);
+        }
+        window.flash = this.flash;
+        window.hide = this.hide;
+        // add event listener to window
+        window.addEventListener('flash', (e) => {
+            this.flash(e.detail.message);
+        });
+    },
+
+    methods: {
+        flash(message){
+            this.show = true;
+            this.body = message;
+            this.hide();
+            },
+        hide(){
+            setTimeout(()=>{
+                this.show = false;
+            },3000);
         }
     }
 }
