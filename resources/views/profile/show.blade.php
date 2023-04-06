@@ -18,8 +18,11 @@
                 @foreach ($activity as $record)
 
                     <div class="flex border border-gray-300 mt-4 gap-x-4   justify-between ">
+                        @if(view()->exists("profile.partials.activity.{$record->type}"))
                         @include("profile.partials.activity.{$record->type}" , ['activity' => $record])
+                        @endif
                     </div>
+
                 @endforeach
             @empty
                 <h1>no activities yet</h1>

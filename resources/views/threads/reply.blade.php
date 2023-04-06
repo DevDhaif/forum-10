@@ -1,5 +1,5 @@
 @props(['reply'])
-<div class="bg-white relative p-4 rounded shadow mt-4 flex justify-between gap-x-4 items-center">
+<div id="reply-{{$reply->id}}" class="bg-white relative p-4 rounded shadow mt-4 flex justify-between gap-x-4 items-center">
 
     <div class="space-y-2 mt-4 p-4 rounded shadow bg-gray-50 flex-1 ">
         <a href="{{ route('profile.show' , $reply->owner) }}" class="text-sm  text-blue-600 ">
