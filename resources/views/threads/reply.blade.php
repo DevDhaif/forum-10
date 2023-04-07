@@ -9,16 +9,30 @@
 
             {{ $reply->created_at->diffForHumans() }}
         </span>
-        <p class="mt-4 border-t pt-4 ">{{ $reply->body }}</p>
+        <p v-if="true" class="mt-4 border-t pt-4 ">{{ $reply->body }}</p>
 
         @can('update' , $reply)
-        <div class="absolute bottom-1 right-1  rounded-full  ">
-            <form class="" action="/replies/{{$reply->id}}" method="POST">
-                @csrf
-                @method('DELETE')
-                <button class="bg-red-500 p-4 border border-red-500 rounded-full hover:bg-red-600" type="submit">
-            </form>
-        </div>
+            <div class="flex gap-x-4 items-center">
+
+                <div class=" ">
+                    <form class="" action="/replies/{{$reply->id}}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button class="bg-red-100 px-4 py-2 border border-red-500 text-red-800 hover:bg-red-200" type="submit"> Delete </button>
+                    </form>
+                </div>
+                <example-component  message="{{$reply->body}}">
+
+                <div class=" ">
+                        <button @click="show = true" class="bg-green-100 px-4 py-6 border border-green-500 text-green-800 hover:bg-green-200" > Edit </button>
+                </div>
+                </example-component>
+
+            <div>
+
+            </div>
+            </div>
+
             @endcan
     </div>
 

@@ -17,7 +17,11 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100" id="app">
-            <flash message="{{  session('flash') }}" ></flash>
+            <flash message="{{  session('flash') }}" >
+
+
+            </flash>
+
             @include('layouts.navigation')
             <!-- Page Content -->
             <main class="container max-w-screen-xl p-4 mx-auto">
