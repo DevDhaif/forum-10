@@ -16,7 +16,13 @@ class FavoriteController extends Controller
     }
     public function store(Reply $reply)
     {
-        $reply->favorite();
-        return back(); 
+        if($reply->isFavorited()) {
+            $reply->unfavorite();
+            return back();
+        } else {
+
+            $reply->favorite();
+            return back();
+        }
     }
 }

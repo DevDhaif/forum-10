@@ -19,6 +19,12 @@ trait Favoritable
             return $this->favorites()->create($attributes);
         }
     }
+    public function unfavorite()
+    {
+        $attributes = ['user_id' => auth()->id()];
+
+        $this->favorites()->where($attributes)->get()->each->delete();
+    }
 
     public function isFavorited()
     {

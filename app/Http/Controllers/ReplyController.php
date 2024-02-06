@@ -9,28 +9,43 @@ use Illuminate\Http\Request;
 
 class ReplyController extends Controller
 {
-    //
     public function __construct()
     {
         $this->middleware('auth');
     }
-    public function store($channelId ,Thread $thread)
+
+    public function store($channelId, Thread $thread)
     {
-        $this->validate( request(),
+        $this->validate(
+            request(),
             [
                 'body' => 'required',
             ]
         );
-        $thread->addReply([
-            'body' => request('body'),
-            'user_id' => auth()->id(),        ]);
-        return back()->with('flash', 'Your reply has been left!');
 
+        return  $thread->addReply([
+            'body' => request('body'),
+            'user_id' => auth()->id(),
+        ]);
     }
 
-    public function destroy(Reply $reply){
-        $this->authorize('update' , $reply);
-         $reply->delete();
-         return back()->with('flash', 'Your reply has been deleted!');
+    public function update(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+
+        $reply->update([
+            'body' => request('body'),
+        ]);
+
+        return back()->with('flash', 'success');
+    }
+
+    public function destroy(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+        $reply->delete();
+        // return back( )->with('flash', 'Your reply has been deleted!');
+        // return back()->with('flash', 'Your reply has been deleted!');
+
     }
 }
