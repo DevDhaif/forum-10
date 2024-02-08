@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Field extends Model
 {
-    use HasFactory;
+    protected $fillable = ['name'];
+
     public function users()
     {
         return $this->hasMany(User::class);
