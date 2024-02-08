@@ -5,6 +5,7 @@ namespace App;
 use App\Models\Activity;
 use App\Models\Favorite;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 trait Favoritable
 {
@@ -15,8 +16,15 @@ trait Favoritable
     public function favorite()
     {
         $attributes = ['user_id' => auth()->id()];
+        Log::info('User ID: ' . $attributes['user_id']);
+
         if (! $this->favorites()->where($attributes)->exists()) {
+            Log::info('Favoriting item');
             return $this->favorites()->create($attributes);
+        }
+        else{
+            Log::info('Unfavoriting item');
+            $this->favorites()->where($attributes)->get()->each->delete();
         }
     }
     public function unfavorite()

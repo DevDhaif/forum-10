@@ -40,4 +40,12 @@ class FavoritesTest extends TestCase
         }
         $this->assertCount(1, $reply->favorites);
     }
+    public function test_an_authenticated_can_unfavorite_a_reply()
+    {
+        $this->signIn();
+        $reply = create(Reply::class);
+        $reply->favorite(auth()->id());
+        $this->delete('replies/' . $reply->id . '/favorites');
+        $this->assertCount(0, $reply->favorites);
+    }
 }

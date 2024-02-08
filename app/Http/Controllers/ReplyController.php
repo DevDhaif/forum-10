@@ -23,10 +23,13 @@ class ReplyController extends Controller
             ]
         );
 
-        return  $thread->addReply([
-            'body' => request('body'),
-            'user_id' => auth()->id(),
+        $thread->addReply([
+          'body' => request('body'),
+          'user_id' => auth()->id(),
         ]);
+
+        return redirect($thread->path())->with('flash', 'Your reply has been left!');
+
     }
 
     public function update(Reply $reply)
@@ -44,7 +47,7 @@ class ReplyController extends Controller
     {
         $this->authorize('update', $reply);
         $reply->delete();
-        // return back( )->with('flash', 'Your reply has been deleted!');
+        return back( )->with('flash', 'Your reply has been deleted!');
         // return back()->with('flash', 'Your reply has been deleted!');
 
     }
