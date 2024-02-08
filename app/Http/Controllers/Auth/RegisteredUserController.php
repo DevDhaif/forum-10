@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Field;
+use App\Models\University;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -20,7 +22,11 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $universities = University::all();
+        $fields = Field::all();
+        return view('auth.register', ['universities' => $universities
+        , 'fields' => $fields
+    ]);
     }
 
     /**
@@ -32,14 +38,18 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'university_id' => ['required', 'integer', 'exists:universities,id'],
+            'field_id' => ['required', 'integer', 'exists:fields,id'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'university_id' => $request->university_id,
+            'field_id' => $request->field_id,
         ]);
 
         event(new Registered($user));

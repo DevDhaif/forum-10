@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'university_id',
+        'field_id',
     ];
 
     /**
@@ -45,7 +47,14 @@ class User extends Authenticatable
     public function path(){
         return "/profiles/{$this->name}";
     }
-
+    public function university()
+    {
+        return $this->belongsTo(University::class);
+    }
+    public function field()
+    {
+        return $this->belongsTo(Field::class);
+    }
     public function threads(){
         return $this->hasMany(Thread::class)->latest();
     }
@@ -55,6 +64,6 @@ class User extends Authenticatable
     }
 
     public function activity(){
-        return $this->hasMany(Activity::class ); 
+        return $this->hasMany(Activity::class );
     }
 }
