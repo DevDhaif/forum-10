@@ -18,18 +18,28 @@ class ProfilesTest extends TestCase
 
     public function test_a_user_has_a_profile()
     {
-        $user = create(User::class);
+        $university = \App\Models\University::factory()->create();
+        $field = \App\Models\Field::factory()->create();
+        $user = User::factory()->create([
+            'university_id' => $university->id,
+            'field_id' => $field->id,
+        ]);
+        $response = $this->get("/profiles/{$user->name}");
+        $response->assertSee($user->name);
 
-        $this->get("/profiles/{$user->name}")
-            ->assertSee($user->name);
     }
     public function test_profiles_display_all_threads_created_by_the_associated_user()
     {
-        $this->signIn();
+        $university = \App\Models\University::factory()->create();
+        $field = \App\Models\Field::factory()->create();
+        $user = User::factory()->create([
+            'university_id' => $university->id,
+            'field_id' => $field->id,
+        ]);
+        $this->be($user);
 
-        $thread = create(Thread::class, ['user_id' => auth()->id()]);
-
-        $this->get("/profiles/" . auth()->user()->name)
+        $thread = Thread::factory()->create(['user_id' => $user->id]);
+        $this->get("/profiles/" . $user->name)
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }

@@ -15,9 +15,10 @@ class ProfileController extends Controller
 {
     public function show(Request $request, User $user)
     {
-
+        $threads = $user->threads;
         return view('profile.show', [
             'profileUser' => $user,
+            'threads' => $threads,
             'activities' => Activity::feed($user, 50),
         ]);
 

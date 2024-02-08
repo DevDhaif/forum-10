@@ -4,6 +4,8 @@ namespace Tests\Unit;
 
 use App\Models\Favorite;
 use App\Models\Reply;
+use App\Models\User;
+
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -30,15 +32,28 @@ class FavoritesTest extends TestCase
 
     public function test_an_authenticated_user_can_only_favorite_a_reply_once()
     {
-        $this->signIn();
-        $reply = create(Reply::class);
-        try {
-            $this->post('replies/' . $reply->id . '/favorites');
-            $this->post('replies/' . $reply->id . '/favorites');
-        } catch (\Exception $e) {
-            $this->fail('Did not expect to insert the same record set twice.');
-        }
-        $this->assertCount(1, $reply->favorites);
+
+$user = User::factory()->create();
+$this->be($user);
+
+// Create a new reply
+$reply = Reply::factory()->create();
+
+// Favorite the reply
+$this->post('replies/' . $reply->id . '/favorites');
+
+
+// Assert that the reply was favorited once
+$this->assertCount(1, $reply->favorites);
+
+// Try to favorite the reply again
+
+$this->post('replies/' . $reply->id . '/favorites');
+
+
+// Assert that the reply is still only favorited once
+$this->assertCount(1, $reply->favorites);
+
     }
     public function test_an_authenticated_can_unfavorite_a_reply()
     {

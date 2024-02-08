@@ -20,13 +20,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Dhaifallah',
-        //     'email' => 'devdhaif@gmail.com',
-        // ]);
 
-        // Reply::factory(50)->create();
+        \App\Models\User::factory(10)->create();
+        \App\Models\User::factory()->create([
+            'name' => 'Dhaifallah',
+            'email' => 'devdhaif@gmail.com',
+        ]);
+
+
+        Reply::factory(50)->create();
+
 
         $universities = ['Al neelain University', 'Sudan University of Science and Technology', 'University of Khartoum', 'Omdurman Islamic University', 'University of Medical Sciences and Technology', 'University of Bahri', 'University of Gezira', 'University of Kordofan', 'University of Juba'];
         foreach ($universities as $university) {

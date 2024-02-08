@@ -22,10 +22,6 @@ trait Favoritable
             Log::info('Favoriting item');
             return $this->favorites()->create($attributes);
         }
-        else{
-            Log::info('Unfavoriting item');
-            $this->favorites()->where($attributes)->get()->each->delete();
-        }
     }
     public function unfavorite()
     {

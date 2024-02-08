@@ -19,11 +19,15 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
+        $university = \App\Models\University::factory()->create();
+        $field = \App\Models\Field::factory()->create();
         $response = $this->post('/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'university_id' => $university->id,
+            'field_id' => $field->id,
         ]);
 
         $this->assertAuthenticated();
