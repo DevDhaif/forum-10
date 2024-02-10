@@ -45,7 +45,7 @@
 
     {{-- heart shape --}}
     <div class="flex space-x-2 border rounded  p-2">
-        <form method="POST" action="/replies/{{ $reply->id }}/favorites">
+        <form method="POST" action={{ route('replies.favorite', ['type'=> 'reply', 'id' => $reply->id]) }}>
             @csrf
             <button type="submit" class="text-white text-sm">
                 <svg class="w-4 h-4 transition-colors duration-500 {{ $reply->isFavorited() ? 'fill-red-500' : 'fill-blue-500' }}"

@@ -50,8 +50,8 @@ Route::get("/threads/{channel}/{thread}", [ThreadController::class,'show'])->nam
 Route::delete("/threads/{channel}/{thread}", [ThreadController::class,'destroy']);
 
 
-Route::post('replies/{reply}/favorites', [FavoriteController::class, 'store'])->name('replies.favorite');
-Route::delete('replies/{reply}/favorites', [FavoriteController::class, 'destroy'])->name('replies.unfavorite');
+Route::post('{type}/{id}/favorites', [FavoriteController::class, 'store'])->name('replies.favorite');
+Route::delete('{type}/{id}/favorites', [FavoriteController::class, 'destroy'])->name('replies.unfavorite');
 
 Route::delete("/replies/{reply}" , [ReplyController::class , 'destroy'])->name('replies.destroy');
 

@@ -66,4 +66,28 @@ class Thread extends Model
     {
         $this->replies()->create($reply);
     }
+    public function favorited()
+    {
+        return $this->morphMany(Favorite::class, 'favorited');
+    }
+    public function isFavorited()
+    {
+        return $this->favorites()->where('user_id', auth()->id())->exists();
+    }
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favorited');
+    }
+    public function favorite()
+    {
+        $this->favorites()->create(['user_id' => auth()->id()]);
+    }
+    public function getFavoritesCountAttribute()
+    {
+        return $this->favorites()->count();
+    }
+    public function unfavorite()
+    {
+        $this->favorites()->where('user_id', auth()->id())->delete();
+    }
 }

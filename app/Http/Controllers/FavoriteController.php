@@ -14,20 +14,31 @@ class FavoriteController extends Controller
     {
         $this->middleware('auth');
     }
-    public function store(Reply $reply)
+    public function store($type, $id)
+
     {
-        if($reply->isFavorited()) {
-            $reply->unfavorite();
+        $favoritable = $this->getFavoritable($type, $id);
+
+        if($favoritable->isFavorited()){
+            $favoritable->unfavorite();
             return back();
         } else {
 
-            $reply->favorite();
+            $favoritable->favorite();
             return back();
         }
     }
-    public function destroy(Reply $reply)
+    public function destroy($type, $id)
+
     {
-        $reply->unfavorite();
+        $favoritable = $this->getFavoritable($type, $id);
+        $favoritable->favorites()->where('user_id', auth()->id())->get()->each->delete();
         return response()->json(null, 204);
+    }
+
+    protected function getFavoritable($type, $id)
+    {
+        $class = "App\\Models\\" . ucfirst($type);
+        return $class::findOrFail($id);
     }
 }
