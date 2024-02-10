@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
-
     use HasFactory;
 
     use RecordsActivity;
@@ -21,14 +20,14 @@ class Thread extends Model
         parent::boot();
         // order by replies_count desc
 
-        static::addGlobalScope('replyCount' , function ($builder){
+        static::addGlobalScope('replyCount', function ($builder) {
             $builder->withCount('replies');
         });
 
         static::deleting(function ($thread) {
-            $thread->replies->each->delete();
-
-
+            $thread->replies->each(function ($reply) {
+                $reply->delete();
+            });
         });
     }
 
