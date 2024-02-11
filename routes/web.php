@@ -45,14 +45,14 @@ Route::get("/threads/{channel}", [ThreadController::class, 'index'])->name('thre
 Route::post("/threads/", [ThreadController::class, 'store'])->name('threads.store');
 // Route::get('/threads/{thread}', [ThreadController::class, 'show'])
 //     ->name('threads.show');
-Route::get("/threads/{channel}/{thread}", [ThreadController::class,'show'])->name('threads.show');
 
+Route::get("/threads/{channel}/{thread}", [ThreadController::class,'show'])->name('threads.show');
 Route::delete("/threads/{channel}/{thread}", [ThreadController::class,'destroy']);
 
 
 Route::post('{type}/{id}/favorites', [FavoriteController::class, 'store'])->name('replies.favorite');
 Route::delete('{type}/{id}/favorites', [FavoriteController::class, 'destroy'])->name('replies.unfavorite');
-
+Route::patch("/replies/{reply}" , [ReplyController::class , 'update'])->name('replies.update');
 Route::delete("/replies/{reply}" , [ReplyController::class , 'destroy'])->name('replies.destroy');
 
 

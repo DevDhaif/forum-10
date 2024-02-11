@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Activity;
+use App\Models\Thread;
+
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,7 +17,9 @@ class ProfileController extends Controller
 {
     public function show(Request $request, User $user)
     {
-        $threads = $user->threads;
+
+$threads = Thread::all()->where('user_id', $user->id);
+
         return view('profile.show', [
             'profileUser' => $user,
             'threads' => $threads,

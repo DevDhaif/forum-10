@@ -40,15 +40,17 @@ class ReplyController extends Controller
             'body' => request('body'),
         ]);
 
-        return back()->with('flash', 'success');
+
+return response()->json(['flash' => 'Your reply has been updated!', 'reply' => $reply]);
+
     }
 
     public function destroy(Reply $reply)
     {
         $this->authorize('update', $reply);
         $reply->delete();
-        return back( )->with('flash', 'Your reply has been deleted!');
-        // return back()->with('flash', 'Your reply has been deleted!');
+return back()->with('flash', 'Your reply has been deleted!');
+
 
     }
 }
