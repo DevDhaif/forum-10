@@ -53,12 +53,13 @@
                             <textarea name="body" id="body" class="w-full" placeholder="Have something to say?" rows="5"></textarea>
                         </div>
                         <button type="submit"
-                            class="bg-blue-500 text-white rounded py-2 px-2 hover:bg-blue-600 mt-4">Post</button>
+                            class="bg-blue-500 text-white rounded py-2 px-2 hover:bg-blue-600 mt-4">Post </button>
                     </form>
                 @endif
-                @foreach ($replies as $reply)
+                <replies :replies="{{ $replies->toJson() }}" :thread="{{ $thread->toJson() }}"></replies>
+                {{-- @foreach ($replies as $reply)
                     @include('threads.reply')
-                @endforeach
+                @endforeach --}}
             </div>
             <div class="py-2 mt-4 ">
                 {{ $replies->links() }}

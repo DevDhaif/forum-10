@@ -41,7 +41,9 @@ class ReplyController extends Controller
         ]);
 
 
+
 return response()->json(['flash' => 'Your reply has been updated!', 'reply' => $reply]);
+
 
     }
 
@@ -49,8 +51,9 @@ return response()->json(['flash' => 'Your reply has been updated!', 'reply' => $
     {
         $this->authorize('update', $reply);
         $reply->delete();
-return back()->with('flash', 'Your reply has been deleted!');
-
-
+        if (request()->expectsJson()) {
+            return response(['status' => 'Reply deleted']);
+        }
+        return back();
     }
 }
