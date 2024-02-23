@@ -6,7 +6,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
-
+use App\Models\Reply;
 use App\Models\Thread;
 
 use Illuminate\Support\Facades\Route;
@@ -52,6 +52,7 @@ Route::delete("/threads/{channel}/{thread}", [ThreadController::class,'destroy']
 
 Route::post('{type}/{id}/favorites', [FavoriteController::class, 'store'])->name('replies.favorite');
 Route::delete('{type}/{id}/favorites', [FavoriteController::class, 'destroy'])->name('replies.unfavorite');
+Route::get('/replies/{reply}/isFavorited', [ReplyController::class, 'isFavorited'])->name('replies.isFavorited');
 Route::patch("/replies/{reply}" , [ReplyController::class , 'update'])->name('replies.update');
 Route::delete("/replies/{reply}" , [ReplyController::class , 'destroy'])->name('replies.destroy');
 

@@ -51,4 +51,10 @@ class ReplyController extends Controller
         }
         return back();
     }
+    public function isFavorited(Reply $reply)
+    {
+        $isFavorited = $reply->isFavoritedByUser(auth()->user());
+
+        return response()->json(['isFavorited' => $isFavorited]);
+    }
 }

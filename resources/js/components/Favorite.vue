@@ -62,7 +62,7 @@ export default {
 
             try {
                 const method = this.isFavorited ? 'delete' : 'post';
-                const response = await axios.post(`/${this.type}/${this.item.id}/favorites`);
+                const response = await axios[method](`/${this.type}/${this.item.id}/favorites`);
                 this.isFavorited = response.data.isFavorited;
                 this.item.favorites_count = response.data.favorites_count;
 

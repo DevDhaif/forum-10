@@ -63,13 +63,19 @@ class ThreadController extends Controller
             'title' => request('title'),
             'body' => request('body')
         ]);
-        return redirect($thread->path())->with('flash','Your thread has been successfully published');
+        return redirect($thread->path())->with('flash', 'Your thread has been successfully published');
     }
     public function show($channelId, Thread $thread)
     {
+        $replies = $thread->replies()->paginate(20);
+
+        // Check if each reply is favorited by the currently logged-in user
+        foreach ($replies as $reply) {
+            $reply->isFavorited = $reply->isFavoritedByUser(auth()->user());
+        }
         return view('threads.show', [
             'thread' => $thread,
-            'replies' => $thread->replies()->paginate(20)
+            'replies' => $replies,
         ]);
     }
     public function edit(Thread $thread)

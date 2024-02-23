@@ -55,5 +55,13 @@ class Reply extends Model
     {
         return $this->morphMany(Activity::class, 'subject');
     }
+    public function isFavoritedByUser($user)
+    {
+        // chech if there is no logged in user
+        if (!$user) {
+            return false;
+        }
+        return $this->favorites()->where('user_id', $user->id)->exists();
+    }
 
 }
