@@ -13,22 +13,28 @@ trait Favoritable
     {
         return $this->morphMany(Favorite::class, 'favorited');
     }
-    public function favorite()
+    public function toggleFavorite()
     {
-        $attributes = ['user_id' => auth()->id()];
-        Log::info('User ID: ' . $attributes['user_id']);
+        $userId = auth()->id();
+        $alreadyFavorited = $this->favorites()->where('user_id', $userId)->exists();
 
-        if (! $this->favorites()->where($attributes)->exists()) {
-            Log::info('Favoriting item');
-            return $this->favorites()->create($attributes);
+        if ($alreadyFavorited) {
+            $this->favorites()->where('user_id', $userId)->delete();
+            $isFavorited = false;
+        } else {
+            $this->favorites()->create(['user_id' => $userId]);
+            $isFavorited = true;
         }
-    }
-    public function unfavorite()
-    {
-        $attributes = ['user_id' => auth()->id()];
 
-        $this->favorites()->where($attributes)->get()->each->delete();
+        // Update favorites count (if not using separate column)
+        $favorites_count = $this->favorites()->count();
+
+        return [
+            'isFavorited' => $isFavorited,
+            'favorites_count' => $favorites_count,
+        ];
     }
+
 
     public function isFavorited()
     {

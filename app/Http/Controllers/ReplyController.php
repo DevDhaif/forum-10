@@ -39,12 +39,7 @@ class ReplyController extends Controller
         $reply->update([
             'body' => request('body'),
         ]);
-
-
-
-return response()->json(['flash' => 'Your reply has been updated!', 'reply' => $reply]);
-
-
+        return response()->json(['flash' => 'Your reply has been updated!', 'reply' => $reply]);
     }
 
     public function destroy(Reply $reply)

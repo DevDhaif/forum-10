@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>replies all here </h1>
-        <reply v-for="reply in localReplies" :key="reply.id" :reply="reply" @replyDeleted="removeReply"></reply>
+            <reply v-for="reply in localReplies" :key="reply.id" :reply="reply" @replyDeleted="removeReply" :user="user"></reply>
     </div>
 </template>
 <script>
@@ -10,7 +10,7 @@ export default {
     components: {
         Reply,
     },
-    props: ["replies", "thread"],
+    props: ["replies", "thread", "user"],
     data() {
         return {
             localReplies: this.replies.data,

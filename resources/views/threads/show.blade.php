@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class="container mx-auto  mt-6 flex space-x-8 justify-between items-start">
+
         <div class="w-3/4">
             <div class="bg-white p-4 rounded shadow w-full flex justify-between gap-x-4 items-center">
                 <p class="flex-1 text-gray-600 text-sm">Published {{ $thread->created_at->diffForHumans() }} by <a
@@ -56,7 +57,7 @@
                             class="bg-blue-500 text-white rounded py-2 px-2 hover:bg-blue-600 mt-4">Post </button>
                     </form>
                 @endif
-                <replies :replies="{{ $replies->toJson() }}" :thread="{{ $thread->toJson() }}"></replies>
+                <replies :replies="{{ $replies->toJson() }}" :thread="{{ $thread->toJson() }}" :user='@json(Auth::user())'></replies>
                 {{-- @foreach ($replies as $reply)
                     @include('threads.reply')
                 @endforeach --}}

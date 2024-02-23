@@ -6,6 +6,7 @@ use App\Models\Favorite;
 use App\Models\Reply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FavoriteController extends Controller
 {
@@ -15,25 +16,19 @@ class FavoriteController extends Controller
         $this->middleware('auth');
     }
     public function store($type, $id)
-
     {
+        Log::info('Storing favorite');
         $favoritable = $this->getFavoritable($type, $id);
 
-        if($favoritable->isFavorited()){
-            $favoritable->unfavorite();
-            return back();
-        } else {
+        $result = $favoritable->toggleFavorite();
 
-            $favoritable->favorite();
-            return back();
-        }
+        return response()->json($result);
     }
     public function destroy($type, $id)
-
     {
         $favoritable = $this->getFavoritable($type, $id);
-        $favoritable->favorites()->where('user_id', auth()->id())->get()->each->delete();
-        return response()->json(null, 204);
+        $result = $favoritable->toggleFavorite();
+        return response()->json($result);
     }
 
     protected function getFavoritable($type, $id)

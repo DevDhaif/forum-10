@@ -1,10 +1,10 @@
 @props(['reply'])
 <div id="reply-{{$reply->id}}"
-     class="bg-white relative p-4 rounded shadow mt-4 flex justify-between gap-x-4 items-center">
+     class="bg-red-600 relative p-4 rounded shadow mt-4 flex justify-between gap-x-4 items-center">
 
-
-     <reply :reply="{{ json_encode($reply) }}" ></reply>
-
+    <h1>gdgdgd</h1>
+     <reply :reply="{{ json_encode($reply) }}" :user='@json(Auth::user())'></reply>
+    {{ Auth::user()->id }} hnn
     {{-- <div class="relative space-y-2 mt-4 p-4 rounded shadow bg-gray-50 flex-1 ">
         <a href="{{ route('profile.show' , $reply->owner) }}" class="text-sm  text-blue-600 ">
             {{ $reply->owner->name }}
@@ -42,7 +42,7 @@
         </div> --}}
 
         {{-- heart shape --}}
-    <div class="flex space-x-2 border rounded  p-2">
+    {{-- <div class="flex space-x-2 border rounded  p-2">
         <form method="POST" action={{ route('replies.favorite', ['type'=> 'reply', 'id' => $reply->id]) }}>
             @csrf
             <button type="submit" class="text-white text-sm">
@@ -56,6 +56,8 @@
             </button>
         </form>
         <span class="text-sm">{{ $reply->favorites_count }} </span>
-    </div>
+    </div> --}}
+    <h1 class="text-4xl text-red-600">ddhd</h1>
+    <favorite type="reply"  :item="$reply" ></favorite>
 </div>
 

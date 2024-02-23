@@ -1,34 +1,38 @@
 <template v-cloak>
-    <transtiion name="fade" @after-leave="afterLeave">
-        <div v-if="!replyDeleted" class="reply">
-
-            <div v-if="editing">
+    <transtiion name="fade" @after-leave="afterLeave" class="mt-4 ">
+        <div v-if="!replyDeleted" class="flex mt-4 items-center  justify-between">
+            <div v-if="editing" class="flex flex-col ">
                 <textarea v-model="editText"></textarea>
-                <button @click="saveEdit">Save</button>
-                <button @click="cancelEdit">Cancel</button>
+                <div class="mt-2">
+                    <btn color="blue" @click="saveEdit">Save</btn>
+                    <btn color="red" @click="cancelEdit">Cancel</btn>
+                </div>
             </div>
-            <div v-else>
+            <div v-else class="flex space-x-4">
                 <p>{{ reply.body }}</p>
-                <button class="bg-blue-500 mx-2 mt-1 hover:bg-blue-700 text-white font-bold py-0.5 px-2 rounded" @click="editReply">
-                    Edit
-                </button>
-                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-0.5 px-2 rounded" @click="deleteReply">
-                    Delete
-                </button>
+                <div v-if="user?.id === reply.user_id" >
+                    <btn color="blue" @click="editReply">Edit</btn>
+                    <btn color="red" @click="deleteReply">Delete</btn>
+                </div>
             </div>
+            <favorite :item="reply" type="reply" :user="user"/>
         </div>
     </transtiion>
 </template>
 
 <script>
 import axios from "axios";
+import Favorite from "./Favorite.vue";
 export default {
-    props: ["reply"],
+    components: {
+        Favorite,
+    },
+    props: ["reply", "user"],
     data() {
         return {
             editing: false,
             editText: this.reply.body,
-            replyDeleted: false
+            replyDeleted: false,
         };
     },
     methods: {
@@ -36,13 +40,14 @@ export default {
             this.editing = true;
         },
         deleteReply() {
-            axios.delete(`/replies/${this.reply.id}`)
+            axios
+                .delete(`/replies/${this.reply.id}`)
                 .then(() => {
                     // this.$emit('replyDeleted', this.reply.id);
                     this.replyDeleted = true;
                     flash("Reply deleted");
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error(error);
                 });
         },
@@ -56,12 +61,13 @@ export default {
             this.editing = false;
             flash("Reply updated");
         },
-        cancelEdit() {
+        cancelEdit
+            () {
             this.editing = false;
         },
-        afterLeave() {
-            this.$emit('delete', this.reply.id);
-        }
+    },
+    created() {
+        // console.log(this.reply.user_id + " " + this.user.id);
     },
 };
 </script>
@@ -78,4 +84,5 @@ export default {
 .fade-enter,
 .fade-leave-to {
     opacity: 0;
-}</style>
+}
+</style>
