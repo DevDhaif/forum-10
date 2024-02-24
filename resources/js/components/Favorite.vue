@@ -41,36 +41,21 @@ export default {
         };
     },
 
-    // mounted() {
-    //     const storedFavorited = localStorage.getItem(`reply-${this.item.id}-favorite`);
-    //     if (storedFavorited) {
-    //         this.isFavorited = JSON.parse(storedFavorited, (key, value) => {
-    //             if (typeof value !== 'boolean') {
-    //                 return false;
-    //             }
-    //             return value;
-    //         });
-    //     }
-    // },
-
     methods: {
         async toggleFavorite() {
             if (!this.user) {
                 window.location.href = '/login';
                 return;
             }
-
             try {
                 const method = this.isFavorited ? 'delete' : 'post';
                 const response = await axios[method](`/${this.type}/${this.item.id}/favorites`);
                 this.isFavorited = response.data.isFavorited;
                 this.item.favorites_count = response.data.favorites_count;
-
             } catch (error) {
                 console.error('Error toggling favorite:', error);
             }
         }
-
     },
 };
 </script>

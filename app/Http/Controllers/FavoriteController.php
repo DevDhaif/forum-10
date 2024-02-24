@@ -21,14 +21,20 @@ class FavoriteController extends Controller
         $favoritable = $this->getFavoritable($type, $id);
 
         $result = $favoritable->toggleFavorite();
+        if (request()->expectsJson()) {
+            return response()->json($result);
+        }
+        return back();
 
-        return response()->json($result);
     }
     public function destroy($type, $id)
     {
         $favoritable = $this->getFavoritable($type, $id);
         $result = $favoritable->toggleFavorite();
-        return response()->json($result);
+        if (request()->expectsJson()) {
+            return response()->json($result);
+        }
+        return back();
     }
 
     protected function getFavoritable($type, $id)

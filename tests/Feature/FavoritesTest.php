@@ -33,46 +33,19 @@ class FavoritesTest extends TestCase
 
     public function test_an_authenticated_user_can_only_favorite_a_reply_once()
     {
-
-
         $user = User::factory()->create();
         $this->be($user);
-
-
-
-        // Create a new reply
         $reply = Reply::factory()->create();
-
-
-
-        // Favorite the reply
         $this->post('reply/' . $reply->id . '/favorites');
-
-
-
-
-        // Assert that the reply was favorited once
         $this->assertCount(1, $reply->favorites);
-
-
-        // Try to favorite the reply again
-
-
         $this->post('reply/' . $reply->id . '/favorites');
-
-
-
-
-        // Assert that the reply is still only favorited once
         $this->assertCount(1, $reply->favorites);
-
-
     }
     public function test_an_authenticated_can_unfavorite_a_reply()
     {
         $this->signIn();
         $reply = create(Reply::class);
-        $reply->favorite(auth()->id());
+        $reply->toggleFavorite(auth()->id());
         $this->delete('reply/' . $reply->id . '/favorites');
         $this->assertCount(0, $reply->favorites);
     }
