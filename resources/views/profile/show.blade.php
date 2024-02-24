@@ -12,14 +12,14 @@
         <p class="mt-2">Since {{ $profileUser->created_at->diffForHumans() }}</p>
         <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {{-- display the threads --}}
-            {{-- @forelse ($threads as $thread)
+            @forelse ($threads as $thread)
                 <div class="bg-white p-4 rounded shadow">
                     <p class="text-gray-600 text-sm">Published {{ $thread->created_at->diffForHumans() }} by <a
                             href="{{ route('profile.show' , $thread->creator) }}"
                             class="text-blue-600 text-sm">{{ $thread->creator->name }}</a>
                         and currently has {{ $thread->replies_count }} {{ Str::plural('reply', $thread->replies_count) }}.</p>
                     <p>{{ $thread->title }}</p>
-                    <p class="text-gray-600 text-sm mt-6">
+                    <p class="text-gray-600 text-sm mt-6 w-52 truncate line-clamp-2 ">
                         {{ $thread->body }}
                     </p>
                     <div class="flex justify-between gap-x-4 items-center">
@@ -37,9 +37,9 @@
                 </div>
             @empty
                 <h1>no threads yet</h1>
-            @endforelse --}}
+            @endforelse
             {{-- all the threads of this user --}}
-            <div class="mt-8 py-8  ">
+            {{-- <div class="mt-8 py-8  ">
                 <h2 class="text-2xl font-bold">Threads</h2>
                 @forelse ($threads as $thread)
                     <div class="bg-white p-4 rounded shadow">
@@ -68,7 +68,7 @@
                     <h1>no threads yet</h1>
                 @endforelse
 
-        </div>
+        </div> --}}
             {{-- links to the next page --}}
         </div>
         <div class="mt-8 py-8  ">

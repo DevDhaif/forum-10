@@ -4,12 +4,12 @@
         @if ($activity->subject)
             <p class="text-sm">favorited a {{ strtolower(class_basename($activity->subject->favorited_type)) }} on
                 @if ($activity->subject?->favorited_type === 'App\\Models\\Thread')
-                    <a href="{{ route('threads.show', ['channel' => $activity->subject->favorited->channel->slug, 'thread' => $activity->subject->favorited->id]) }}"
+                    <a href="{{ $activity->subject->favorited->path() }}"
                         class="text-blue-500">
                         {{ $activity->subject->favorited->title }}
                     </a>
                 @elseif($activity->subject?->favorited_type === 'App\\Models\\Reply' && $activity->subject?->favorited->thread)
-                    <a href="{{ route('threads.show', ['channel' => $activity->subject->favorited->thread->channel->slug, 'thread' => $activity->subject->favorited->thread->id]) }}"
+                    <a href="{{ $activity->subject->favorited->path() }}"
                         class="text-blue-500">
                         {{ $activity->subject->favorited->body }}
                     </a>

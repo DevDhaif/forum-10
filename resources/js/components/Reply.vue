@@ -1,5 +1,6 @@
 <template v-cloak>
-    <transtiion name="fade" @after-leave="afterLeave" class="mt-4 ">
+    <transtiion :id="'reply-'+reply.id"
+    name="fade" @after-leave="afterLeave" class="mt-4 ">
         <div v-if="!replyDeleted" class="flex mt-4 items-center  justify-between">
             <div v-if="editing" class="flex flex-col ">
                 <textarea v-model="editText"></textarea>
