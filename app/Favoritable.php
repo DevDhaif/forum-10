@@ -19,8 +19,11 @@ trait Favoritable
         $alreadyFavorited = $this->favorites()->where('user_id', $userId)->exists();
 
         if ($alreadyFavorited) {
-            $this->favorites()->where('user_id', $userId)->delete();
+            $favorite = $this->favorites()->where('user_id', $userId)->first();
             $isFavorited = false;
+            if ($favorite) {
+                $favorite->delete();
+            }
         } else {
             $this->favorites()->create(['user_id' => $userId]);
             $isFavorited = true;

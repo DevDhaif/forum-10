@@ -11,7 +11,12 @@ class Favorite extends Model
     use HasFactory;
     use RecordsActivity;
     protected $guarded = [];
-
+    protected static function booted()
+    {
+        static::deleted(function ($favorite){
+            $favorite->activity()->delete();
+        });
+    }
     public function favorited(){
         return $this->morphTo();
     }
