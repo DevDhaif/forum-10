@@ -14,7 +14,7 @@ import Replies from "/resources/js/components/Replies.vue";
 import Favorite from "/resources/js/components/Favorite.vue";
 import Flash from "/resources/js/components/Flash.vue";
 import Btn from "/resources/js/components/Btn.vue";
-
+import ThreadInfo from "/resources/js/components/ThreadInfo.vue";
 const app = createApp({});
 window.app = app;
 window.flash = function(message, level = 'success') {
@@ -23,6 +23,7 @@ window.flash = function(message, level = 'success') {
 
 app.component('example-component', ExampleComponent);
 app.component('reply', Reply);
+app.component('thread-info', ThreadInfo);
 app.component('replies', Replies);
 app.component('favorite', Favorite);
 app.component('btn', Btn);
