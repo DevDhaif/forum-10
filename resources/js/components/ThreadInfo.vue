@@ -14,7 +14,7 @@
 <script>
 import moment from "moment";
 export default {
-    props: ["thread", "user"],
+    props: ["thread"],
 
     methods: {
         userPath() {

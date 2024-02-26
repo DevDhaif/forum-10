@@ -76,6 +76,7 @@ class ThreadController extends Controller
         return view('threads.show', [
             'thread' => $thread,
             'replies' => $replies,
+            'user' => auth()->user()
         ]);
     }
     public function edit(Thread $thread)
@@ -86,21 +87,16 @@ class ThreadController extends Controller
     }
     public function destroy($channel, Thread $thread)
     {
-
         $this->authorize('update', $thread);
-
-        // DB::transaction(
-        //     function () use ($thread) {
-        //         $thread->replies->each->delete();
-        //         $thread->delete();
-        //     }
-        // );
-
         $thread->delete();
-
         if (request()->wantsJson()) {
             return response([], 204);
         }
         return redirect('/threads');
+    }
+    public function isFavorited(Thread $thread)
+    {
+        $isFavorited = $thread->isFavoritedByUser(auth()->user());
+        return response()->json(['isFavorited' => $isFavorited]);
     }
 }

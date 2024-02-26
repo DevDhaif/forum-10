@@ -13,8 +13,8 @@ class Thread extends Model
     use Favoritable;
     use RecordsActivity;
     protected $guarded = [];
-
-    protected $with = ['creator', 'channel'];
+    protected $appends = ['favorites_count', 'isFavorited'];
+    protected $with = ['creator', 'channel', 'favorites'];
 
     protected static function boot()
     {
@@ -90,5 +90,12 @@ class Thread extends Model
     public function unfavorite()
     {
         $this->favorites()->where('user_id', auth()->id())->delete();
+    }
+    public function isFavoritedByUser($user)
+    {
+        if (!$user) {
+            return false;
+        }
+        return $this->favorites()->where('user_id', $user->id)->exists();
     }
 }

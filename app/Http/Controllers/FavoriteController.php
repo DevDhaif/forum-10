@@ -17,7 +17,6 @@ class FavoriteController extends Controller
     }
     public function store($type, $id)
     {
-        Log::info('Storing favorite');
         $favoritable = $this->getFavoritable($type, $id);
 
         $result = $favoritable->toggleFavorite();

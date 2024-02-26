@@ -16,6 +16,8 @@ import Flash from "/resources/js/components/Flash.vue";
 import Btn from "/resources/js/components/Btn.vue";
 import PostReply from "/resources/js/components/PostReply.vue";
 import ThreadInfo from "/resources/js/components/ThreadInfo.vue";
+import ThreadDetails from "/resources/js/components/ThreadDetails.vue";
+import ThreadPage from "/resources/js/pages/ThreadPage.vue";
 const app = createApp({});
 window.app = app;
 window.flash = function(message, level = 'success') {
@@ -26,6 +28,8 @@ app.component('example-component', ExampleComponent);
 app.component('reply', Reply);
 app.component('post-reply', PostReply);
 app.component('thread-info', ThreadInfo);
+app.component('thread-details', ThreadDetails);
+app.component('thread-page', ThreadPage);
 app.component('replies', Replies);
 app.component('favorite', Favorite);
 app.component('btn', Btn);

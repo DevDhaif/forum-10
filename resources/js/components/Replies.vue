@@ -21,8 +21,10 @@ export default {
             this.localReplies = this.localReplies.filter(reply => reply.id !== replyId);
         },
     },
-    created() {
-        console.log(this.replies.data);
-    },
+    watch : {
+        replies(newReplies) {
+            this.localReplies = newReplies.data;
+        }
+    }
 };
 </script>

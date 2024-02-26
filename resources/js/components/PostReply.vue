@@ -1,6 +1,8 @@
 <template>
     <div v-if="user">
-        <h1 class="text-3xl text-red-700">Post a Reply from vue </h1>
+        <p class="text-gray-600 text-sm mt-6">
+            This thread has {{ thread.replies_count }} replies.
+        </p>
         <form @submit.prevent="postReply" class="mt-6">
             <div class="mt-6">
                 <textarea v-model="body" name="body" class="w-full" placeholder="Have something to say?" rows="5"></textarea>
@@ -22,28 +24,25 @@ export default {
             errorMessage: "",
         };
     },
-    mounted() {
-        console.log(this.thread.channel.slug);
-    },
-    methods:{
-        postReply(){
-            if(this.body === ""){
+    methods: {
+        async postReply() {
+            if (this.body === "") {
                 this.errorMessage = "Please enter a valid reply";
                 return;
             }
             this.errorMessage = null;
-            axios.post(`/threads/${this.thread.channel.slug}/${this.thread.id}/replies`, {
+            await axios.post(`/threads/${this.thread.channel.slug}/${this.thread.id}/replies`, {
                 body: this.body,
             })
-            .then((response) => {
-                this.$emit('replyPosted', response.data);
-                this.body = "";
-                flash("Reply posted");
-            })
-            .catch((error) => {
-                this.errorMessage = "Something went wrong. Please try again";
-                console.error(error);
-            });
+                .then((response) => {
+                    this.$emit('replyPosted', response.data);
+                    this.body = "";
+                    flash("Reply posted");
+                })
+                .catch((error) => {
+                    this.errorMessage = "Something went wrong. Please try again";
+                    console.error(error);
+                });
         }
     }
 }

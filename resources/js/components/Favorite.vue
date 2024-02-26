@@ -31,13 +31,12 @@ export default {
         },
         user: {
             type: Object,
-            required: true,
         },
     },
 
     data() {
         return {
-            isFavorited: this.item.isFavorited === true ? this.item.isFavorited : false,
+            isFavorited: this.item.isFavorited || false,
         };
     },
 
