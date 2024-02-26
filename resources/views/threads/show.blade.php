@@ -2,7 +2,7 @@
 @section('content')
     <div class="container mx-auto  mt-6 flex space-x-8 justify-between items-start">
 
-        <div class="w-3/4">
+        <div class="w-3/4 bg-red-700 p-2">
             <div class="bg-white p-4 rounded shadow w-full flex justify-between gap-x-4 items-center">
                 <p class="flex-1 text-gray-600 text-sm">Published {{ $thread->created_at->diffForHumans() }} by <a
                         href="{{ route('profile.show', $thread->creator) }}"
@@ -48,16 +48,7 @@
                 <p class="text-gray-600 text-sm mt-6">
                     This thread has {{ $thread->replies_count }} {{ Str::plural('reply', $thread->replies_count) }}.
                 </p>
-                @if (auth()->check())
-                    <form method="POST" action="{{ $thread->path() . '/replies' }}">
-                        @csrf
-                        <div class="mt-6">
-                            <textarea name="body" id="body" class="w-full" placeholder="Have something to say?" rows="5"></textarea>
-                        </div>
-                        <button type="submit" class="bg-blue-500 text-white rounded py-2 px-2 hover:bg-blue-600 mt-4">Post
-                        </button>
-                    </form>
-                @endif
+                <post-reply :user='@json(Auth::user())' :thread="{{ $thread->toJson() }}"></post-reply>
                 <replies :replies="{{ $replies->toJson() }}" :thread="{{ $thread->toJson() }}"
                     :user='@json(Auth::user())'></replies>
             </div>
