@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class="mx-auto">
-        <h1 class="text-2xl font-bold"> All Threads</h1>
+        <h1 class="text-4xl font-bold text-blue-700 my-10 bg-blue-100 p-6 rounded-md border-2 border-blue-200"> {{ $channel ?? "All " }} threads </h1>
         @if (count($threads) == 0)
             <div class="px-4 py-3">
                 <p class="text-sm leading-5">No threads yet.</p>
