@@ -29,6 +29,12 @@ class Thread extends Model
             $thread->replies->each(function ($reply) {
                 $reply->delete();
             });
+            $thread->activity->each(function ($activity){
+                $activity->delete();
+            });
+            $thread->favorites->each(function ($favorite){
+                $favorite->delete();
+            });
         });
     }
 
@@ -44,13 +50,11 @@ class Thread extends Model
 
     public function replies()
     {
-        return $this->hasMany(Reply::class)->withCount('favorites')->with(['owner', 'favorites' , 'channel']);
-
+        return $this->hasMany(Reply::class)->withCount('favorites')->with(['owner', 'favorites', 'channel']);
     }
     public function channel()
     {
         return $this->belongsTo(Channel::class);
-
     }
 
     public function scopeFilter($query, $filters)
@@ -67,10 +71,6 @@ class Thread extends Model
     {
         $this->replies()->create($reply);
     }
-    public function favorited()
-    {
-        return $this->morphMany(Favorite::class, 'favorited');
-    }
     public function isFavorited()
     {
         return $this->favorites()->where('user_id', auth()->id())->exists();
@@ -79,23 +79,5 @@ class Thread extends Model
     {
         return $this->morphMany(Favorite::class, 'favorited');
     }
-    public function favorite()
-    {
-        $this->favorites()->create(['user_id' => auth()->id()]);
-    }
-    public function getFavoritesCountAttribute()
-    {
-        return $this->favorites()->count();
-    }
-    public function unfavorite()
-    {
-        $this->favorites()->where('user_id', auth()->id())->delete();
-    }
-    public function isFavoritedByUser($user)
-    {
-        if (!$user) {
-            return false;
-        }
-        return $this->favorites()->where('user_id', $user->id)->exists();
-    }
+
 }

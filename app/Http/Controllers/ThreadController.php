@@ -11,7 +11,7 @@ class ThreadController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show' ]);
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
     public function getThreads(Channel $channel, ThreadFilters $filters)
@@ -87,10 +87,5 @@ class ThreadController extends Controller
             return response([], 204);
         }
         return redirect('/threads');
-    }
-    public function isFavorited(Thread $thread)
-    {
-        $isFavorited = $thread->isFavoritedByUser(auth()->user());
-        return response()->json(['isFavorited' => $isFavorited]);
     }
 }
