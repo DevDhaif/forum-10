@@ -35,11 +35,11 @@ trait Favoritable
 
     public function getIsFavoritedAttribute()
     {
-        return $this->favorites()->where('user_id', auth()->id())->count() > 0;
+        return $this->favorites->where('user_id', auth()->id())->count() > 0;
     }
     public function getFavoritesCountAttribute()
     {
-        return $this->favorites()->count();
+        return $this->favorites->count();
     }
 
     public function activity()

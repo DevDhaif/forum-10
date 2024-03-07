@@ -16,18 +16,29 @@ class Reply extends Model
 
     protected $guarded = [];
 
+    protected $appends = ['favorites_count'];
     protected $with = ['owner', 'favorites'];
+    protected static $favoritedReplyIds = [];
+    public static function loadFavoritedReplyIdsForUser($user)
+    {
+        if ($user) {
+            self::$favoritedReplyIds = Favorite::where('user_id', $user->id)
+                ->where('favorited_type', self::class)
+                ->pluck('favorited_id')
+                ->all();
+        }
+    }
 
     protected static function boot()
     {
 
         parent::boot();
 
-        static::deleting(function ($reply){
-            $reply->activity->each(function ($activity){
+        static::deleting(function ($reply) {
+            $reply->activity->each(function ($activity) {
                 $activity->delete();
             });
-            $reply->favorites->each(function ($favorite){
+            $reply->favorites->each(function ($favorite) {
                 $favorite->delete();
             });
         });
@@ -60,7 +71,6 @@ class Reply extends Model
         if (!$user) {
             return false;
         }
-        return $this->favorites()->where('user_id', $user->id)->exists();
+        return in_array($this->id, self::$favoritedReplyIds);
     }
-
 }

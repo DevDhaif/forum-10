@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Filters\ThreadFilters;
 use App\Models\Channel;
+use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Http\Request;
 
@@ -61,6 +62,7 @@ class ThreadController extends Controller
     }
     public function show($channelId, Thread $thread)
     {
+        Reply::loadFavoritedReplyIdsForUser(auth()->user());
         $replies = $thread->replies()->paginate(20);
 
         // Check if each reply is favorited by the currently logged-in user

@@ -1,8 +1,6 @@
 <template>
     <div v-if="user">
-        <p class="text-gray-600 text-sm mt-6">
-            This thread has {{ thread.replies_count }} replies.
-        </p>
+        
         <form @submit.prevent="postReply" class="mt-6">
             <div class="mt-6">
                 <textarea v-model="body" name="body" class="w-full" placeholder="Have something to say?" rows="5"></textarea>
@@ -35,7 +33,8 @@ export default {
                 body: this.body,
             })
                 .then((response) => {
-                    this.$emit('replyPosted', response.data);
+                    console.log(response.data.reply);
+                    this.$emit('replyPosted', response.data.reply);
                     this.body = "";
                     flash("Reply posted");
                 })

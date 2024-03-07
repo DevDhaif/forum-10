@@ -23,11 +23,16 @@ class ReplyController extends Controller
             ]
         );
 
-        $thread->addReply([
+        $reply = $thread->addReply([
           'body' => request('body'),
           'user_id' => auth()->id(),
         ]);
-
+        $thread->load('replies.favorites');
+        if (request()->expectsJson()) {
+            return response()->json(['flash' => 'Your reply has been left!',
+                'reply' => $reply
+        ]);
+        }
         return redirect($thread->path())->with('flash', 'Your reply has been left!');
 
     }

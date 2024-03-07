@@ -10,7 +10,7 @@ export default {
     components: {
         Reply,
     },
-    props: ["replies", "thread", "user"],
+    props: ["replies", "thread", "user","key"],
     data() {
         return {
             localReplies: this.replies.data,
