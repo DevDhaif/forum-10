@@ -7,12 +7,13 @@ use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ThreadController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show']);
+        // $this->middleware('auth')->except(['index', 'show', 'getReplies']);
     }
 
     public function getThreads(Channel $channel, ThreadFilters $filters)
@@ -63,7 +64,7 @@ class ThreadController extends Controller
     public function show($channelId, Thread $thread)
     {
         Reply::loadFavoritedReplyIdsForUser(auth()->user());
-        $replies = $thread->replies()->paginate(20);
+        $replies = $thread->replies()->paginate(5);
 
         // Check if each reply is favorited by the currently logged-in user
         foreach ($replies as $reply) {
@@ -72,7 +73,14 @@ class ThreadController extends Controller
         return view('threads.show', [
             'thread' => $thread,
             'replies' => $replies,
-            'user' => auth()->user()
+            'user' => auth()->user(),
+            'pagination' => [
+                'currentPage' => $replies->currentPage(),
+                'lastPage' => $replies->lastPage(),
+                'next_page_url' => $replies->nextPageUrl(),
+                'prev_page_url' => $replies->previousPageUrl(),
+                'path' => $replies->path(),
+            ]
         ]);
     }
     public function edit(Thread $thread)
@@ -89,5 +97,38 @@ class ThreadController extends Controller
             return response([], 204);
         }
         return redirect('/threads');
+    }
+    public function getReplies($channel, $threadId, Request $request)
+    {
+        $thread = Thread::findOrFail($threadId);
+        $page = $request->query('page', 1);
+        $replies = $thread->replies()->paginate(5, ['*'], 'page', $page);
+        // return json if expected
+        if (request()->wantsJson()) {
+            return response()->json([
+                'replies' => $replies,
+                'pagination' => [
+                    'currentPage' => $replies->currentPage(),
+                    'lastPage' => $replies->lastPage(),
+                    'next_page_url' => $replies->nextPageUrl(),
+                    'prev_page_url' => $replies->previousPageUrl(),
+                    'path' => $replies->path(),
+                ]
+            ]);
+        } else {
+
+            return view('threads.show', [
+                'thread' => $thread,
+                'replies' => $replies,
+                'user' => auth()->user(),
+                'pagination' => [
+                    'currentPage' => $replies->currentPage(),
+                    'lastPage' => $replies->lastPage(),
+                    'next_page_url' => $replies->nextPageUrl(),
+                    'prev_page_url' => $replies->previousPageUrl(),
+                    'path' => $replies->path(),
+                ]
+            ]);
+        }
     }
 }

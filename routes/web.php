@@ -46,6 +46,8 @@ Route::post("/threads/", [ThreadController::class, 'store'])->name('threads.stor
 // Route::get('/threads/{thread}', [ThreadController::class, 'show'])
 //     ->name('threads.show');
 
+Route::get("/threads/{channel}/{thread}/replies", [ThreadController::class, 'getReplies'])->name('getReplies');
+Route::post('/threads/{channel}/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
 Route::get("/threads/{channel}/{thread}", [ThreadController::class,'show'])->name('threads.show');
 Route::delete("/threads/{channel}/{thread}", [ThreadController::class,'destroy']);
 
@@ -57,10 +59,9 @@ Route::patch("/replies/{reply}" , [ReplyController::class , 'update'])->name('re
 Route::delete("/replies/{reply}" , [ReplyController::class , 'destroy'])->name('replies.destroy');
 
 
-Route::post('/threads/{channel}/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
+// http://forum-10.test/threads/minus/39/replies?page=2
 
 Route::get('/profiles/{user:name}', [ProfileController::class, 'show'])->name('profile.show');
-
 
 
 

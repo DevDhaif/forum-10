@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>replies all here </h1>
-            <reply v-for="reply in localReplies" :key="reply.id" :reply="reply" @replyDeleted="removeReply" :user="user"></reply>
+            <reply v-for="reply in localReplies" :key="reply.id" :reply="reply"  :user="user"></reply>
     </div>
 </template>
 <script>

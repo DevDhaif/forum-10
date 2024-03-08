@@ -1,6 +1,6 @@
 <template>
-    <div class="inline-flex space-x-2 border rounded p-2">
-        <button @click="toggleFavorite" class="text-white text-sm">
+    <div class="inline-flex p-2 space-x-2 border rounded">
+        <button @click="toggleFavorite" class="text-sm text-white">
             <svg
                           :class="{
                               ' fill-blue-500': !isFavorited,
@@ -14,6 +14,8 @@
                         </svg>
         </button>
         <span class="text-sm">{{ item.favorites_count }}</span>
+        <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
+
     </div>
 </template>
 <script>
@@ -37,6 +39,7 @@ export default {
     data() {
         return {
             isFavorited: this.item.isFavorited || false,
+            errorMessage: "",
         };
     },
 
@@ -52,7 +55,7 @@ export default {
                 this.isFavorited = response.data.isFavorited;
                 this.item.favorites_count = response.data.favorites_count;
             } catch (error) {
-                console.error('Error toggling favorite:', error);
+                this.errorMessage = "could not toggle favorite";
             }
         }
     },

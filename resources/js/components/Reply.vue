@@ -1,7 +1,6 @@
 <template v-cloak>
-    <div :id="'reply-'+reply.id"
-    name="fade" class="mt-4 ">
-        <div v-if="!replyDeleted" class="flex mt-4 items-center  justify-between">
+    <div :id="'reply-' + reply.id" name="fade" class="mt-4 ">
+        <div v-if="!replyDeleted" class="flex items-center justify-between mt-4">
             <div v-if="editing" class="flex flex-col ">
                 <textarea v-model="editText"></textarea>
                 <div class="mt-2">
@@ -11,13 +10,14 @@
             </div>
             <div v-else class="flex space-x-4">
                 <p>{{ reply.body }}</p>
-                <div v-if="user?.id === reply.user_id" >
+                <div v-if="user?.id === reply.user_id">
                     <btn color="blue" @click="editReply">Edit</btn>
                     <btn color="red" @click="deleteReply">Delete</btn>
                 </div>
             </div>
-            <favorite :item="reply" type="reply" :user="user"/>
+            <favorite :item="reply" type="reply" :user="user" />
         </div>
+        <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
 </template>
 
@@ -34,6 +34,7 @@ export default {
             editing: false,
             editText: this.reply.body,
             replyDeleted: false,
+            errorMessage: ""
         };
     },
     methods: {
@@ -44,16 +45,15 @@ export default {
             axios
                 .delete(`/replies/${this.reply.id}`)
                 .then(() => {
-                    // this.$emit('replyDeleted', this.reply.id);
+                    this.$emit('replyDeleted', this.reply.id);
                     this.replyDeleted = true;
                     flash("Reply deleted");
                 })
                 .catch((error) => {
-                    console.error(error);
+                    this.errorMessage = "Could not delete the reply";
                 });
         },
         saveEdit() {
-            // Here you can send the updated text to the server
             axios.patch(`/replies/${this.reply.id}`, {
                 body: this.editText,
             });
@@ -66,9 +66,6 @@ export default {
             () {
             this.editing = false;
         },
-    },
-    created() {
-        // console.log(this.reply.user_id + " " + this.user.id);
     },
 };
 </script>
