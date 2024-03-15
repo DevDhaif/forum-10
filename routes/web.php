@@ -46,10 +46,13 @@ Route::post("/threads/", [ThreadController::class, 'store'])->name('threads.stor
 // Route::get('/threads/{thread}', [ThreadController::class, 'show'])
 //     ->name('threads.show');
 
-Route::get("/threads/{channel}/{thread}/replies", [ThreadController::class, 'getReplies'])->name('getReplies');
 Route::post('/threads/{channel}/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
 Route::get("/threads/{channel}/{thread}", [ThreadController::class,'show'])->name('threads.show');
-Route::delete("/threads/{channel}/{thread}", [ThreadController::class,'destroy']);
+// edit the thread route
+Route::get("/threads/{channel}/{thread}/edit", [ThreadController::class,'edit'])->name('threads.edit');
+Route::patch("/threads/{channel}/{thread}", [ThreadController::class,'update'])->name('threads.update');
+
+Route::delete("/threads/{channel}/{thread}", [ThreadController::class,'destroy'])->name('threads.destroy');
 
 
 Route::post('{type}/{id}/favorites', [FavoriteController::class, 'store'])->name('replies.favorite');
@@ -63,6 +66,8 @@ Route::delete("/replies/{reply}" , [ReplyController::class , 'destroy'])->name('
 
 Route::get('/profiles/{user:name}', [ProfileController::class, 'show'])->name('profile.show');
 
-
+Route::get('inertia', function () {
+    return inertia('Inertia');
+})->name('inertia');
 
 require __DIR__.'/auth.php';

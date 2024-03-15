@@ -19,7 +19,3 @@ class ThreadFilters extends Filters
         return $this->builder->orderBy('replies_count' , 'desc');
     }
 }
-
-    //     $this->builder->getQuery()->orders = [];
-    //     return $this->builder->orderBy('replies_count' , 'desc');
-    // }

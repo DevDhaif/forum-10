@@ -3,7 +3,8 @@
 
         <form @submit.prevent="postReply" class="mt-6">
             <div class="mt-6">
-                <textarea v-model="body" name="body" class="w-full" placeholder="Have something to say?" rows="5"></textarea>
+                <textarea v-model="body" name="body" class="w-full" placeholder="Have something to say?"
+                    rows="5"></textarea>
             </div>
             <button type="submit" class="px-2 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">Post
             </button>
@@ -29,17 +30,20 @@ export default {
                 return;
             }
             this.errorMessage = null;
-            await axios.post(`/threads/${this.thread.channel.slug}/${this.thread.id}/replies`, {
-                body: this.body,
-            })
-                .then((response) => {
-                    this.$emit('replyPosted', response.data.reply);
-                    this.body = "";
-                    flash("Reply posted");
+
+            if (this.thread.channel) {
+                await axios.post(`/threads/${this.thread.channel.slug}/${this.thread.id}/replies`, {
+                    body: this.body,
                 })
-                .catch((error) => {
-                    this.errorMessage = "Something went wrong. Please try again";
-                });
+                    .then((response) => {
+                        this.$emit('replyPosted', response.data.reply);
+                        this.body = "";
+                        flash("Reply posted");
+                    })
+                    .catch((error) => {
+                        this.errorMessage = "Something went wrong. Please try again";
+                    });
+            }
         }
     }
 }

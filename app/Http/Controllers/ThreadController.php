@@ -7,13 +7,12 @@ use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class ThreadController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('auth')->except(['index', 'show', 'getReplies']);
     }
 
     public function getThreads(Channel $channel, ThreadFilters $filters)
@@ -22,30 +21,29 @@ class ThreadController extends Controller
         if ($channel->exists) {
             $threads = $threads->where('channel_id', $channel->id);
         }
+        // return json threads
         return $threads;
     }
     public function index(Channel $channel, ThreadFilters $filters)
     {
-        $threads = $this->getThreads($channel, $filters)->get();
-
-        if (request()->wantsJson()) {
-            return $threads;
-        }
-        return view(
-            'threads.index',
-            [
-                'threads' => $threads,
-                'channel' => $channel->name,
-            ]
-        );
+        $threads = $this->getThreads($channel, $filters)->paginate(5);
+        return Inertia::render('Thread/Index', [
+            'threads' => $threads,
+            'channel' => $channel->slug,
+        ]);
     }
     public function create()
     {
-        return view('threads.create');
+        return Inertia::render(
+            'Thread/Create',
+            [
+                'user' => auth()->user(),
+            ]
+        );
     }
     public function store(Request $request)
     {
-        $this->validate(
+        $validatedData = $this->validate(
             $request,
             [
                 'title' => 'required',
@@ -53,82 +51,83 @@ class ThreadController extends Controller
                 'channel_id' => 'required|exists:channels,id'
             ]
         );
-        $thread = Thread::create([
-            'user_id' => auth()->id(),
-            'channel_id' => request('channel_id'),
-            'title' => request('title'),
-            'body' => request('body')
+        $thread = Thread::create(
+            array_merge(
+                $validatedData,
+                [
+                    'user_id' => auth()->id(),
+                ]
+            )
+        );
+
+        if ($thread->channel){
+            $slug = $thread->channel->slug;
+        }
+        else
+        {
+            $slug =null;
+        }
+        // using inertia
+        return Inertia::render('Thread/Show', [
+            'thread' => $thread,
+            'user' => auth()->user(),
+            'slug' => $slug,
         ]);
-        return redirect($thread->path())->with('flash', 'Your thread has been successfully published');
     }
-    public function show($channelId, Thread $thread)
+    public function show($channelSlug, Thread $thread)
     {
+        $channel = Channel::where('slug', $channelSlug)->first();
+
+        if (!$channel || $thread->channel_id !== $channel->id) {
+            abort(404);
+        }
+        // dd($thread->channel_id);
         Reply::loadFavoritedReplyIdsForUser(auth()->user());
+        $thread->load(['replies.favorites']);
         $replies = $thread->replies()->paginate(5);
 
-        // Check if each reply is favorited by the currently logged-in user
         foreach ($replies as $reply) {
             $reply->isFavorited = $reply->isFavoritedByUser(auth()->user());
         }
-        return view('threads.show', [
+        return Inertia::render('Thread/Show', [
             'thread' => $thread,
             'replies' => $replies,
             'user' => auth()->user(),
-            'pagination' => [
-                'currentPage' => $replies->currentPage(),
-                'lastPage' => $replies->lastPage(),
-                'next_page_url' => $replies->nextPageUrl(),
-                'prev_page_url' => $replies->previousPageUrl(),
-                'path' => $replies->path(),
-            ]
         ]);
     }
-    public function edit(Thread $thread)
+    public function edit(Channel $channel, Thread $thread)
     {
+        if ($thread->channel_id !== $channel->id) {
+            abort(404);
+        }
+        $this->authorize('update', $thread);
+        return Inertia::render('Thread/Edit', [
+            'thread' => $thread,
+            'user' => auth()->user(),
+        ]);
     }
-    public function update(Request $request, Thread $thread)
+    public function update(Request $request, Channel $channel, Thread $thread)
     {
+        if ($thread->channel_id != $channel->id) {
+            abort(404, 'Thread not found');
+        }
+        $this->authorize('update', $thread);
+        $this->validate($request, [
+            'title' => 'required',
+            'body' => 'required',
+            'channel_id' => 'required|exists:channels,id'
+        ]);
+        $thread->update($request->only('title', 'body', 'channel_id'));
+        $newChannel = Channel::find($request->channel_id);
+
+        return Inertia::location(route('threads.show', [$newChannel->slug, $thread->id]));
     }
     public function destroy($channel, Thread $thread)
     {
         $this->authorize('update', $thread);
         $thread->delete();
-        if (request()->wantsJson()) {
-            return response([], 204);
-        }
-        return redirect('/threads');
-    }
-    public function getReplies($channel, $threadId, Request $request)
-    {
-        $thread = Thread::findOrFail($threadId);
-        $page = $request->query('page', 1);
-        $replies = $thread->replies()->paginate(5, ['*'], 'page', $page);
-        // return json if expected
-        if (request()->wantsJson()) {
-            return response()->json([
-                'replies' => $replies,
-                'pagination' => [
-                    'currentPage' => $replies->currentPage(),
-                    'lastPage' => $replies->lastPage(),
-                    'next_page_url' => $replies->nextPageUrl(),
-                    'prev_page_url' => $replies->previousPageUrl(),
-                    'path' => $replies->path(),
-                ]
-            ]);
-        } else {
 
-            return view('threads.show', [
-                'thread' => $thread,
-                'replies' => $replies,
-                'user' => auth()->user(),
-                'pagination' => [
-                    'currentPage' => $replies->currentPage(),
-                    'lastPage' => $replies->lastPage(),
-                    'next_page_url' => $replies->nextPageUrl(),
-                    'prev_page_url' => $replies->previousPageUrl(),
-                    'path' => $replies->path(),
-                ]
-            ]);
-        }
+        $threads = Thread::latest()->paginate(5);
+        return Inertia::location(route('threads'));
     }
 }

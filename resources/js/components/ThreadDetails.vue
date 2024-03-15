@@ -9,14 +9,10 @@
                         <a :href="userPath()" class="text-sm text-blue-600">
                             {{ thread.creator.name }}
                         </a>
-                        in <a :href="`/threads/${thread.channel.slug}`" class="text-sm text-blue-600">
+                        in <a v-if="thread.channel" :href="`/threads/${thread.channel.slug}`" class="text-sm text-blue-600">
                             {{ thread.channel.name }}
                         </a>
                         and currently has {{ thread.replies_count }} replies .
-
-                        <a :href="`/threads/${thread.channel.slug}`" class="text-sm text-blue-600">
-                            {{ thread.channel.name }}
-                        </a>
                     </p>
                 </div>
                 <div v-if="canUpdate">
@@ -46,6 +42,7 @@
 
 </template>
 <script>
+import { Inertia } from "@inertiajs/inertia";
 import axios from "axios";
 import moment from "moment";
 export default {
@@ -60,17 +57,25 @@ export default {
             return `/profiles/${this.thread.creator.name}`;
         },
         deleteThread() {
-            axios
-                .delete(`/threads/${this.thread.channel.slug}/${this.thread.id}`)
-                .then((response) => {
-                    if (response.status === 204) {
-                        flash("Thread deleted");
-                        window.location.href = '/threads';
-                    }
+            Inertia.delete(`/threads/${this.thread.channel.slug}/${this.thread.id}`)
+                .then(() => {
+                    flash("Thread deleted");
                 })
                 .catch((error) => {
                     this.errorMessage = "Could not delete the thread";
                 });
+
+            // axios
+            //     .delete(`/threads/${this.thread.channel.slug}/${this.thread.id}`)
+            //     .then((response) => {
+            //         if (response.status === 204) {
+            //             flash("Thread deleted");
+            //             window.location.href = '/threads';
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         this.errorMessage = "Could not delete the thread";
+            //     });
         },
     },
     computed: {

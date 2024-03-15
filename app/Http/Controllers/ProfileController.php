@@ -12,20 +12,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
     public function show(Request $request, User $user)
     {
 
-$threads = Thread::all()->where('user_id', $user->id);
+        $threads = Thread::all()->where('user_id', $user->id);
 
-        return view('profile.show', [
-            'profileUser' => $user,
+        return Inertia::render('Profile/Index', [
+            'profileUser' => $user->load('university','field'),
             'threads' => $threads,
             'activities' => Activity::feed($user, 50),
         ]);
-
+        // return view('profile.show', [
+        //     'profileUser' => $user,
+        //     'threads' => $threads,
+        //     'activities' => Activity::feed($user, 50),
+        // ]);
     }
     /**
      * Display the user's profile form.

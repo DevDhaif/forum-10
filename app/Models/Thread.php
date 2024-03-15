@@ -13,7 +13,7 @@ class Thread extends Model
     use Favoritable;
     use RecordsActivity;
     protected $guarded = [];
-    protected $appends = ['favorites_count', 'isFavorited'];
+    protected $appends = ['favorites_count', 'isFavorited', 'path'];
     protected $with = ['creator', 'channel', 'favorites'];
 
     protected static function boot()
@@ -29,10 +29,10 @@ class Thread extends Model
             $thread->replies->each(function ($reply) {
                 $reply->delete();
             });
-            $thread->activity->each(function ($activity){
+            $thread->activity->each(function ($activity) {
                 $activity->delete();
             });
-            $thread->favorites->each(function ($favorite){
+            $thread->favorites->each(function ($favorite) {
                 $favorite->delete();
             });
         });
@@ -40,7 +40,8 @@ class Thread extends Model
 
     public function path()
     {
-        return "/threads/{$this->channel->slug}/{$this->id}";
+        $slug = $this->channel? $this->channel->slug: '';
+        return "/threads/{$slug}/{$this->id}";
     }
 
     public function activity()
@@ -79,5 +80,8 @@ class Thread extends Model
     {
         return $this->morphMany(Favorite::class, 'favorited');
     }
-
+    public function getPathAttribute()
+    {
+        return $this->path();
+    }
 }

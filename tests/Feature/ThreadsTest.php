@@ -13,10 +13,14 @@ use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
 use LogicException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use PHPUnit\Framework\ExpectationFailedException;
 use Tests\TestCase;
+use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
+use Inertia\Testing\AssertableCollection;
 
 //  use testcase from phpunit
 
@@ -57,14 +61,14 @@ class ThreadsTest extends TestCase
     /** @test */
     public function a_user_can_view_a_single_thread(): void
     {
-        $response = $this->get("/threads/" . $this->thread->channel . '/' .$this->thread->id);
+        $response = $this->get("/threads/" . $this->thread->channel . '/' . $this->thread->id);
         $response->assertSee($this->thread->title);
     }
 
     /** @test */
     public function a_user_can_read_replies_on_a_thread()
     {
-        $reply = create(Reply::class, ['thread_id' => $this->thread->id ]);
+        $reply = create(Reply::class, ['thread_id' => $this->thread->id]);
         // fwrite(STDERR, print_r($reply->toArray(), true));
 
         $response = $this->get("/threads/" . $this->thread->channel . '/' . $this->thread->id);
@@ -78,7 +82,7 @@ class ThreadsTest extends TestCase
 
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->thread->replies);
     }
-/** @test */
+    /** @test */
     public function a_thread_must_have_a_channel(): void
     {
         $channel = create(Channel::class);
@@ -104,7 +108,7 @@ class ThreadsTest extends TestCase
     /** @test */
     public function a_thread_can_make_a_string_path(): void
     {
-        $thread = create(Thread::class, [ 'channel_id' => 1]);
+        $thread = create(Thread::class, ['channel_id' => 1]);
         $this->assertEquals('/threads/' . $thread->channel->slug . '/' . $thread->id, $thread->path());
         // fwrite(STDERR, print_r($thread->path(), true));
     }
@@ -139,15 +143,24 @@ class ThreadsTest extends TestCase
 
     public function test_a_user_can_filter_threads_by_popularity(): void
     {
-        $threadTwo = create(Thread::class);
-        create(Reply::class, ['thread_id' => $threadTwo->id], 2);
-        $threadThree = create(Thread::class);
-        create(Reply::class, ['thread_id' => $threadThree->id], 3);
+        $threadWithTwoReplies = create(Thread::class);
+        create(Reply::class, ['thread_id' => $threadWithTwoReplies->id], 2);
 
-        $threadZero = $this->thread;
-        $response = $this->getJson('threads?popular=1')->json();
+        $threadWithThreeReplies = create(Thread::class);
+        create(Reply::class, ['thread_id' => $threadWithThreeReplies->id], 3);
 
-        $this->assertEquals([3,2,0], array_column($response, 'replies_count'));
+        $threadWithZeroReplies = $this->thread;
+        $response = $this->get('/threads?popular=1');
+        $response->assertInertia(
+            fn (AssertableInertia $page) =>
+            $page->component('Thread/Index')
+                ->where('threads.data', function ($threads) use ($threadWithThreeReplies, $threadWithTwoReplies, $threadWithZeroReplies) {
+                    $threadsCollection = collect($threads);
+                    return $threadsCollection->contains('id', $threadWithThreeReplies->id)
+                        && $threadsCollection->contains('id', $threadWithTwoReplies->id)
+                        && $threadsCollection->contains('id', $threadWithZeroReplies->id);
+                })
+        );
     }
 
     public function test_authorize_users_can_delete_threads(): void
@@ -162,7 +175,8 @@ class ThreadsTest extends TestCase
         $this->assertDatabaseMissing("threads", ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
         $this->assertEquals(0, Activity::count());
-        $response->assertStatus(204);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('threads'));
     }
 
     public function test_unauthorized_users_may_not_delete_threads(): void
@@ -172,6 +186,5 @@ class ThreadsTest extends TestCase
         // $this->delete($thread->path())->assertRedirect('/login');
         $this->signIn();
         $this->delete($thread->path())->assertStatus(403);
-
     }
 }
