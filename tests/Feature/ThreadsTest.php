@@ -61,7 +61,7 @@ class ThreadsTest extends TestCase
     /** @test */
     public function a_user_can_view_a_single_thread(): void
     {
-        $response = $this->get("/threads/" . $this->thread->channel . '/' . $this->thread->id);
+        $response = $this->get("/threads/" . $this->thread->channel->slug . '/' . $this->thread->id);
         $response->assertSee($this->thread->title);
     }
 
@@ -71,7 +71,7 @@ class ThreadsTest extends TestCase
         $reply = create(Reply::class, ['thread_id' => $this->thread->id]);
         // fwrite(STDERR, print_r($reply->toArray(), true));
 
-        $response = $this->get("/threads/" . $this->thread->channel . '/' . $this->thread->id);
+        $response = $this->get("/threads/" . $this->thread->channel->slug . '/' . $this->thread->id);
         $response->assertSee($reply->owner->name);
     }
 
