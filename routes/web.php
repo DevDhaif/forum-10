@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
@@ -65,7 +66,8 @@ Route::delete("/replies/{reply}" , [ReplyController::class , 'destroy'])->name('
 // http://forum-10.test/threads/minus/39/replies?page=2
 
 Route::get('/profiles/{user:name}', [ProfileController::class, 'show'])->name('profile.show');
-
+Route::post('/upload-image', [ImageController::class, 'upload'])->name('image.upload');
+Route::delete('/upload-image/{image}', [ImageController::class, 'destroy'])->name('image.destroy');
 Route::get('inertia', function () {
     return inertia('Inertia');
 })->name('inertia');

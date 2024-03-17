@@ -33,9 +33,8 @@
         </div>
         <hr class="my-4 border-gray-200">
         <div class="p-2 ">
-            <p class="mt-6 text-sm text-gray-600">
-                {{ thread.body }}
-            </p>
+            <div class="mt-6 prose  prose-em:text-red-700 prose-code:prose-lg
+            " v-html="thread.body"></div>
         </div>
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
