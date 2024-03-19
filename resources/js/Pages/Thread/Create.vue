@@ -7,17 +7,13 @@
         <form v-if="user" @submit.prevent="submitForm" class="space-y-4">
             <div class="mt-6">
                 title
-                <input type="text" v-model="title" class="w-full" placeholder="Title" required>
+                <input type="text" v-model="title" class="w-full border border-gray-300  rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Title" required>
             </div>
             <div class="mt-4">
                 <!-- <editor-content :editor="editor" required v-model="body" /> -->
                 <my-editor v-model="body" :editor="editor" :modelValue="body"  />
             </div>
-            <!-- <div class="mt-6">
-                <textarea v-model="body" class="w-full" placeholder="Have something to say?" rows="5"
-                    required></textarea>
-            </div> -->
-            <select v-model="channel_id" class="w-full" required>
+            <select v-model="channel_id" class="w-full border border-gray-300  rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                 <option value="">Choose One...</option>
                 <option v-for="channel in channels" :key="channel.id" :value="channel.id">
                     {{ channel.name }}
@@ -68,7 +64,6 @@ export default {
 }
 </script>
 <style scoped>
-/* Basic editor styles */
 .editor__content {
     border: 1px solid #ccc;
     padding: 10px;

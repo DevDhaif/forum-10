@@ -17,8 +17,18 @@ import ThreadInfo from "/resources/js/components/ThreadInfo.vue";
 import ThreadDetails from "/resources/js/components/ThreadDetails.vue";
 import ThreadCard from "/resources/js/components/ThreadCard.vue";
 import MyEditor from "/resources/js/components/MyEditor.vue";
+import 'highlight.js/styles/github-dark.css'
+import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
-// import ThreadPage from "/resources/js/pages/ThreadPage.vue";
+const vuetify = createVuetify({
+    components,
+    directives,
+  })
+
 
 window.Alpine = Alpine;
 Alpine.start();
@@ -30,6 +40,7 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         const vueApp = createApp({ render: () => h(app, props) })
             .use(plugin)
+            .use(vuetify)
             .component('example-component', ExampleComponent)
             .component('reply', Reply)
             .component('replies', Replies)

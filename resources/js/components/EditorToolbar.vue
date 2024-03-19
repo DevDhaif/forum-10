@@ -1,72 +1,5 @@
-<script setup>
-import { useEditor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-import ImageResize from 'tiptap-extension-resize-image'
-import { Table } from '@tiptap/extension-table'
-import { TableRow } from '@tiptap/extension-table-row'
-import { TableHeader } from '@tiptap/extension-table-header'
-import { TableCell } from '@tiptap/extension-table-cell'
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { getBasicButtons, getButtons } from '../data/editorButtons'
-import { ref } from 'vue'
-import lowlight from '../data/highlightLanguages'
-import axios from 'axios'
-import ButtonToolbar from './ButtonToolbar.vue'
-import TableIcon from 'vue-material-design-icons/Table.vue'
-import TooltipBtnVue from './TooltipBtn.vue'
-import TableMenu from './TableMenu.vue'
-import EditorToolbar from './EditorToolbar.vue'
-
-
-const props = defineProps({ modelValue: String })
-const editor = useEditor({
-    content: props.modelValue,
-    onUpdate: ({ editor }) => {
-        emit('update:modelValue', editor.getHTML())
-    },
-    extensions: [StarterKit, Underline, ImageResize, TableRow, TableHeader, TableCell,
-        Table.configure({ resizable: true }),
-        CodeBlockLowlight.configure({ lowlight }),
-    ],
-    editorProps: {
-        attributes: {
-            class:
-                'border border-gray-400 p-4 min-h-[28rem] max-h-[12rem] prose  overflow-y-auto outline-none  max-w-none',
-        },
-    },
-})
-
-
-const emit = defineEmits(['update:modelValue'])
-
-const fileInput = ref(null)
-
-const basicButtons = getBasicButtons(editor, fileInput);
-const buttons = getButtons(editor);
-console.log(buttons);
-const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
-
-    axios.post('/upload-image', formData)
-        .then((response) => {
-            const imageUrl = response.data.url;
-            editor.value.chain().focus().setImage({ src: imageUrl }).run();
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-}
-
-
-</script>
-
 <template>
-    <div class="prose-code:prose-code-lg">
-        <EditorToolbar :editor="editor" :handleFileUpload="handleFileUpload" />
-        <!-- <section v-if="editor"
+    <section v-if="editor"
             class="flex flex-wrap items-center p-4 text-gray-700 border-t border-l border-r border-gray-400 buttons gap-x-4">
             <input type="file" ref="fileInput" @change="handleFileUpload" hidden />
             <button v-for="itemButton in basicButtons" :key="itemButton.action" type="button"
@@ -92,11 +25,23 @@ const handleFileUpload = (event) => {
                     </div>
                 </v-container>
             </v-menu>
-        </section> -->
-
-        <EditorContent :editor="editor" />
-    </div>
+        </section>
 </template>
+<script setup>
+import { ref } from 'vue'
+import TableIcon from 'vue-material-design-icons/Table.vue'
+import TooltipBtnVue from './TooltipBtn.vue'
+import { getBasicButtons, getButtons } from '../data/editorButtons'
+
+const props = defineProps({
+  editor: Object,
+  handleFileUpload: Function
+})
+const fileInput = ref(null)
+
+const basicButtons = getBasicButtons(props.editor,fileInput)
+const buttons = getButtons(props.editor)
+</script>
 <style scoped lang="scss">
 :deep(.tiptap) {
     table {
