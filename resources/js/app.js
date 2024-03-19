@@ -16,7 +16,7 @@ import PostReply from "/resources/js/components/PostReply.vue";
 import ThreadInfo from "/resources/js/components/ThreadInfo.vue";
 import ThreadDetails from "/resources/js/components/ThreadDetails.vue";
 import ThreadCard from "/resources/js/components/ThreadCard.vue";
-import MyEditor from "/resources/js/components/MyEditor.vue";
+import MyEditor from "/resources/js/components/Editor/MyEditor.vue";
 import 'highlight.js/styles/github-dark.css'
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'

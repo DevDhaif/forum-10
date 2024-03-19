@@ -20,9 +20,9 @@
 </template>
 
 <script setup>
-import { getButtons } from '../data/editorButtons'
+import { getButtons } from '../../data/editorButtons'
 import TableIcon from 'vue-material-design-icons/Table.vue'
 const props = defineProps({ editor: Object })
 const buttons = getButtons(props.editor);
 
-</script>
+</script>../../data/editorButtons

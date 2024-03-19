@@ -27,20 +27,38 @@
             </v-menu>
         </section>
 </template>
-<script setup>
-import { ref } from 'vue'
+<script>
 import TableIcon from 'vue-material-design-icons/Table.vue'
 import TooltipBtnVue from './TooltipBtn.vue'
-import { getBasicButtons, getButtons } from '../data/editorButtons'
+import { getBasicButtons, getButtons } from '../../data/editorButtons'
 
-const props = defineProps({
-  editor: Object,
-  handleFileUpload: Function
-})
-const fileInput = ref(null)
-
-const basicButtons = getBasicButtons(props.editor,fileInput)
-const buttons = getButtons(props.editor)
+export default {
+  props: {
+    editor: Object,
+    handleFileUpload: Function
+  },
+  data() {
+    return {
+      fileInput: null,
+      basicButtons: [],
+      buttons: []
+    }
+  },
+  watch: {
+    editor: {
+      immediate: true,
+      handler(newEditor) {
+        if (newEditor) {
+          this.basicButtons = getBasicButtons(newEditor, this.fileInput)
+          this.buttons = getButtons(newEditor)
+        }
+      }
+    }
+  },
+  mounted() {
+    this.fileInput = this.$refs.fileInput
+  }
+}
 </script>
 <style scoped lang="scss">
 :deep(.tiptap) {
@@ -128,3 +146,4 @@ const buttons = getButtons(props.editor)
 //   }
 // }
 </style>
+../../data/editorButtons

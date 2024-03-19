@@ -29,7 +29,7 @@
 
 <script>
 import { Inertia } from '@inertiajs/inertia';
-import MyEditor from '../../components/MyEditor.vue'
+import MyEditor from '../../components/Editor/MyEditor.vue'
 
 export default {
     components: {

@@ -8,9 +8,9 @@ import { TableRow } from '@tiptap/extension-table-row'
 import { TableHeader } from '@tiptap/extension-table-header'
 import { TableCell } from '@tiptap/extension-table-cell'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { getBasicButtons, getButtons } from '../data/editorButtons'
+import { getBasicButtons, getButtons } from '../../data/editorButtons'
 import { ref } from 'vue'
-import lowlight from '../data/highlightLanguages'
+import lowlight from '../../data/highlightLanguages'
 import axios from 'axios'
 import ButtonToolbar from './ButtonToolbar.vue'
 import TableIcon from 'vue-material-design-icons/Table.vue'
@@ -44,7 +44,7 @@ const fileInput = ref(null)
 
 const basicButtons = getBasicButtons(editor, fileInput);
 const buttons = getButtons(editor);
-console.log(buttons);
+
 const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const formData = new FormData();
@@ -65,13 +65,15 @@ const handleFileUpload = (event) => {
 
 <template>
     <div class="prose-code:prose-code-lg">
-        <EditorToolbar :editor="editor" :handleFileUpload="handleFileUpload" />
-        <!-- <section v-if="editor"
+        <!-- <EditorToolbar :editor="editor" :handleFileUpload="handleFileUpload" /> -->
+        <section v-if="editor"
             class="flex flex-wrap items-center p-4 text-gray-700 border-t border-l border-r border-gray-400 buttons gap-x-4">
             <input type="file" ref="fileInput" @change="handleFileUpload" hidden />
             <button v-for="itemButton in basicButtons" :key="itemButton.action" type="button"
                 @click="itemButton.action(editor)"
-                :class="typeof itemButton.class === 'function' ? itemButton.class() : ''" class="p-1">
+                :class="typeof itemButton.class === 'function' ? itemButton.class() : ''"
+                class="p-1"
+                >
                 <component :is="itemButton.icon" />
             </button>
             <v-menu :close-on-content-click="false" location="end">
@@ -92,12 +94,18 @@ const handleFileUpload = (event) => {
                     </div>
                 </v-container>
             </v-menu>
-        </section> -->
+        </section>
 
         <EditorContent :editor="editor" />
     </div>
 </template>
 <style scoped lang="scss">
+:deep(.bg-gray-200){
+    background-color: #edf2f7;
+}
+:deep(.rounded){
+    border-radius: 0.375rem;
+}
 :deep(.tiptap) {
     table {
         border-collapse: collapse;
@@ -171,15 +179,4 @@ const handleFileUpload = (event) => {
         box-shadow: none !important;
     }
 }
-// .buttons {
-//   button {
-//     background-color: #f5f5f5;
-//     border: 1px solid #e0e0e0;
-//     border-radius: 4px;
-//     color: #333;
-//     cursor: pointer;
-//     font-size: 1.5rem;
-//     padding: 0.5rem;
-//   }
-// }
 </style>
