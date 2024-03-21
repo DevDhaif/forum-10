@@ -9,10 +9,8 @@
                         <x-application-logo class="block w-auto text-gray-800 fill-current h-9"/>
                     </a>
                 </div>
-
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex sm:items-center">
-
                     {{-- dropdown to choose all threads or my threads --}}
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -30,6 +28,7 @@
                                 </div>
                             </button>
                         </x-slot>
+                        
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('threads')">
@@ -44,15 +43,11 @@
                                     My Threads
                                 </x-dropdown-link>
                             @endauth
-
                         </x-slot>
                     </x-dropdown>
-
-
                     <x-nav-link href="/threads/create" :active="request()->routeIs('threads.create')">
                         {{ __('new thread') }}
                     </x-nav-link>
-
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button
@@ -83,15 +78,11 @@
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 @if (Auth::check())
-
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
-
                             <button
                                 class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none">
-
                                 <div>{{ Auth::user()->name }}</div>
-
                                 <div class="ml-1">
                                     <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 20 20">
@@ -101,18 +92,14 @@
                                     </svg>
                                 </div>
                             </button>
-
                         </x-slot>
-
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.show',Auth::user()->name)">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
-
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-
                                 <x-dropdown-link :href="route('logout')"
                                                  onclick="event.preventDefault();
                                                 this.closest('form').submit();">
@@ -122,9 +109,7 @@
                         </x-slot>
                     </x-dropdown>
                 @endif
-
             </div>
-
             <!-- Hamburger -->
             <div class="flex items-center -mr-2 sm:hidden">
                 <button x-on:click="open = ! open"
@@ -140,7 +125,6 @@
             </div>
         </div>
     </div>
-
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
@@ -148,7 +132,6 @@
                 {{ __('threads') }}
             </x-responsive-nav-link>
         </div>
-
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
@@ -156,21 +139,15 @@
 
                     <div class="text-base font-medium text-gray-800">{{ Auth::user()->name }}</div>
                     <div class="text-sm font-medium text-gray-500">{{ Auth::user()->email }}</div>
-
                 @endif
-
-
             </div>
-
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
-
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
                     <x-responsive-nav-link :href="route('logout')"
                                            onclick="event.preventDefault();
                                         this.closest('form').submit();">

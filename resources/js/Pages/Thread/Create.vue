@@ -1,4 +1,6 @@
 <template>
+
+
     <div class="container mx-auto mt-6 space-y-4">
         <div>
             <h1 class="text-2xl font-bold">Create a Thread</h1>
@@ -29,11 +31,13 @@
 
 <script>
 import { Inertia } from '@inertiajs/inertia';
+import Layout from '../../Shared/Layout.vue'
 import MyEditor from '../../components/Editor/MyEditor.vue'
 
 export default {
     components: {
-        MyEditor
+        MyEditor,
+        Layout
     },
     props: ['channels', 'user'],
     data() {
@@ -60,6 +64,9 @@ export default {
             });
         }
     },
+    mounted(){
+        console.log(this.user);
+    }
 
 }
 </script>

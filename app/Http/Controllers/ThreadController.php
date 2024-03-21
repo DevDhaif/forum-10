@@ -24,9 +24,11 @@ class ThreadController extends Controller
         // return json threads
         return $threads;
     }
-    public function index(Channel $channel, ThreadFilters $filters)
+    public function index(Channel $channel, ThreadFilters $filters,Request $request)
     {
         $threads = $this->getThreads($channel, $filters)->paginate(5);
+        $threads->appends($request->query());
+        
         return Inertia::render('Thread/Index', [
             'threads' => $threads,
             'channel' => $channel->slug,

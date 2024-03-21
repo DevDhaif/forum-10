@@ -25,6 +25,8 @@ class User extends Authenticatable
         'field_id',
     ];
 
+    protected $appends = ['path'];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -66,4 +68,8 @@ class User extends Authenticatable
     public function activity(){
         return $this->hasMany(Activity::class );
     }
+    public function getPathAttribute()
+{
+    return $this->path();
+}
 }

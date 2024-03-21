@@ -20,7 +20,7 @@ export default {
         Pagination,
     },
     props: {
-        threads: Array,
+        threads: Object,
         channel: String,
     },
 
