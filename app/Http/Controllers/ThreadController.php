@@ -7,6 +7,7 @@ use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class ThreadController extends Controller
@@ -24,11 +25,11 @@ class ThreadController extends Controller
         // return json threads
         return $threads;
     }
-    public function index(Channel $channel, ThreadFilters $filters,Request $request)
+    public function index(Channel $channel, ThreadFilters $filters, Request $request)
     {
         $threads = $this->getThreads($channel, $filters)->paginate(5);
         $threads->appends($request->query());
-        
+
         return Inertia::render('Thread/Index', [
             'threads' => $threads,
             'channel' => $channel->slug,
@@ -62,31 +63,27 @@ class ThreadController extends Controller
             )
         );
 
-        if ($thread->channel){
-            $slug = $thread->channel->slug;
-        }
-        else
-        {
-            $slug =null;
-        }
-        // using inertia
-        return Inertia::render('Thread/Show', [
-            'thread' => $thread,
-            'user' => auth()->user(),
-            'slug' => $slug,
-        ]);
+        $thread->load('creator', 'replies');
+
+
+        // Determine the channel slug
+        $slug = $thread->channel ? $thread->channel->slug : null;
+
+        // using inertia redirect
+        return Inertia::location(route('threads.show', [$slug, $thread->id]));
     }
     public function show($channelSlug, Thread $thread)
     {
-        $channel = Channel::where('slug', $channelSlug)->first();
+        $channels = Cache::get('channels');
+        $channel = $channels->firstWhere('slug', $channelSlug);
 
         if (!$channel || $thread->channel_id !== $channel->id) {
             abort(404);
         }
-        // dd($thread->channel_id);
+
         Reply::loadFavoritedReplyIdsForUser(auth()->user());
-        $thread->load(['replies.favorites']);
-        $replies = $thread->replies()->paginate(5);
+
+        $replies = $thread->replies()->paginate(100);
 
         foreach ($replies as $reply) {
             $reply->isFavorited = $reply->isFavoritedByUser(auth()->user());

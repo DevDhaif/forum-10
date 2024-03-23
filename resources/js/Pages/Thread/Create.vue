@@ -39,7 +39,7 @@
 import { Inertia } from "@inertiajs/inertia";
 import Layout from "../../Shared/Layout.vue";
 import MyEditor from "../../components/Editor/MyEditor.vue";
-
+import { route } from "ziggy-js"
 export default {
     components: {
         MyEditor,

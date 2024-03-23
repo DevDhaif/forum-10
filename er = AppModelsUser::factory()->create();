@@ -1,0 +1,37 @@
+[90m= [39m[34;4mApp\Models\Thread[39;24m {#4883
+    [34mid[39m: [35m134[39m,
+    [34mtitle[39m: "[32maaaaaaaaaaaaaaaaaaaaaaaaaaa[39m",
+    [34mbody[39m: "[32m<p>bbbbbbbbbbbbbbbbbbb</p>[39m",
+    [34muser_id[39m: [35m11[39m,
+    [34mchannel_id[39m: [35m1[39m,
+    [34mcreated_at[39m: "[32m2024-03-23 12:43:55[39m",
+    [34mupdated_at[39m: "[32m2024-03-23 12:43:55[39m",
+    [34mreplies_count[39m: [35m12[39m,
+    [34mcreator[39m: [34;4mApp\Models\User[39;24m {#4891
+      [34mid[39m: [35m11[39m,
+      [34mname[39m: "[32mDhaifallah[39m",
+      [34memail[39m: "[32mdevdhaif@gmail.com[39m",
+      [34memail_verified_at[39m: "[32m2024-03-02 12:19:14[39m",
+      #[33mpassword[39m: "[32m$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi[39m",
+      #[33mremember_token[39m: "[32mOZSY3UA5rJ[39m",
+      [34mcreated_at[39m: "[32m2024-03-02 12:19:14[39m",
+      [34mupdated_at[39m: "[32m2024-03-02 12:19:16[39m",
+      [34muniversity_id[39m: [35m8[39m,
+      [34mfield_id[39m: [35m7[39m,
+      +[1mpath[22m: "[32m/profiles/Dhaifallah[39m",
+    },
+    [34mchannel[39m: [34;4mApp\Models\Channel[39;24m {#4895
+      [34mid[39m: [35m1[39m,
+      [34mname[39m: "[32mmolestiae[39m",
+      [34mslug[39m: "[32mmolestiae[39m",
+      [34mcreated_at[39m: "[32m2024-03-02 12:19:14[39m",
+      [34mupdated_at[39m: "[32m2024-03-02 12:19:14[39m",
+    },
+    [34mfavorites[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#4892
+      [34mall[39m: [],
+    },
+    +[1mfavorites_count[22m: [35m0[39m,
+    +[1misFavorited[22m: [36mfalse[39m,
+    +[1mpath[22m: "[32m/threads/molestiae/134[39m",
+  }
+

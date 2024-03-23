@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 use Inertia\Inertia;
 
@@ -36,8 +37,12 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $channels = Cache::remember('channels', 5, function () {
+            return \App\Models\Channel::all();
+        });
+
         return array_merge(parent::share($request), [
-            'channels' => \App\Models\Channel::all(),
+            'channels' => $channels,
             'user' => fn () => $request->user()
                 ? $request->user()->only('id', 'name', 'email')
                 : null,
