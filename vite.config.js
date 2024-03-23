@@ -33,5 +33,8 @@ export default defineConfig({
             '@': '/resources/js',
             '@/Shared' : '/resources/js/Shared',
         }
-    }
+    },
+    optimizeDeps: {
+        include: ["highlight.js"],
+    },
 });

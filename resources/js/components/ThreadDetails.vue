@@ -2,14 +2,16 @@
     <div class="container p-4 mx-auto mt-6 bg-white rounded shadow">
         <div>
             <h2 class="text-2xl font-bold">{{ thread.title }}</h2>
-            <div class="flex items-center justify-between mt-4 ">
-                <div class="flex items-center space-x-2 ">
+            <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center space-x-2">
                     <p class="text-sm text-gray-600">
                         This thread was published {{ diffForHumans }} ago by
                         <a :href="userPath()" class="text-sm text-blue-600">
                             {{ thread.creator.name }}
                         </a>
-                        in <a v-if="thread.channel" :href="`/threads/${thread.channel.slug}`" class="text-sm text-blue-600">
+                        in
+                        <a v-if="thread.channel" :href="`/threads/${thread.channel.slug}`"
+                            class="text-sm text-blue-600">
                             {{ thread.channel.name }}
                         </a>
                         and currently has {{ thread.replies_count }} replies .
@@ -29,52 +31,50 @@
                 </div>
                 <favorite :item="thread" type="thread" :user="user"></favorite>
             </div>
-
         </div>
-        <hr class="my-4 border-gray-200">
-        <div class="p-2 ">
-            <div class="mt-6 prose  prose-em:text-red-700 prose-code:prose-lg
-            " v-html="thread.body"></div>
+        <hr class="my-4 border-gray-200" />
+        <div class="p-2">
+            <div class="mt-6 prose prose-em:text-red-700 prose-code:prose-lg" v-html="highlighted"></div>
         </div>
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
-
 </template>
 <script>
 import { Inertia } from "@inertiajs/inertia";
-import axios from "axios";
+import { route } from "ziggy-js";
 import moment from "moment";
+import { highlightCode } from "../Utils/highlightCode";
 export default {
     props: ["thread", "user"],
-    data(){
+    data() {
         return {
-            errorMessage: ""
-        }
+            errorMessage: "",
+        };
     },
     methods: {
         userPath() {
             return `/profiles/${this.thread.creator.name}`;
         },
         deleteThread() {
-            Inertia.delete(`/threads/${this.thread.channel.slug}/${this.thread.id}`)
+            Inertia.delete(
+                route("threads.destroy", {
+                    channel: this.thread.channel.slug,
+                    thread: this.thread.id,
+                }),
+            )
                 .then(() => {
                     flash("Thread deleted");
                 })
                 .catch((error) => {
-                    this.errorMessage = "Could not delete the thread";
+                    this.errorMessage =
+                        error.response.data.message ||
+                        "Could not delete the thread";
                 });
-
-            // axios
-            //     .delete(`/threads/${this.thread.channel.slug}/${this.thread.id}`)
-            //     .then((response) => {
-            //         if (response.status === 204) {
-            //             flash("Thread deleted");
-            //             window.location.href = '/threads';
-            //         }
-            //     })
-            //     .catch((error) => {
-            //         this.errorMessage = "Could not delete the thread";
-            //     });
+        },
+        decodeHtml(html) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
         },
     },
     computed: {
@@ -84,7 +84,9 @@ export default {
         canUpdate() {
             return this.user && this.thread.creator.id === this.user.id;
         },
+        highlighted() {
+            return highlightCode(this.thread.body, this.decodeHtml);
+        },
     },
-
-}
+};
 </script>
