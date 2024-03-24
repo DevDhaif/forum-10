@@ -7,15 +7,14 @@
         <form v-if="user" @submit.prevent="submitForm" class="space-y-4">
             <div class="mt-6">
                 title
-                <input type="text" v-model="title"
+                <input type="text" v-model="form.title"
                     class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Title" required />
             </div>
             <div class="mt-4">
-                <!-- <editor-content :editor="editor" required v-model="body" /> -->
-                <my-editor v-model="body" :editor="editor" :modelValue="body" />
+                <my-editor v-model="form.body" :editor="editor" :modelValue="body" />
             </div>
-            <select v-model="channel_id"
+            <select v-model="form.channel_id"
                 class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required>
                 <option value="">Choose One...</option>
@@ -48,32 +47,26 @@ export default {
     props: ["channels", "user"],
     data() {
         return {
-            title: "",
-            body: "",
-            channel_id: "",
+            form: this.$inertia.form({
+                title: "",
+                body: "",
+                channel_id: "",
+            }),
             errors: [],
         };
     },
 
     methods: {
         submitForm() {
-            Inertia.post("/threads", {
-                title: this.title,
-                body: this.body,
-                channel_id: this.channel_id,
-            })
+
+            this.form.post(route("threads.store"))
                 .then(() => {
-                    this.title = "";
-                    this.body = "";
-                    this.channel_id = "";
+                    this.form.reset();
                 })
                 .catch((error) => {
                     this.errors = error.response.data.errors;
                 });
         },
-    },
-    mounted() {
-        console.log(this.user);
     },
 };
 </script>

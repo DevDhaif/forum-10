@@ -1,7 +1,6 @@
 <template>
     <div v-if="user">
-
-        <form @submit.prevent="postReply" class="mt-6">
+        <form class="relative mt-6" @submit.prevent="postReply">
             <div class="mt-6">
                 <textarea v-model="body" name="body" class="w-full" placeholder="Have something to say?"
                     rows="5"></textarea>
@@ -9,6 +8,7 @@
             <button type="submit" class="px-2 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">Post
             </button>
         </form>
+        <flash v-if="flashMessage" :flash="flashMessage"></flash>
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
 </template>
@@ -21,6 +21,7 @@ export default {
         return {
             body: "",
             errorMessage: "",
+            flashMessage: null
         };
     },
     methods: {
@@ -37,14 +38,18 @@ export default {
                 })
                     .then((response) => {
                         this.$emit('replyPosted', response.data.reply);
+                        this.flashMessage = null;
+                        this.$nextTick(() => {
+                            this.flashMessage = response.data.flash;
+                        });
                         this.body = "";
-                        flash("Reply posted");
                     })
                     .catch((error) => {
+                        console.error(error);
                         this.errorMessage = "Something went wrong. Please try again";
                     });
             }
         }
-    }
+    },
 }
 </script>

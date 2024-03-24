@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filters\ThreadFilters;
+use App\Http\Requests\CreateThreadRequest;
 use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
@@ -44,33 +45,23 @@ class ThreadController extends Controller
             ]
         );
     }
-    public function store(Request $request)
+    public function store(CreateThreadRequest $request)
     {
-        $validatedData = $this->validate(
-            $request,
-            [
-                'title' => 'required',
-                'body' => 'required',
-                'channel_id' => 'required|exists:channels,id'
-            ]
-        );
-        $thread = Thread::create(
-            array_merge(
-                $validatedData,
-                [
-                    'user_id' => auth()->id(),
-                ]
-            )
-        );
+        try {
 
-        $thread->load('creator', 'replies');
+            $thread = Thread::create(
+                array_merge(
+                    $request->validated(),
+                    ['user_id' => auth()->id()]
+                )
+            );
+            session()->flash('success', 'Your reply has been left!');
 
-
-        // Determine the channel slug
-        $slug = $thread->channel ? $thread->channel->slug : null;
-
-        // using inertia redirect
-        return Inertia::location(route('threads.show', [$slug, $thread->id]));
+            return Inertia::location(route('threads.show', [$thread->channel->slug, $thread->id]));
+        } catch (\Exception $e) {
+            session()->flash('error', 'There was a problem creating your thread');
+            return back();
+        }
     }
     public function show($channelSlug, Thread $thread)
     {
@@ -83,7 +74,7 @@ class ThreadController extends Controller
 
         Reply::loadFavoritedReplyIdsForUser(auth()->user());
 
-        $replies = $thread->replies()->paginate(100);
+        $replies = $thread->replies()->paginate(10);
 
         foreach ($replies as $reply) {
             $reply->isFavorited = $reply->isFavoritedByUser(auth()->user());

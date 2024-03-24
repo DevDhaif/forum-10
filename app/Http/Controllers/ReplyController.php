@@ -24,17 +24,19 @@ class ReplyController extends Controller
         );
 
         $reply = $thread->addReply([
-          'body' => request('body'),
-          'user_id' => auth()->id(),
+            'body' => request('body'),
+            'user_id' => auth()->id(),
         ]);
-        $thread->load('replies.favorites');
-        if (request()->expectsJson()) {
-            return response()->json(['flash' => 'Your reply has been left!',
-                'reply' => $reply
-        ]);
-        }
-        return redirect($thread->path())->with('flash', 'Your reply has been left!');
 
+        if (request()->expectsJson()) {
+            return response()->json([
+                'reply' => $reply,
+                'flash' => 'Your reply has been left!',
+            ]);
+        }
+        session()->flash('message', 'Your reply has been left!');
+
+        return redirect($thread->path());;
     }
 
     public function update(Reply $reply)
@@ -44,7 +46,15 @@ class ReplyController extends Controller
         $reply->update([
             'body' => request('body'),
         ]);
-        return response()->json(['flash' => 'Your reply has been updated!', 'reply' => $reply]);
+        if (request()->expectsJson()) {
+
+            return response()->json([
+                'reply' => $reply,
+                'flash' => 'Your reply has been updated!'
+            ]);
+        }
+        session()->flash('message', 'Your reply has been updated!');
+        return redirect()->back();
     }
 
     public function destroy(Reply $reply)
@@ -52,9 +62,12 @@ class ReplyController extends Controller
         $this->authorize('update', $reply);
         $reply->delete();
         if (request()->expectsJson()) {
-            return response(['status' => 'Reply deleted']);
+            return response()->json([
+                'flash' => 'Your reply has been deleted!',
+            ]);
         }
-        return back();
+        session()->flash('message', 'Your reply has been deleted!');
+        return redirect()->back();
     }
     public function isFavorited(Reply $reply)
     {

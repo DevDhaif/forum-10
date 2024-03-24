@@ -7,15 +7,9 @@
                     This thread has {{ replies.data.length }}
                     replies.
                 </p>
-                <post-reply :user="user" :thread="thread" @replyPosted="addReply"></post-reply>
+                <post-reply :user="user" :thread="thread" @replyPosted="addReply" @flash="handleFlash"></post-reply>
                 <replies :replies="replies" :thread="thread" :user="user" :key="repliesKey"></replies>
-                <!-- <button
-                class="w-8 h-8 mx-2 mt-4 text-center text-white bg-blue-500 rounded-full hover:bg-blue-600"
-                v-for="page in Array.from({ length: pagination.lastPage }, (_, i) => i + 1)" :key="page"
-                    @click="goToPage(page)">
-                    {{ page }}
-                </button> -->
-                <!-- <pagination :links="replies.links"></pagination> -->
+                <pagination :links="replies.links"></pagination>
             </div>
         </div>
         <thread-info :thread="thread" :user="thread.creator" />
@@ -33,6 +27,7 @@ export default {
         return {
             replies: this.replies,
             repliesKey: 0,
+            flashMessage: ""
         }
     },
     methods: {
@@ -40,9 +35,9 @@ export default {
             this.replies.data.push(reply)
             this.repliesKey++
         },
-    },
-    mounted() {
-        console.log(this.thread)
-    },
+        handleFlash(message) {
+            this.flashMessage = message
+        },
+    }
 }
 </script>

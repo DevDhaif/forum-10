@@ -45,8 +45,8 @@ class CreateThreadsTest extends TestCase
                 ->has(
                     'thread',
                     fn (AssertableInertia $page) => $page
-                        ->where('title', $thread->title) // Use where instead of has
-                        ->where('body', $thread->body) // Use where instead of has
+                        ->where('title', $thread->title)
+                        ->where('body', $thread->body)
                         ->etc()
                 )
         );

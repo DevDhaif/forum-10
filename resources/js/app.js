@@ -24,6 +24,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import { InertiaForm } from "@inertiajs/inertia-vue3";
 
 const vuetify = createVuetify({
     components,
@@ -45,6 +46,7 @@ createInertiaApp({
         const vueApp = createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(vuetify)
+            .use(InertiaForm)
             .component('example-component', ExampleComponent)
             .component('reply', Reply)
             .component('replies', Replies)

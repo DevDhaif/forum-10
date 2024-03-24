@@ -17,6 +17,8 @@
             </div>
             <favorite :item="reply" type="reply" :user="user" />
         </div>
+        <flash v-if="flashMessage" :flash="flashMessage"></flash>
+
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
 </template>
@@ -34,7 +36,8 @@ export default {
             editing: false,
             editText: this.reply.body,
             replyDeleted: false,
-            errorMessage: ""
+            errorMessage: "",
+            flashMessage: null
         };
     },
     methods: {
@@ -44,10 +47,14 @@ export default {
         deleteReply() {
             axios
                 .delete(`/replies/${this.reply.id}`)
-                .then(() => {
+                .then((response) => {
                     this.$emit('replyDeleted', this.reply.id);
                     this.replyDeleted = true;
-                    flash("Reply deleted");
+                    this.flashMessage = null;
+                    this.$nextTick(() => {
+                        this.flashMessage = response.data.flash;
+                    });
+                    this.errorMessage = null;
                 })
                 .catch((error) => {
                     this.errorMessage = "Could not delete the reply";
@@ -56,11 +63,20 @@ export default {
         saveEdit() {
             axios.patch(`/replies/${this.reply.id}`, {
                 body: this.editText,
-            });
-            this.body = this.editText;
-            this.reply.body = this.editText;
-            this.editing = false;
-            flash("Reply updated");
+            })
+                .then((response) => {
+                    this.body = this.editText;
+                    this.reply.body = this.editText;
+                    this.editing = false;
+                    this.flashMessage = null;
+                    this.$nextTick(() => {
+                        this.flashMessage = response.data.flash;
+                    });
+                    this.errorMessage = null;
+                })
+                .catch((error) => {
+                    this.errorMessage = "Could not save the reply";
+                });
         },
         cancelEdit
             () {
