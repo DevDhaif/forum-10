@@ -65,6 +65,12 @@ class ThreadController extends Controller
     }
     public function show($channelSlug, Thread $thread)
     {
+        if (!session()->has("viewed_threads.{$thread->id}")) {
+            $thread->increment('visits');
+            session()->put("viewed_threads.{$thread->id}", true);
+        }
+
+
         $channels = Cache::get('channels');
         $channel = $channels->firstWhere('slug', $channelSlug);
 

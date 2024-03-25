@@ -17,6 +17,7 @@
                         and currently has {{ thread.replies_count }} replies .
                     </p>
                 </div>
+                <Visits :item="thread"></Visits>
                 <div v-if="canUpdate">
                     <form @submit.prevent="deleteThread">
                         <button title="Delete this thread" type="submit"
@@ -41,11 +42,15 @@
 </template>
 <script>
 import { Inertia } from "@inertiajs/inertia";
+import Visits from "../Shared/Visits.vue";
 import { route } from "ziggy-js";
 import moment from "moment";
 import { highlightCode } from "../Utils/highlightCode";
 export default {
     props: ["thread", "user"],
+    components: {
+        Visits,
+    },
     data() {
         return {
             errorMessage: "",
