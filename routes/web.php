@@ -44,12 +44,10 @@ Route::get("/threads/create", [ThreadController::class, 'create'])->middleware('
 
 Route::get("/threads/{channel}", [ThreadController::class, 'index'])->name('threads.channel');
 Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
-// Route::get('/threads/{thread}', [ThreadController::class, 'show'])
-//     ->name('threads.show');
 
 Route::post('/threads/{channel}/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
 Route::get("/threads/{channel}/{thread}", [ThreadController::class, 'show'])->name('threads.show');
-// edit the thread route
+
 Route::get("/threads/{channel}/{thread}/edit", [ThreadController::class, 'edit'])->name('threads.edit');
 Route::patch("/threads/{channel}/{thread}", [ThreadController::class, 'update'])->name('threads.update');
 
@@ -63,7 +61,6 @@ Route::patch("/replies/{reply}", [ReplyController::class, 'update'])->name('repl
 Route::delete("/replies/{reply}", [ReplyController::class, 'destroy'])->name('replies.destroy');
 
 
-// http://forum-10.test/threads/minus/39/replies?page=2
 
 Route::get('/profiles/{user:name}', [ProfileController::class, 'show'])->name('profile.show');
 Route::post('/upload-image', [ImageController::class, 'upload'])->name('image.upload');

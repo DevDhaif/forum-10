@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Reply;
 use App\Models\Thread;
-use App\Models\User;
-use Illuminate\Http\Request;
 
 class ReplyController extends Controller
 {
@@ -28,10 +26,15 @@ class ReplyController extends Controller
             'user_id' => auth()->id(),
         ]);
 
+        $thread = $thread->fresh();
+
+        $replies = $thread->replies()->latest()->paginate(10)->withPath("/threads/{$thread->channel->slug}/{$thread->id}");
         if (request()->expectsJson()) {
             return response()->json([
                 'reply' => $reply,
                 'flash' => 'Your reply has been left!',
+                'replies' => $replies,
+                'thread' => $thread,
             ]);
         }
         session()->flash('message', 'Your reply has been left!');
@@ -60,10 +63,15 @@ class ReplyController extends Controller
     public function destroy(Reply $reply)
     {
         $this->authorize('update', $reply);
+        $thread = $reply->thread;
         $reply->delete();
+        $replies = $thread->replies()->latest()->paginate(10)->withPath("/threads/{$thread->channel->slug}/{$thread->id}");
+
         if (request()->expectsJson()) {
             return response()->json([
                 'flash' => 'Your reply has been deleted!',
+                'replies' => $replies,
+                'thread' => $thread,
             ]);
         }
         session()->flash('message', 'Your reply has been deleted!');

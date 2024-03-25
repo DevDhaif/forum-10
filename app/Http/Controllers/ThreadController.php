@@ -74,7 +74,7 @@ class ThreadController extends Controller
 
         Reply::loadFavoritedReplyIdsForUser(auth()->user());
 
-        $replies = $thread->replies()->paginate(10);
+        $replies = $thread->replies()->latest()->paginate(10);
 
         foreach ($replies as $reply) {
             $reply->isFavorited = $reply->isFavoritedByUser(auth()->user());

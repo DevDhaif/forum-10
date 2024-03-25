@@ -1,7 +1,9 @@
 <template>
     <div>
         <h1>replies all here </h1>
-            <reply v-for="reply in localReplies" :key="reply.id" :reply="reply"  :user="user"></reply>
+        <reply v-for="reply in this.replies.data" :key="reply.id" :reply="reply" :user="user"
+            @replyDeleted="updateReplies"></reply>
+        <flash v-if="flashMessage" :flash="flashMessage"></flash>
     </div>
 </template>
 <script>
@@ -10,21 +12,27 @@ export default {
     components: {
         Reply,
     },
-    props: ["replies", "thread", "user","key"],
+    props: ["replies", "thread", "user", "key"],
     data() {
         return {
-            localReplies: this.replies.data,
+            replies: this.replies,
+            thread: this.thread,
+            flashMessage: null,
+            errorMessage: "",
+            body: "",
         }
     },
     methods: {
-        removeReply(replyId) {
-            this.localReplies = this.localReplies.filter(reply => reply.id !== replyId);
-        },
-    },
-    watch : {
-        replies(newReplies) {
-            this.localReplies = newReplies.data;
+
+        updateReplies(replyId, thread, replies, flash) {
+            Object.assign(this.thread, thread);
+            Object.assign(this.replies, replies);
+            this.flashMessage = null;
+            this.$nextTick(() => {
+                this.flashMessage = flash;
+            });
         }
     }
+
 };
 </script>

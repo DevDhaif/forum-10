@@ -25,31 +25,31 @@ export default {
         };
     },
     methods: {
-        async postReply() {
+        postReply() {
             if (this.body === "") {
-                this.errorMessage = "Please enter a valid reply";
-                return;
+                this.errorMessage = "Please enter a valid reply"
+                return
             }
-            this.errorMessage = null;
+            this.errorMessage = null
 
             if (this.thread.channel) {
-                await axios.post(`/threads/${this.thread.channel.slug}/${this.thread.id}/replies`, {
+                axios.post(`/threads/${this.thread.channel.slug}/${this.thread.id}/replies`, {
                     body: this.body,
                 })
                     .then((response) => {
-                        this.$emit('replyPosted', response.data.reply);
-                        this.flashMessage = null;
+                        this.$emit('posted', response.data.thread, response.data.replies, response.data.flash)
+                        this.flashMessage = null
                         this.$nextTick(() => {
-                            this.flashMessage = response.data.flash;
-                        });
-                        this.body = "";
+                            this.flashMessage = response.data.flash
+                        })
+                        this.body = ""
                     })
                     .catch((error) => {
-                        console.error(error);
-                        this.errorMessage = "Something went wrong. Please try again";
-                    });
+                        console.error(error)
+                        this.errorMessage = "Something went wrong. Please try again"
+                    })
             }
-        }
+        },
     },
 }
 </script>

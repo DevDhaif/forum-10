@@ -6,7 +6,6 @@ use App\Favoritable;
 use App\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 class Reply extends Model
 {
@@ -34,6 +33,10 @@ class Reply extends Model
 
         parent::boot();
 
+        static::created(function ($reply) {
+            $reply->thread->increment('replies_count');
+        });
+
         static::deleting(function ($reply) {
             $reply->activity->each(function ($activity) {
                 $activity->delete();
@@ -41,6 +44,7 @@ class Reply extends Model
             $reply->favorites->each(function ($favorite) {
                 $favorite->delete();
             });
+            $reply->thread->decrement('replies_count');
         });
     }
 

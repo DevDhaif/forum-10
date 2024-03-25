@@ -1,6 +1,6 @@
 <template v-cloak>
     <div :id="'reply-' + reply.id" name="fade" class="mt-4 ">
-        <div v-if="!replyDeleted" class="flex items-center justify-between mt-4">
+        <div class="flex items-center justify-between mt-4">
             <div v-if="editing" class="flex flex-col ">
                 <textarea v-model="editText"></textarea>
                 <div class="mt-2">
@@ -18,7 +18,6 @@
             <favorite :item="reply" type="reply" :user="user" />
         </div>
         <flash v-if="flashMessage" :flash="flashMessage"></flash>
-
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
 </template>
@@ -27,33 +26,17 @@
 import axios from "axios";
 import Favorite from "./Favorite.vue";
 export default {
-    components: {
-        Favorite,
-    },
+    components: { Favorite },
     props: ["reply", "user"],
-    data() {
-        return {
-            editing: false,
-            editText: this.reply.body,
-            replyDeleted: false,
-            errorMessage: "",
-            flashMessage: null
-        };
-    },
+    data() { return { editing: false, editText: this.reply.body, errorMessage: "", flashMessage: null }; },
     methods: {
-        editReply() {
-            this.editing = true;
-        },
+        editReply() { this.editing = true; },
         deleteReply() {
             axios
                 .delete(`/replies/${this.reply.id}`)
                 .then((response) => {
-                    this.$emit('replyDeleted', this.reply.id);
-                    this.replyDeleted = true;
-                    this.flashMessage = null;
-                    this.$nextTick(() => {
-                        this.flashMessage = response.data.flash;
-                    });
+                    this.$emit('replyDeleted', this.reply.id, response.data.thread, response.data.replies, response.data.flash);
+                    console.log(response.data.flash);
                     this.errorMessage = null;
                 })
                 .catch((error) => {
