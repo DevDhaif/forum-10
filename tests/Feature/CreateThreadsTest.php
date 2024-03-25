@@ -35,17 +35,26 @@ class CreateThreadsTest extends TestCase
         $this->signIn();
 
         $thread = make(Thread::class);
+
         $response = $this->post('/threads', $thread->toArray());
 
-        $response->assertSuccessful();
+        $createdThread = Thread::where('title', $thread->title)->first();
+
+        $response->assertRedirect(route('threads.show', [$createdThread->channel->slug, $createdThread->id]));
+
+        $this->assertDatabaseHas('threads', ['title' => $createdThread->title, 'body' => $createdThread->body]);
+
+
+        $response = $this->get(route('threads.show', [$createdThread->channel->slug, $createdThread->id]));
+
         $response->assertInertia(
             fn (AssertableInertia $page) => $page
                 ->component('Thread/Show')
                 ->has(
                     'thread',
                     fn (AssertableInertia $page) => $page
-                        ->where('title', $thread->title)
-                        ->where('body', $thread->body)
+                        ->where('title', $createdThread->title)
+                        ->where('body', $createdThread->body)
                         ->etc()
                 )
         );

@@ -55,7 +55,7 @@ class ThreadController extends Controller
                     ['user_id' => auth()->id()]
                 )
             );
-            session()->flash('success', 'Your reply has been left!');
+            session()->flash('success', 'Your thread has been left!');
 
             return Inertia::location(route('threads.show', [$thread->channel->slug, $thread->id]));
         } catch (\Exception $e) {
