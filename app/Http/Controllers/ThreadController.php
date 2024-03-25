@@ -115,6 +115,7 @@ class ThreadController extends Controller
         ]);
         $thread->update($request->only('title', 'body', 'channel_id'));
         $newChannel = Channel::find($request->channel_id);
+        session()->flash('success', 'Your thread has been updated!');
 
         return Inertia::location(route('threads.show', [$newChannel->slug, $thread->id]));
     }
