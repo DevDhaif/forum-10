@@ -13,7 +13,7 @@ class Thread extends Model
     use Favoritable;
     use RecordsActivity;
     protected $guarded = [];
-    protected $fillable = ['title', 'body', 'channel_id'];
+    protected $fillable = ['title', 'body', 'channel_id','user_id'];
     protected $appends = ['favorites_count', 'isFavorited', 'path'];
     protected $with = ['creator', 'channel', 'favorites'];
 

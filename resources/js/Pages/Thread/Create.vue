@@ -19,7 +19,8 @@
                     {{ channel.name }}
                 </option>
             </select>
-            <button type="submit" class="px-2 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"> Post </button>
+            <button type="submit" class="px-2 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"> Post
+            </button>
             <ul v-if="errors.length" class="mt-4">
                 <li v-for="error in errors" :key="error" class="text-sm text-red-500">
                     {{ error }}
@@ -64,44 +65,3 @@ export default {
     },
 };
 </script>
-<style scoped>
-.editor__content {
-    border: 1px solid #ccc;
-    padding: 10px;
-    min-height: 300px;
-}
-
-.tiptap {
-    border: 1px solid #ccc;
-    margin-top: 0.75em;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-code {
-    background-color: rgba(#616161, 0.1);
-    color: #616161;
-}
-
-.content {
-    padding: 1rem 0 0;
-}
-
-.contect h2 {
-    margin: 1rem 0 0.5rem;
-}
-
-.contect pre {
-    border-radius: 5px;
-    color: #333;
-}
-
-.contect code {
-    display: block;
-    white-space: pre-wrap;
-    font-size: 0.8rem;
-    padding: 0.75rem 1rem;
-    background-color: #e9ecef;
-    color: #495057;
-}
-</style>

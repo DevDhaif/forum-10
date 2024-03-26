@@ -9,6 +9,7 @@ use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ThreadController extends Controller
@@ -28,7 +29,7 @@ class ThreadController extends Controller
     }
     public function index(Channel $channel, ThreadFilters $filters, Request $request)
     {
-        $threads = $this->getThreads($channel, $filters)->paginate(5);
+        $threads = $this->getThreads($channel, $filters)->latest()->paginate(50);
         $threads->appends($request->query());
 
         return Inertia::render('Thread/Index', [
@@ -47,6 +48,8 @@ class ThreadController extends Controller
     }
     public function store(CreateThreadRequest $request)
     {
+        // dd(auth()->id());
+
         try {
 
             $thread = Thread::create(
@@ -55,10 +58,13 @@ class ThreadController extends Controller
                     ['user_id' => auth()->id()]
                 )
             );
+            // dd($thread);
             session()->flash('success', 'Your thread has been left!');
 
             return Inertia::location(route('threads.show', [$thread->channel->slug, $thread->id]));
         } catch (\Exception $e) {
+            // Log::info('Thread creation failed');
+            // dd($e->getMessage());
             session()->flash('error', 'There was a problem creating your thread');
             return back();
         }
@@ -104,20 +110,23 @@ class ThreadController extends Controller
     }
     public function update(Request $request, Channel $channel, Thread $thread)
     {
-        if ($thread->channel_id != $channel->id) {
-            abort(404, 'Thread not found');
-        }
-        $this->authorize('update', $thread);
-        $this->validate($request, [
-            'title' => 'required',
-            'body' => 'required',
-            'channel_id' => 'required|exists:channels,id'
-        ]);
-        $thread->update($request->only('title', 'body', 'channel_id'));
-        $newChannel = Channel::find($request->channel_id);
-        session()->flash('success', 'Your thread has been updated!');
+        try {
+            if ($thread->channel_id != $channel->id) {
+                abort(404, 'Thread not found');
+            }
+            $this->authorize('update', $thread);
 
-        return Inertia::location(route('threads.show', [$newChannel->slug, $thread->id]));
+            $thread->update($request->only('title', 'body', 'channel_id'));
+
+            $newChannel = Channel::find($request->channel_id);
+
+            session()->flash('success', 'Your thread has been updated!');
+
+            return Inertia::location(route('threads.show', [$newChannel->slug, $thread->id]));
+        } catch (\Exception $e) {
+            session()->flash('error', 'There was a problem updating your thread');
+            return back();
+        }
     }
     public function destroy($channel, Thread $thread)
     {

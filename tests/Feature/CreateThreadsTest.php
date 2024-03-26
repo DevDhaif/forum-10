@@ -34,16 +34,27 @@ class CreateThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $thread = make(Thread::class);
+        $channel = Channel::factory()->create();
+        $thread =   Thread::factory()->make(['channel_id' => $channel->id]);
 
-        $response = $this->post('/threads', $thread->toArray());
+        $threadData = [
+            'title' => $thread->title,
+            'body' => $thread->body,
+            'channel_id' => $channel->id,
+        ];
 
-        $createdThread = Thread::where('title', $thread->title)->first();
+        $response = $this->post('/threads', $threadData);
+
+        $createdThread = Thread::where('title', $threadData['title'])
+            ->where('body', $threadData['body'])
+            ->first();
+        // dd($thread->toArray());
+
+        $this->assertNotNull($createdThread, 'Thread was not created');
 
         $response->assertRedirect(route('threads.show', [$createdThread->channel->slug, $createdThread->id]));
 
         $this->assertDatabaseHas('threads', ['title' => $createdThread->title, 'body' => $createdThread->body]);
-
 
         $response = $this->get(route('threads.show', [$createdThread->channel->slug, $createdThread->id]));
 
