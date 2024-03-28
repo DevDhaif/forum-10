@@ -45,8 +45,7 @@
         </div>
         <hr class="my-4 border-gray-200" />
         <div class="p-2 relative">
-            <div class="mt-6 tiptap prose prose-pre:pr-8 prose-pre:w-fit  w-full max-w-full " v-html="highlighted">
-            </div>
+            <div class="mt-6 tiptap prose prose-pre:pr-8 prose-pre:w-fit  w-full max-w-full " v-html="highlighted" />
         </div>
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
@@ -165,5 +164,4 @@ export default {
 .tiptap p {
     margin: 0;
 }
-
 </style>

@@ -8,6 +8,7 @@ import { TableRow } from '@tiptap/extension-table-row'
 import { TableHeader } from '@tiptap/extension-table-header'
 import { TableCell } from '@tiptap/extension-table-cell'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import TextDirection from "tiptap-text-direction";
 import { getBasicButtons, getButtons } from '../../data/editorButtons'
 import { ref } from 'vue'
 import lowlight from '../../data/highlightLanguages'
@@ -30,6 +31,9 @@ const editor = useEditor({
         TableCell,
         Table.configure({ resizable: true }),
         CodeBlockLowlight.configure({ lowlight }),
+        TextDirection.configure({
+            types: ["heading", "paragraph"],
+        }),
     ],
     editorProps: {
         attributes: {
@@ -177,5 +181,25 @@ const handleFileUpload = event => {
     :hover {
         box-shadow: none !important;
     }
+}
+
+.ProseMirror p[dir="rtl"],
+.ProseMirror h1[dir="rtl"],
+.ProseMirror h2[dir="rtl"],
+.ProseMirror h3[dir="rtl"],
+.ProseMirror h4[dir="rtl"],
+.ProseMirror h5[dir="rtl"],
+.ProseMirror h6[dir="rtl"] {
+    text-align: right;
+}
+
+.ProseMirror p[dir="ltr"],
+.ProseMirror h1[dir="ltr"],
+.ProseMirror h2[dir="ltr"],
+.ProseMirror h3[dir="ltr"],
+.ProseMirror h4[dir="ltr"],
+.ProseMirror h5[dir="ltr"],
+.ProseMirror h6[dir="ltr"] {
+    text-align: left;
 }
 </style>

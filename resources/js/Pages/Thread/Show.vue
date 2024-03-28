@@ -1,5 +1,5 @@
 <template>
-    <div class="container flex items-start justify-between mx-auto mt-6 space-x-8">
+    <div  class="container flex items-start justify-between mx-auto mt-6 space-x-8">
         <div class="w-3/4">
             <thread-details :thread="thread" :user="user"></thread-details>
             <div class="p-4 mt-4 bg-white rounded shadow">
