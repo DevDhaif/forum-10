@@ -10,10 +10,6 @@
                 <input type="text" v-model="title" placeholder="Title" required
                     class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
-            <!-- <div class="mt-6">
-                <textarea v-model="body" class="w-full" placeholder="Have something to say?" rows="5"
-                    required></textarea>
-            </div> -->
             <div class="mt-6">
                 <my-editor v-model="body" :editor="editor" :modelValue="body" />
             </div>

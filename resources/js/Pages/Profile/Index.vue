@@ -26,10 +26,5 @@
 <script>
 export default {
     props: ['profileUser', 'threads', 'activities'],
-
-    created() {
-        // Fetch data from API and assign to profileUser, threads, and activities
-        console.log(this.profileUser);
-    }
 }
 </script>

@@ -3,10 +3,11 @@
         <header>
             <navigation :user="user" :channels="channels"></navigation>
         </header>
-        <article>
+        <article class="container mx-auto ">
             <slot />
         </article>
-        <FlashMessages v-if="$page.props.flash.success || $page.props.flash.error"></FlashMessages>
+        <FlashMessages v-if="$page.props.flash.success || $page.props.flash.error">
+        </FlashMessages>
     </main>
 </template>
 

@@ -36,7 +36,6 @@ export default {
                 .delete(`/replies/${this.reply.id}`)
                 .then((response) => {
                     this.$emit('replyDeleted', this.reply.id, response.data.thread, response.data.replies, response.data.flash);
-                    console.log(response.data.flash);
                     this.errorMessage = null;
                 })
                 .catch((error) => {
@@ -52,12 +51,11 @@ export default {
                     this.reply.body = this.editText;
                     this.editing = false;
                     this.flashMessage = null;
-                    this.$nextTick(() => {
-                        this.flashMessage = response.data.flash;
-                    });
+                    this.flashMessage = { message: response.data.flash, type: "success" }
                     this.errorMessage = null;
                 })
                 .catch((error) => {
+                    this.flashMessage = { message: response.data.flash, type: "error" }
                     this.errorMessage = "Could not save the reply";
                 });
         },

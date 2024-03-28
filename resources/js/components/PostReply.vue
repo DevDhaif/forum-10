@@ -1,14 +1,16 @@
 <template>
     <div v-if="user">
-        <form class="relative mt-6" @submit.prevent="postReply">
+        <form class="relative my-6" @submit.prevent="postReply">
             <div class="mt-6">
-                <textarea v-model="body" name="body" class="w-full" placeholder="Have something to say?"
-                    rows="5"></textarea>
+                <textarea v-model="body" name="body" class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500
+                " placeholder="Have something to say?" rows="5"></textarea>
             </div>
-            <button type="submit" class="px-2 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">Post
+            <button type="submit"
+                class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
+                Post
             </button>
         </form>
-        <flash v-if="flashMessage" :flash="flashMessage"></flash>
+        <flash :flash="flashMessage"></flash>
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
 </template>
@@ -26,6 +28,8 @@ export default {
     },
     methods: {
         postReply() {
+            // this.flashMessage = null;
+
             if (this.body === "") {
                 this.errorMessage = "Please enter a valid reply"
                 return
@@ -38,14 +42,12 @@ export default {
                 })
                     .then((response) => {
                         this.$emit('posted', response.data.thread, response.data.replies, response.data.flash)
-                        this.flashMessage = null
-                        this.$nextTick(() => {
-                            this.flashMessage = response.data.flash
-                        })
+                        this.flashMessage = { message: response.data.flash, type: "success" }
                         this.body = ""
                     })
                     .catch((error) => {
                         console.error(error)
+                        this.flashMessage = { message: response.data.flash, type: "error" }
                         this.errorMessage = "Something went wrong. Please try again"
                     })
             }

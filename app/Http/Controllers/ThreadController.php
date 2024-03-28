@@ -48,8 +48,6 @@ class ThreadController extends Controller
     }
     public function store(CreateThreadRequest $request)
     {
-        // dd(auth()->id());
-
         try {
 
             $thread = Thread::create(
@@ -58,13 +56,11 @@ class ThreadController extends Controller
                     ['user_id' => auth()->id()]
                 )
             );
-            // dd($thread);
+
             session()->flash('success', 'Your thread has been left!');
 
             return Inertia::location(route('threads.show', [$thread->channel->slug, $thread->id]));
         } catch (\Exception $e) {
-            // Log::info('Thread creation failed');
-            // dd($e->getMessage());
             session()->flash('error', 'There was a problem creating your thread');
             return back();
         }
@@ -131,9 +127,15 @@ class ThreadController extends Controller
     public function destroy($channel, Thread $thread)
     {
         $this->authorize('update', $thread);
-        $thread->delete();
+        try {
+            $thread->delete();
 
-        $threads = Thread::latest()->paginate(5);
-        return Inertia::location(route('threads'));
+            session()->flash('success', 'Your thread has been deleted!');
+
+            return Inertia::location(route('threads'));
+        } catch (\Exception $e) {
+            session()->flash('error', 'There was a problem deleting your thread');
+            return back();
+        }
     }
 }

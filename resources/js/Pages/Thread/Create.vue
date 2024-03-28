@@ -31,13 +31,12 @@
 </template>
 
 <script>
-import Layout from "../../Shared/Layout.vue";
+import { Inertia } from '@inertiajs/inertia'
 import MyEditor from "../../components/Editor/MyEditor.vue";
 import { route } from "ziggy-js"
 export default {
     components: {
         MyEditor,
-        Layout,
     },
     props: ["channels", "user"],
     data() {
@@ -53,8 +52,7 @@ export default {
 
     methods: {
         submitForm() {
-
-            this.form.post(route("threads.store"))
+            Inertia.post(route("threads.store"), this.form.data())
                 .then(() => {
                     this.form.reset();
                 })
