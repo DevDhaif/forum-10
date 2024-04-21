@@ -16,7 +16,7 @@ class Reply extends Model
     protected $guarded = [];
 
     protected $appends = ['favorites_count'];
-    protected $with = ['owner', 'favorites'];
+    protected $with = ['owner', 'favorites', 'channel', 'thread'];
     protected static $favoritedReplyIds = [];
     public static function loadFavoritedReplyIdsForUser($user)
     {
@@ -76,5 +76,9 @@ class Reply extends Model
             return false;
         }
         return in_array($this->id, self::$favoritedReplyIds);
+    }
+    public function getPathAttribute()
+    {
+        return $this->path();
     }
 }

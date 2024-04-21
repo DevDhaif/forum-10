@@ -38,7 +38,7 @@ const editor = useEditor({
     editorProps: {
         attributes: {
             class:
-                'border border-gray-400 p-4 min-h-[28rem] max-h-[12rem] prose  overflow-y-auto outline-none  max-w-none',
+                ' min-h-[28rem] max-h-[12rem] prose dark:prose-invert !bg-slate-800/10 p-4 overflow-y-auto outline-none  max-w-none border-[1px] border-slate-500 dark:border-slate-600',
         },
     },
 })
@@ -70,7 +70,7 @@ const handleFileUpload = event => {
 <template>
     <div class="prose-code:prose-code-lg">
         <section v-if="editor"
-            class="flex flex-wrap items-center p-4 text-gray-700 border-t border-l border-r border-gray-400 buttons gap-x-4">
+            class="flex flex-wrap items-center p-4 text-gray-700 border-t-[1px] border-l border-r border-slate-400 dark:border-slate-600 buttons gap-x-4">
             <input type="file" ref="fileInput" @change="handleFileUpload" hidden />
             <button v-for="itemButton in basicButtons" :key="itemButton.action" type="button"
                 @click="itemButton.action(editor)"
@@ -79,8 +79,8 @@ const handleFileUpload = event => {
             </button>
             <v-menu :close-on-content-click="false" location="end">
                 <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" class="!p-0 !shadow-red-600">
-                        <TableIcon />
+                    <v-btn v-bind="props" class="!p-0 !bg-transparent ">
+                        <TableIcon class="text-gray-700 " />
                     </v-btn>
                 </template>
 

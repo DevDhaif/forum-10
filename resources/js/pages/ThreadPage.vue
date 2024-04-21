@@ -3,7 +3,7 @@
 
         <div class="w-3/4">
             <thread-details :thread="thread" :user="user"></thread-details>
-            <div class="p-4 mt-4 bg-white rounded shadow">
+            <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
                 <p class="mt-6 text-sm text-gray-600">
                     This thread has {{ replies.data.length }}
                     replies.

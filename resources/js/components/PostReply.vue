@@ -28,7 +28,6 @@ export default {
     },
     methods: {
         postReply() {
-            // this.flashMessage = null;
 
             if (this.body === "") {
                 this.errorMessage = "Please enter a valid reply"

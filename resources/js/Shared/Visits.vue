@@ -1,6 +1,6 @@
 <template>
     <div
-        class="mr-4 flex items-center bg-blue-50 text-blue-900 text-sm font-medium  px-4 py-2 rounded  border border-blue-400">
+        class="mr-4 flex items-center bg-blue-50 dark:bg-blue-200 text-blue-900 dark:text-blue-600 text-sm font-medium  px-4 py-2 rounded  border border-blue-400">
         <svg width="19" height="13" viewBox="0 0 19 13" class="mr-1 mb-0.5 text-blue-800 dark:text-blue-600">
             <g fill="none" fill-rule="evenodd">
                 <path d="M0-3h19v19H0z"></path>

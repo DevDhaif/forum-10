@@ -7,13 +7,13 @@
             <div class="mt-6">
                 title
                 <input type="text" v-model="form.title" placeholder="Title" required
-                    class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white">
             </div>
             <div class="mt-4">
                 <my-editor v-model="form.body" :editor="editor" :modelValue="body" />
             </div>
             <select v-model="form.channel_id" required
-                class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="w-full border border-gray-300 dark:border-slate-100 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ">
                 <option value="">Choose One...</option>
                 <option v-for="channel in channels" :key="channel.id" :value="channel.id">
                     {{ channel.name }}

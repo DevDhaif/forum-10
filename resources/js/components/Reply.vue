@@ -17,7 +17,7 @@
             </div>
             <favorite :item="reply" type="reply" :user="user" />
         </div>
-        <flash v-if="flashMessage" :flash="flashMessage"></flash>
+        <flash :flash="flashMessage"></flash>
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
 </template>
@@ -50,7 +50,6 @@ export default {
                     this.body = this.editText;
                     this.reply.body = this.editText;
                     this.editing = false;
-                    this.flashMessage = null;
                     this.flashMessage = { message: response.data.flash, type: "success" }
                     this.errorMessage = null;
                 })

@@ -28,25 +28,24 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.css" rel="stylesheet" /> --}}
-
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @routes
 </head>
 
-<body class="font-sans antialiased">
-    {{-- <div class="min-h-screen bg-gray-100" id="app">
-        <flash message="{{ session('flash') }}">
-        </flash>
-        @include('layouts.navigation')
-        <!-- Page Content -->
-        <main class="container max-w-screen-xl p-4 mx-auto">
-            <!--  content -->
-            @yield('content')
-        </main>
-    </div> --}}
+<body class="font-sans antialiased text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900">
     @inertia
 </body>
 
 </html>
+
+{{-- <div class="min-h-screen bg-gray-100" id="app">
+    <flash message="{{ session('flash') }}">
+    </flash>
+    @include('layouts.navigation')
+    <!-- Page Content -->
+    <main class="container max-w-screen-xl p-4 mx-auto">
+        <!--  content -->
+        @yield('content')
+    </main>
+</div> --}}

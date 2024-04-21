@@ -1,15 +1,23 @@
 <template>
-    <div class="flex py-4 px-8 bg-white shadow-md justify-around">
+    <div class="flex py-4 px-8 bg-slate-50  dark:bg-slate-900 shadow-md justify-around">
         <!-- Logo -->
         <div class="flex items-center flex-shrink-0">
             <Link href="#">
-            <Logo class="block w-12 text-gray-800 fill-current h-12" />
+            <Logo class="block w-12 text-slate-800 fill-current h-12" />
             </Link>
         </div>
         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex sm:items-center">
-            <Link
-                class="px-4 py-2 leading-4 border border-1 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent  text-sm font-medium text-gray-900 hover:text-gray-700 hover:bg-gray-100"
-                :href="route('threads.create')">
+            <Link class="px-4 py-2 leading-4 border border-1 rounded cursor-pointer
+                focus:border-transparent text-sm font-medium
+                focus:outline-none focus:ring-2 focus:ring-slate-300
+                dark:focus:ring-slate-600
+                text-slate-900
+                dark:text-slate-100
+                hover:text-slate-700
+                hover:bg-slate-100
+                dark:hover:bg-slate-800 dark:hover:text-slate-300
+
+                " :href="route('threads.create')">
             New Thread
             </Link>
             <Dropdown title="Filter">

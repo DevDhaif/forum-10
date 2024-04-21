@@ -19,18 +19,13 @@ class ProfileController extends Controller
     public function show(Request $request, User $user)
     {
 
-        $threads = Thread::all()->where('user_id', $user->id);
+        $threads = Thread::where('user_id', $user->id)->latest()->get();
 
         return Inertia::render('Profile/Index', [
-            'profileUser' => $user->load('university','field'),
+            'profileUser' => $user->load('university', 'field'),
             'threads' => $threads,
             'activities' => Activity::feed($user, 50),
         ]);
-        // return view('profile.show', [
-        //     'profileUser' => $user,
-        //     'threads' => $threads,
-        //     'activities' => Activity::feed($user, 50),
-        // ]);
     }
     /**
      * Display the user's profile form.

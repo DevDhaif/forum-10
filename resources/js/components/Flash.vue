@@ -7,7 +7,6 @@
             </div>
         </div>
     </Transition>
-    <button @click="show = !show">Toggle </button>
 </template>
 
 <script>

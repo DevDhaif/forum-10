@@ -1,8 +1,8 @@
 <template>
-    <div  class="container flex items-start justify-between mx-auto mt-6 space-x-8">
+    <div class="container flex items-start justify-between mx-auto mt-6 space-x-8">
         <div class="w-3/4">
             <thread-details :thread="thread" :user="user"></thread-details>
-            <div class="p-4 mt-4 bg-white rounded shadow">
+            <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
                 <p class="mt-6 text-sm text-gray-600"> This thread has {{ thread.replies_count }} replies. </p>
                 <post-reply :user="user" :thread="thread" @replyPosted="addReply" @flash="handleFlash"
                     @posted="posted"></post-reply>

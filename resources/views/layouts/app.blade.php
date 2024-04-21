@@ -34,7 +34,7 @@
     @inertiaHead
 </head>
 
-<body class="font-sans antialiased">
+<body class="antialiased text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900">
     {{-- <div class="min-h-screen bg-gray-100" id="app">
         <flash message="{{ session('flash') }}">
         </flash>

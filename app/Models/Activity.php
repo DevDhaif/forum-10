@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Activity extends Model
 {
@@ -27,13 +28,33 @@ class Activity extends Model
 
     static protected function feed($user, $take = 50)
     {
-        return static::where('user_id', $user->id)
-            ->latest()
-            ->with('subject')
-            ->take($take)
-            ->get()
-            ->groupBy(function ($activity) {
-                return $activity->created_at->format('Y-m-d');
-            });
+        $cacheKey = "user:{$user->id}:feed";
+        return Cache::remember($cacheKey, 60, function () use ($user, $take) {
+
+            return static::where('user_id', $user->id)
+                ->latest()
+                ->with(['subject' => function ($morphTo) {
+                    $morphTo->morphWith([
+                        Favorite::class => ['favorited'],
+                    ]);
+                }])
+                ->take($take)
+                ->get()
+                ->map(function ($activity) {
+                    if ($activity->subject_type === Reply::class) {
+                        $activity->subject->path = $activity->subject->path();
+                    } elseif ($activity->subject_type === Favorite::class) {
+                        if ($activity->subject->favorited_type === Reply::class) {
+                            $activity->subject->favorited->path = $activity->subject->favorited->path();
+                        } elseif ($activity->subject->favorited_type === Thread::class) {
+                            $activity->subject->favorited->path = $activity->subject->favorited->path();
+                        }
+                    }
+                    return $activity;
+                })
+                ->groupBy(function ($activity) {
+                    return $activity->created_at->format('Y-m-d');
+                });
+        });
     }
 }

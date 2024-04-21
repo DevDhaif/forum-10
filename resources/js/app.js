@@ -18,6 +18,8 @@ import ThreadDetails from "/resources/js/components/ThreadDetails.vue";
 import ThreadCard from "/resources/js/components/ThreadCard.vue";
 import MyEditor from "/resources/js/components/Editor/MyEditor.vue";
 import Layout from './Shared/Layout.vue';
+import Badge from './Shared/Badge.vue'
+import TimeLine from './Shared/TimeLine.vue'
 import 'highlight.js/styles/github-dark.css'
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
@@ -59,6 +61,8 @@ createInertiaApp({
             .component('thread-card', ThreadCard)
             .component('my-editor', MyEditor)
             .component('layout', Layout)
+            .component('badge', Badge)
+            .component('time-line', TimeLine)
 
 
         vueApp.mount(el);
