@@ -27,6 +27,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { InertiaForm } from "@inertiajs/inertia-vue3";
+import isAdminMixin from './mixins/isAdminMixin';
 
 const vuetify = createVuetify({
     components,
@@ -49,6 +50,7 @@ createInertiaApp({
             .use(plugin)
             .use(vuetify)
             .use(InertiaForm)
+            .mixin(isAdminMixin)
             .component('example-component', ExampleComponent)
             .component('reply', Reply)
             .component('replies', Replies)

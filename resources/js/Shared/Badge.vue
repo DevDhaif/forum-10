@@ -1,6 +1,6 @@
 <template>
     <span :class="badgeClass(channelId, color)"
-        class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium border-[1px] ">
+        class="inline-flex uppercase items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium border-[1px] ">
         {{ title }}
     </span>
 </template>

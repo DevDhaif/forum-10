@@ -26,10 +26,19 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        Gate::before(function ($user) {
-            if ($user->name === 'Dhaifallah') {
-                return true;
-            }
+        $this->registerPolicies();
+
+        Gate::define('update-thread', function ($user, $thread) {
+            return $user->id == $thread->user_id;
         });
+
+        Gate::define('delete-thread', function ($user, $thread) {
+            return $user->id == $thread->user_id;
+        });
+        // Gate::before(function ($user) {
+        //     if ($user->name === 'Dhaifallah') {
+        //         return true;
+        //     }
+        // });
     }
 }

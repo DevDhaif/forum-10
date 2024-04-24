@@ -1,6 +1,7 @@
 <template>
     <div>
         <h1 class="text-2xl font-bold">{{ profileUser.name }}</h1>
+        {{ getRole(profileUser) }}
         <h1 class="text-2xl font-bold">{{ profileUser.email }}</h1>
         <div class="flex mt-4 space-x-2">
             <h1 class="px-4 py-1 font-semibold text-blue-800 bg-blue-100 border border-blue-500 rounded-xl">{{
@@ -78,6 +79,13 @@ export default {
                 activity: activity,
             };
         },
+        getRole(user) {
+            if (user.roles.some(role => role.name === 'admin')) {
+                return 'Admin';
+            } else {
+                return 'User';
+            }
+        }
     },
     created() {
         // console.log(this.threads);

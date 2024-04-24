@@ -109,7 +109,7 @@ export default {
             return moment(this.thread.created_at).fromNow();
         },
         canUpdate() {
-            return this.user && this.thread.creator.id === this.user.id;
+            return (this.user && this.thread.creator.id === this.user.id) || this.isAdmin;
         },
         highlighted() {
             return highlightCode(this.thread.body, this.decodeHtml);

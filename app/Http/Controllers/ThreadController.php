@@ -87,6 +87,8 @@ class ThreadController extends Controller
         foreach ($replies as $reply) {
             $reply->isFavorited = $reply->isFavoritedByUser(auth()->user());
         }
+        $user = auth()->user();
+        $user->role = $user->roles->first()->name;
         return Inertia::render('Thread/Show', [
             'thread' => $thread,
             'replies' => $replies,

@@ -85,9 +85,7 @@ export default {
         VisitIcon
     },
     props: ['thread', 'channel', 'channels', 'index'],
-    mounted() {
-        this.drawTriangle();
-    },
+
     computed: {
         formatDate() {
             return date => moment(date).fromNow()
@@ -107,28 +105,6 @@ export default {
                 body = body.substring(0, 100) + '...'
             }
             return highlightCode(body)
-        },
-
-        methods: {
-            drawTriangle() {
-                const canvas = this.$refs.canvas;
-                const ctx = canvas.getContext('2d');
-
-                // Adjust the canvas size
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
-
-                // Draw the triangle
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                ctx.lineTo(canvas.width, canvas.height / 2);
-                ctx.lineTo(0, canvas.height);
-                ctx.closePath();
-
-                // Fill the triangle
-                ctx.fillStyle = 'red';
-                ctx.fill();
-            }
         },
 
     },
