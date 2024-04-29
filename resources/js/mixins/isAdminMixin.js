@@ -1,7 +1,7 @@
 export default {
     computed: {
         isAdmin() {
-            return this.user.role === 'admin';
+            return this.user?.role === 'admin';
         }
     }
 }

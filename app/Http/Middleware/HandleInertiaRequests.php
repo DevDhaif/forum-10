@@ -40,9 +40,13 @@ class HandleInertiaRequests extends Middleware
         $channels = Cache::remember('channels', 5, function () {
             return \App\Models\Channel::all();
         });
+        $universities = \App\Models\University::all();
+        $fields = \App\Models\Field::all();
 
         return array_merge(parent::share($request), [
             'channels' => $channels,
+            'universities' => $universities,
+            'fields' => $fields,
             'user' => fn () => $request->user()
                 ? $request->user()->only('id', 'name', 'email')
                 : null,
