@@ -48,7 +48,7 @@ class HandleInertiaRequests extends Middleware
             'universities' => $universities,
             'fields' => $fields,
             'user' => fn () => $request->user()
-                ? $request->user()->only('id', 'name', 'email')
+                ? $request->user()->only('id', 'name', 'email', 'roles')
                 : null,
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

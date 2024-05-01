@@ -10,7 +10,7 @@
             </div>
             <div v-else class="flex space-x-4">
                 <p>{{ reply.body }}</p>
-                <div v-if="user?.id === reply.user_id">
+                <div v-if="(user?.id === reply.user_id) || this.isAdmin">
                     <btn color="blue" @click="editReply">Edit</btn>
                     <btn color="red" @click="deleteReply">Delete</btn>
                 </div>

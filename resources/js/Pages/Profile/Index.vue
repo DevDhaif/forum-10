@@ -44,7 +44,8 @@
 
             <h1 class="text-2xl font-bold">{{ profileUser.name }}</h1>
             <badge :title="getRole(profileUser)" />
-            <button @click="dialog = !dialog" class="px-4 py-1 bg-blue-500 text-white rounded-lg">Edit</button>
+            <button v-if="canUpdate" @click="dialog = !dialog"
+                class="px-4 py-1 bg-blue-500 text-white rounded-lg">Edit</button>
 
         </div>
         <h1 class="text-2xl font-bold">{{ profileUser.email }}</h1>
@@ -85,7 +86,7 @@ import axios from 'axios';
 import Dropdown from '../../Shared/Dropdown.vue';
 
 export default {
-    props: ['profileUser', 'threads', 'activities', 'universities', 'fields'],
+    props: ['profileUser', 'threads', 'activities', 'universities', 'fields', 'user'],
     components: {
         CreatedFavorite,
         CreatedThread,
@@ -158,7 +159,8 @@ export default {
         },
     },
     mounted() {
-        this.canUpdate = this.$page.props.user.id === this.profileUser.id;
+        // console.log(this.isAdmin);
+        this.canUpdate = (this.$page.props.user.id === this.profileUser.id) || this.isAdmin;
     }
 }
 </script>

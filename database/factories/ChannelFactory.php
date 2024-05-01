@@ -21,5 +21,6 @@ class ChannelFactory extends Factory
         return [
             'name' => $name,
             'slug' => $name,
-        ];}
+        ];
+    }
 }

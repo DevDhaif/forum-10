@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Reply;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 class ReplyPolicy
 {
@@ -24,6 +25,15 @@ class ReplyPolicy
     public function update(User $user, Reply $reply)
     {
         //
-        return $reply->user_id == $user->id;
+        return $reply->user_id == $user->id || $user->hasRole('admin')
+            ? Response::allow()
+            : Response::deny('You do not own this reply.');
+    }
+    public function delete(User $user, Reply $reply)
+    {
+        //
+        return $reply->user_id == $user->id || $user->hasRole('admin')
+            ? Response::allow()
+            : Response::deny('You do not own this reply.');
     }
 }

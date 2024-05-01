@@ -62,7 +62,7 @@ class ReplyController extends Controller
 
     public function destroy(Reply $reply)
     {
-        $this->authorize('update', $reply);
+        $this->authorize('delete', $reply);
         $thread = $reply->thread;
         $reply->delete();
         $replies = $thread->replies()->latest()->paginate(10)->withPath("/threads/{$thread->channel->slug}/{$thread->id}");
