@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <button v-if="canUpdate" @click="dialog = !dialog"
-            class="px-4 py-2 bg-blue-500 text-white rounded-lg">Edit</button>
+    <div class="mt-4">
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card>
                 <v-card-title>
@@ -42,8 +40,13 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <h1 class="text-2xl font-bold">{{ profileUser.name }}</h1>
-        {{ getRole(profileUser) }}
+        <div class="flex items-center space-x-4">
+
+            <h1 class="text-2xl font-bold">{{ profileUser.name }}</h1>
+            <badge :title="getRole(profileUser)" />
+            <button @click="dialog = !dialog" class="px-4 py-1 bg-blue-500 text-white rounded-lg">Edit</button>
+
+        </div>
         <h1 class="text-2xl font-bold">{{ profileUser.email }}</h1>
         <div class="flex mt-4 space-x-2">
             <h1 class="px-4 py-1 font-semibold text-blue-800 bg-blue-100 border border-blue-500 rounded-xl">{{
@@ -55,14 +58,14 @@
         <p class="mt-2">Since {{ formattedDate(profileUser.created_at) }}</p>
         <h2 class="text-2xl font-bold mt-8">Threads</h2>
         <div class="mx-auto grid grid-cols-3 gap-4">
-            <thread-card v-for="(thread, index) in threads" :key="thread.id" :thread="thread" :index="index" />
+            <thread-card v-for="( thread, index ) in  threads " :key="thread.id" :thread="thread" :index="index" />
             <h1 v-if="threads.length === 0">no threads yet</h1>
         </div>
         <h2 class="text-2xl font-bold mt-8">Activities</h2>
         <time-line>
 
-            <div class="space-y-12" v-for="(activitiesOnDate, date) in activities" :key="date">
-                <component v-for="(activity) in activitiesOnDate" :key="activity.id" :date="date"
+            <div class="space-y-12" v-for="( activitiesOnDate, date ) in  activities " :key="date">
+                <component v-for="( activity ) in  activitiesOnDate " :key="activity.id" :date="date"
                     :is="getComponentName(activity.type)" v-bind="activityProps(activity)" :user="profileUser">
                 </component>
             </div>
@@ -88,7 +91,7 @@ export default {
         CreatedThread,
         CreatedReply,
         ActivityIcon,
-        Dropdown
+        Dropdown,
     },
     data() {
         return {
@@ -111,14 +114,12 @@ export default {
     methods: {
         updateProfile() {
             const oldName = this.profileUser.name;
-            axios.patch('/profile', this.form)
+            axios.patch(`/profile/${this.profileUser.name}`, { ...this.form, user_id: this.profileUser.id })
                 .then(response => {
-                    console.log(this.profileUser)
                     this.profileUser.name = response.data.name;
                     this.profileUser.email = response.data.email;
                     this.profileUser.field = response.data.field;
                     this.profileUser.university = response.data.university;
-                    console.log(this.profileUser)
                     this.dialog = false;
                     if (oldName !== response.data.name) {
                         this.$inertia.visit(`/profiles/${response.data.name}`);

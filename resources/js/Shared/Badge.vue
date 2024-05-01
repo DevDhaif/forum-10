@@ -1,6 +1,6 @@
 <template>
     <span :class="badgeClass(channelId, color)"
-        class="inline-flex uppercase items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium border-[1px] ">
+        class="inline-flex uppercase items-center gap-x-1.5 py-1.5 px-3 rounded-full tracking-widest text-xs font-medium border-[1px] ">
         {{ title }}
     </span>
 </template>
@@ -36,7 +36,7 @@ export default {
             const colorKeys = Object.keys(colors);
             const id = Number(channelId);
             if (isNaN(id)) {
-                return 'bg-red-100 text-gray-800';
+                return 'border-cyan-300 text-cyan-800 bg-gradient-to-br from-cyan-50 via-cyan-200 to-cyan-500';
             }
             const colorKey = colorKeys[id % colorKeys.length];
             return colors[colorKey];

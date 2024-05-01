@@ -10,7 +10,9 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Inertia\Inertia;
 
@@ -41,9 +43,11 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request)
+    public function update(ProfileUpdateRequest $request, User $user)
     {
-        $user = $request->user();
+        if (!$request->user()->hasRole('admin') && $request->user()->id !== $user->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         $user->fill($request->validated());
 
         if ($user->isDirty('email')) {
@@ -52,6 +56,7 @@ class ProfileController extends Controller
 
         $user->save();
         $user->load('university', 'field', 'roles');
+
         return response()->json($user, 200);
     }
 
