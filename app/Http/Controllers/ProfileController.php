@@ -68,7 +68,11 @@ class ProfileController extends Controller
         if ($user->id !== $request->user()->id && !$request->user()->hasRole('admin')) {
             return response()->json(['error' => 'Unauthorized User'], 403);
         }
-
+        if (!$request->user()->hasRole('admin')) {
+            $request->validateWithBag('userDeletion', [
+                'password' => ['required', 'current-password'],
+            ]);
+        }
         Auth::logout();
 
         $user->delete();
@@ -77,20 +81,5 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return response()->json(['message' => 'User deleted'], 200);
-
-        // $request->validateWithBag('userDeletion', [
-        //     'password' => ['required', 'current-password'],
-        // ]);
-
-        // $user = $request->user();
-
-        // Auth::logout();
-
-        // $user->delete();
-
-        // $request->session()->invalidate();
-        // $request->session()->regenerateToken();
-
-        // return Redirect::to('/');
     }
 }

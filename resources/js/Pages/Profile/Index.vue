@@ -1,6 +1,6 @@
 <template>
     <div class="mt-4">
-        <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-dialog v-model="updateDialog" persistent max-width="600px">
             <v-card>
                 <v-card-title>
                     <span class="headline">Edit Profile</span>
@@ -35,8 +35,29 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+                    <v-btn color="blue darken-1" text @click="updateDialog = false">Close</v-btn>
                     <v-btn color="blue darken-1" text @click="updateProfile">Save</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="deleteDialog" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Delete Account</span>
+                </v-card-title>
+                <v-card-text>
+                    <form class="relative " @submit.prevent="updateProfile">
+                        <!-- <v-text-field label="Name" v-model="form.name"></v-text-field> -->
+                        <!-- enter password to delete account -->
+                        <v-text-field label="Password" v-model="form.password" type="password"></v-text-field>
+                        <!-- show error  -->
+                        <v-alert v-if="showAlert && errors.password" type="error">{{ errors.password }}</v-alert>
+                    </form>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="deleteDialog = false">Close</v-btn>
+                    <v-btn color="blue darken-1" text @click="confirmDelete">Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -44,7 +65,7 @@
 
             <h1 class="text-2xl font-bold">{{ profileUser.name }}</h1>
             <badge :title="getRole(profileUser)" />
-            <button v-if="canUpdate" @click="dialog = !dialog"
+            <button v-if="canUpdate" @click="updateDialog = !updateDialog"
                 class="px-4 py-1 bg-blue-500 text-white rounded-lg">Edit</button>
             <button v-if="canUpdate" class="px-4 py-1 bg-red-500 text-white rounded-lg"
                 @click="deleteProfile">Delete</button>
@@ -98,19 +119,34 @@ export default {
     data() {
         return {
             editing: false,
-            dialog: false,
+            updateDialog: false,
+            deleteDialog: false,
             canUpdate: false,
             form: {
                 name: this.profileUser.name,
                 email: this.profileUser.email,
                 university_id: this.profileUser.university.id,
                 field_id: this.profileUser.field.id,
+                password: '',
             },
+            errors: {},
+            showAlert: false,
         }
     },
     watch: {
         profileUser(newProfileUser) {
             this.canUpdate = this.$page.props.user.id === newProfileUser.id;
+        },
+        errors: {
+            handler() {
+                if (this.errors.password) {
+                    this.showAlert = true;
+                    setTimeout(() => {
+                        this.showAlert = false;
+                    }, 3000);
+                }
+            },
+            deep: true
         }
     },
     methods: {
@@ -122,7 +158,7 @@ export default {
                     this.profileUser.email = response.data.email;
                     this.profileUser.field = response.data.field;
                     this.profileUser.university = response.data.university;
-                    this.dialog = false;
+                    this.updateDialog = false;
                     if (oldName !== response.data.name) {
                         this.$inertia.visit(`/profiles/${response.data.name}`);
                     }
@@ -132,12 +168,28 @@ export default {
                 });
         },
         deleteProfile() {
-            axios.delete(`/profile/${this.profileUser.name}`)
+            if (this.isAdmin) {
+                axios.delete(`/profile/${this.profileUser.name}`)
+                    .then(response => {
+                        this.$inertia.visit(`/`);
+                    })
+                    .catch(error => {
+                        // Handle error
+                        this.errors = error.response.data.errors;
+                    });
+            } else {
+                this.deleteDialog = true;
+            }
+        },
+        confirmDelete() {
+            axios.delete(`/profile/${this.profileUser.name}`, { data: { password: this.form.password } })
                 .then(response => {
+                    this.deleteDialog = false;
                     this.$inertia.visit(`/`);
                 })
                 .catch(error => {
                     // Handle error
+                    this.errors = error.response.data.errors;
                 });
         },
         getComponentName(type) {
