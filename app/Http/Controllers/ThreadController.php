@@ -89,8 +89,8 @@ class ThreadController extends Controller
         }
 
         $user = auth()->user();
-        if ($user) {
-            $user->role = $user?->roles->first()->name;
+        if ($user && $user->roles->isNotEmpty()) {
+            $user->role = $user->roles->first()->name;
         }
         return Inertia::render('Thread/Show', [
             'thread' => $thread,

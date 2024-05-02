@@ -47,7 +47,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function path(){
+    public function path()
+    {
         return "/profiles/{$this->name}";
     }
     public function university()
@@ -58,19 +59,22 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Field::class);
     }
-    public function threads(){
+    public function threads()
+    {
         return $this->hasMany(Thread::class)->latest();
     }
 
-    public function getRouteKeyName(){
-         return 'name';
+    public function getRouteKeyName()
+    {
+        return 'name';
     }
 
-    public function activity(){
-        return $this->hasMany(Activity::class );
+    public function activity()
+    {
+        return $this->hasMany(Activity::class);
     }
     public function getPathAttribute()
-{
-    return $this->path();
-}
+    {
+        return $this->path();
+    }
 }
