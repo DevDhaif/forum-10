@@ -108,18 +108,32 @@ class ProfileTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->delete('/profile', [
+            ->delete("/profile/{$user->name}", [
                 'password' => 'password',
             ]);
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect('/');
-
+            ->assertStatus(200);
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
         $this->assertGuest();
         $this->assertNull($user->fresh());
     }
 
+    public function test_admin_can_delete_user_account(): void
+    {
+        $user = User::factory()->create(['name' => 'testuser']);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $response = $this
+            ->actingAs($admin)
+            ->delete("/profile/{$user->name}");
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
     public function test_correct_password_must_be_provided_to_delete_account(): void
     {
         $this->expectException('Illuminate\Validation\ValidationException');

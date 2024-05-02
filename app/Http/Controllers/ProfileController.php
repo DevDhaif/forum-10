@@ -63,14 +63,11 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(User $user, Request $request)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current-password'],
-        ]);
-
-        $user = $request->user();
-        // yes there is
+        if ($user->id !== $request->user()->id && !$request->user()->hasRole('admin')) {
+            return response()->json(['error' => 'Unauthorized User'], 403);
+        }
 
         Auth::logout();
 
@@ -79,6 +76,21 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return response()->json(['message' => 'User deleted'], 200);
+
+        // $request->validateWithBag('userDeletion', [
+        //     'password' => ['required', 'current-password'],
+        // ]);
+
+        // $user = $request->user();
+
+        // Auth::logout();
+
+        // $user->delete();
+
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
+
+        // return Redirect::to('/');
     }
 }

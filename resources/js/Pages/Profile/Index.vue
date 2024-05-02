@@ -46,7 +46,8 @@
             <badge :title="getRole(profileUser)" />
             <button v-if="canUpdate" @click="dialog = !dialog"
                 class="px-4 py-1 bg-blue-500 text-white rounded-lg">Edit</button>
-
+            <button v-if="canUpdate" class="px-4 py-1 bg-red-500 text-white rounded-lg"
+                @click="deleteProfile">Delete</button>
         </div>
         <h1 class="text-2xl font-bold">{{ profileUser.email }}</h1>
         <div class="flex mt-4 space-x-2">
@@ -125,6 +126,15 @@ export default {
                     if (oldName !== response.data.name) {
                         this.$inertia.visit(`/profiles/${response.data.name}`);
                     }
+                })
+                .catch(error => {
+                    // Handle error
+                });
+        },
+        deleteProfile() {
+            axios.delete(`/profile/${this.profileUser.name}`)
+                .then(response => {
+                    this.$inertia.visit(`/`);
                 })
                 .catch(error => {
                     // Handle error
