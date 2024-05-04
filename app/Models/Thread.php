@@ -71,10 +71,10 @@ class Thread extends Model
     {
         return $this->favorites()->where('user_id', auth()->id())->exists();
     }
-    public function favorites()
-    {
-        return $this->morphMany(Favorite::class, 'favorited');
-    }
+    // public function favorites()
+    // {
+    //     return $this->morphMany(Favorite::class, 'favorited');
+    // }`
     public function getPathAttribute()
     {
         return $this->path();
