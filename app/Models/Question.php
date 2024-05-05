@@ -13,7 +13,7 @@ class Question extends Model
     use Voteable;
     use RecordsActivity;
     protected $guarded = [];
-    protected $appends = ['votes_count', 'isVoted', 'path', 'is_answered'];
+    protected $appends = ['votes_count', 'isUpvoted', 'isDownvoted', 'path', 'is_answered'];
     protected $with = ['creator', 'channel', 'votes'];
 
     protected static function boot()
@@ -69,11 +69,19 @@ class Question extends Model
         return $this->answers()->create($answer);
     }
 
-    public function isVoted()
-    {
-        return $this->votes()->where('user_id', auth()->id())->exists();
-    }
+    // public function isVoted()
+    // {
+    //     return $this->votes()->where('user_id', auth()->id())->exists();
+    // }
 
+    public function isUpvoted()
+    {
+        return $this->votes()->where('user_id', auth()->id())->where('type', 'upvote')->exists();
+    }
+    public function isDownvoted()
+    {
+        return $this->votes()->where('user_id', auth()->id())->where('type', 'downvote')->exists();
+    }
     public function votes()
     {
         return $this->morphMany(Vote::class, 'voted');
@@ -84,11 +92,18 @@ class Question extends Model
     //     return $this->votes()->sum('vote');
     // }
 
-    public function getIsVotedAttribute()
+    // public function getIsVotedAttribute()
+    // {
+    //     return $this->isVoted();
+    // }
+    public function getIsUpvotedAttribute()
     {
-        return $this->isVoted();
+        return $this->isUpvoted();
     }
-
+    public function getIsDownvotedAttribute()
+    {
+        return $this->isDownvoted();
+    }
     public function getIsAnsweredAttribute()
     {
         return $this->answers()->where('is_best', true)->exists();
@@ -101,15 +116,15 @@ class Question extends Model
         $this->is_answered = true;
         $this->save();
     }
-    public function vote($vote)
-    {
-        $this->votes()->create($vote);
-    }
+    // public function vote($vote)
+    // {
+    //     $this->votes()->create($vote);
+    // }
 
-    public function unvote()
-    {
-        $this->votes()->where('user_id', auth()->id())->delete();
-    }
+    // public function unvote()
+    // {
+    //     $this->votes()->where('user_id', auth()->id())->delete();
+    // }
 
     public function getPathAttribute()
     {

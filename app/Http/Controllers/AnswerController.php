@@ -118,10 +118,16 @@ class AnswerController extends Controller
         session()->flash('message', 'Your answer has been deleted!');
         return redirect()->back();
     }
-    public function isVoted(Answer $answer)
+    public function isUpvoted(Answer $answer)
     {
-        $isVoted = $answer->isVotedByUser(auth()->user());
+        $isUpvoted = $answer->isUpvotedByUser(auth()->user());
 
-        return response()->json(['isVoted' => $isVoted]);
+        return response()->json(['isUpvoted' => $isUpvoted]);
+    }
+    public function isDownvoted(Answer $answer)
+    {
+        $isDownvoted = $answer->isDownvotedByUser(auth()->user());
+
+        return response()->json(['isDownvoted' => $isDownvoted]);
     }
 }

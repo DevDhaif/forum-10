@@ -11,20 +11,39 @@ class VoteController extends Controller
         $this->middleware('auth');
     }
 
-    public function store($type, $id)
+    public function upvote($type, $id)
     {
         $voteable = $this->getVoteable($type, $id);
 
-        $result = $voteable->toggleVote();
+        $result = $voteable->toggleUpvote();
         if (request()->expectsJson()) {
             return response()->json($result);
         }
         return back();
     }
-    public function destroy($type, $id)
+    public function downvote($type, $id)
     {
         $voteable = $this->getVoteable($type, $id);
-        $result = $voteable->toggleVote();
+
+        $result = $voteable->toggleDownvote();
+        if (request()->expectsJson()) {
+            return response()->json($result);
+        }
+        return back();
+    }
+    public function removeUpvote($type, $id)
+    {
+        $voteable = $this->getVoteable($type, $id);
+        $result = $voteable->toggleUpvote();
+        if (request()->expectsJson()) {
+            return response()->json($result);
+        }
+        return back();
+    }
+    public function removeDownvote($type, $id)
+    {
+        $voteable = $this->getVoteable($type, $id);
+        $result = $voteable->toggleDownvote();
         if (request()->expectsJson()) {
             return response()->json($result);
         }

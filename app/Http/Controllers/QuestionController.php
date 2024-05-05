@@ -96,7 +96,8 @@ class QuestionController extends Controller
         $answers = $question->answers()->latest()->paginate(10);
 
         foreach ($answers as $answer) {
-            $answer->isVoted = $answer->isVotedByUser(auth()->user());
+            $answer->isUpvoted = $answer->isUpvotedByUser(auth()->user());
+            $answer->isDownvoted = $answer->isDownvotedByUser(auth()->user());
         }
 
         $user = auth()->user();

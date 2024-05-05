@@ -72,13 +72,21 @@ class Answer extends Model
     {
         return $this->morphMany(Activity::class, 'subject');
     }
-    public function isVotedByUser($user)
+    public function isUpvotedByUser($user)
     {
         // chech if there is no logged in user
         if (!$user) {
             return false;
         }
-        return in_array($this->id, self::$votedAnswerIds);
+        return in_array($this->id, self::$votedAnswerIds) && $this->votes->where('user_id', $user->id)->where('type', 'upvote')->count() > 0;
+    }
+    public function isDownvotedByUser($user)
+    {
+        // chech if there is no logged in user
+        if (!$user) {
+            return false;
+        }
+        return in_array($this->id, self::$votedAnswerIds) && $this->votes->where('user_id', $user->id)->where('type', 'downvote')->count() > 0;
     }
     public function getPathAttribute()
     {

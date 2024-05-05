@@ -68,10 +68,12 @@ Route::delete("/questions/{channel}/{question}", [QuestionController::class, 'de
 
 
 Route::post('{type}/{id}/favorites', [FavoriteController::class, 'store'])->name('replies.favorite');
-Route::post('{type}/{id}/votes', [VoteController::class, 'store'])->name('answers.vote');
+Route::post('{type}/{id}/upvotes', [VoteController::class, 'upvote'])->name('answers.upvote');
+Route::post('{type}/{id}/downvotes', [VoteController::class, 'downvote'])->name('answers.downvote');
 
 Route::delete('{type}/{id}/favorites', [FavoriteController::class, 'destroy'])->name('replies.unfavorite');
-Route::delete('{type}/{id}/votes', [VoteController::class, 'destroy'])->name('answers.unvote');
+Route::delete('{type}/{id}/upvotes', [VoteController::class, 'removeUpvote'])->name('answers.removeUpvote');
+Route::delete('{type}/{id}/downvotes', [VoteController::class, 'removeDownvote'])->name('answers.removeDownvote');
 
 Route::get('/replies/{reply}/isFavorited', [ReplyController::class, 'isFavorited'])->name('replies.isFavorited');
 Route::get('/answers/{answer}/isVoted', [AnswerController::class, 'isVoted'])->name('answers.isVoted');

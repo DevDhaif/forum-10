@@ -16,7 +16,8 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('voted_id');
             $table->string('voted_type', 50);
-            $table->unique(['user_id', 'voted_id', 'voted_type']);
+            $table->string('type', 50)->comment('upvote, downvote');
+            $table->unique(['user_id', 'voted_id', 'voted_type', 'type']);
             $table->timestamps();
         });
     }

@@ -16,6 +16,7 @@
                     <btn color="red" @click="deleteAnswer">Delete</btn>
                 </div>
             </div>
+            <Vote :item="answer" type="answer" :user="user"></Vote>
             <!-- <favorite :item="answer" type="answer" :user="user" /> -->
         </div>
         <flash :flash="flashMessage"></flash>
@@ -25,10 +26,13 @@
 
 <script>
 import axios from "axios";
-// import Favorite from "./Favorite.vue";
+import Vote from "./Vote.vue";
+
 export default {
-    // components: { Favorite },
     props: ["answer", "user"],
+    components: {
+        Vote,
+    },
     data() { return { editing: false, editText: this.answer.body, errorMessage: "", flashMessage: null }; },
     methods: {
         editAnswer() { this.editing = true; },
@@ -65,7 +69,7 @@ export default {
         },
     },
     mounted() {
-        console.log(this.answer)
+        // console.log(this.answer)
     }
 };
 </script>
