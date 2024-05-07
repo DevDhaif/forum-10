@@ -130,4 +130,31 @@ class AnswerController extends Controller
 
         return response()->json(['isDownvoted' => $isDownvoted]);
     }
+
+    public function best(Question $question, Answer $answer)
+    {
+        $this->authorize('update', $question);
+        $question->markAsBest($answer);
+        if (request()->expectsJson()) {
+            return response()->json([
+                'flash' => 'The best answer has been marked!',
+                'question' => $question,
+            ]);
+        }
+        session()->flash('message', 'The best answer has been marked!');
+        return back();
+    }
+    public function removeBest(Question $question, Answer $answer)
+    {
+        $this->authorize('update', $question);
+        $question->removeBestAnswer($answer);
+        if (request()->expectsJson()) {
+            return response()->json([
+                'flash' => 'The best answer has been removed!',
+                'question' => $question,
+            ]);
+        }
+        session()->flash('message', 'The best answer has been removed!');
+        return back();
+    }
 }

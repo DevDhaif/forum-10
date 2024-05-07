@@ -13,7 +13,7 @@ class Question extends Model
     use Voteable;
     use RecordsActivity;
     protected $guarded = [];
-    protected $appends = ['votes_count', 'isUpvoted', 'isDownvoted', 'path', 'is_answered'];
+    protected $appends = ['votes_count', 'isUpvoted', 'isDownvoted', 'path', 'is_answered', 'is_solved'];
     protected $with = ['creator', 'channel', 'votes'];
 
     protected static function boot()
@@ -69,10 +69,6 @@ class Question extends Model
         return $this->answers()->create($answer);
     }
 
-    // public function isVoted()
-    // {
-    //     return $this->votes()->where('user_id', auth()->id())->exists();
-    // }
 
     public function isUpvoted()
     {
@@ -109,22 +105,28 @@ class Question extends Model
         return $this->answers()->where('is_best', true)->exists();
     }
 
-    public function markBestAnswer(Answer $answer)
+    public function markAsBest(Answer $answer)
     {
         $this->answers()->update(['is_best' => false]);
         $answer->update(['is_best' => true]);
         $this->is_answered = true;
+        $this->is_solved = true;
+        $this->best_answer_id = $answer->id;
         $this->save();
     }
-    // public function vote($vote)
-    // {
-    //     $this->votes()->create($vote);
-    // }
+    public function removeBestAnswer(Answer $answer)
+    {
+        $this->answers()->update(['is_best' => false]);
+        $this->is_answered = false;
+        $this->is_solved = false;
+        $this->best_answer_id = null;
+        $this->save();
+    }
 
-    // public function unvote()
-    // {
-    //     $this->votes()->where('user_id', auth()->id())->delete();
-    // }
+    public function getIsSolvedAttribute()
+    {
+        return $this->answers()->where('is_best', true)->exists();
+    }
 
     public function getPathAttribute()
     {

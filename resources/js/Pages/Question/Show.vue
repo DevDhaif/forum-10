@@ -4,9 +4,9 @@
             <QuestionDetails :question="question" :user="user"></QuestionDetails>
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
                 <p class="mt-6 text-sm text-gray-600"> This question has {{ question.answers_count }} answers. </p>
+                <Answers :answers="answers" :question="question" :user="user" @flash="flash" />
                 <PostAnswer :user="user" :question="question" @answerPosted="addAnswer" @flash="handleFlash"
                     @posted="posted"></PostAnswer>
-                <Answers :answers="answers" :question="question" :user="user" @flash="flash" />
                 <pagination :links="answers.links"></pagination>
             </div>
         </div>

@@ -1,5 +1,6 @@
 <template>
-    <div v-if="user">
+    <div v-if="user" class="mt-4">
+        <h1 class="text-2xl font-bold">Your Answer</h1>
         <form class="relative my-6" @submit.prevent="postAnswer">
             <div class="mt-6">
                 <textarea v-model="body" name="body" class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500

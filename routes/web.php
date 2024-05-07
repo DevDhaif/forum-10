@@ -75,6 +75,9 @@ Route::delete('{type}/{id}/favorites', [FavoriteController::class, 'destroy'])->
 Route::delete('{type}/{id}/upvotes', [VoteController::class, 'removeUpvote'])->name('answers.removeUpvote');
 Route::delete('{type}/{id}/downvotes', [VoteController::class, 'removeDownvote'])->name('answers.removeDownvote');
 
+Route::post('/questions/{question}/answers/{answer}/best', [AnswerController::class, 'best'])->name('answers.best');
+Route::delete('/questions/{question}/answers/{answer}/best', [AnswerController::class, 'removeBest'])->name('answers.removeBest');
+
 Route::get('/replies/{reply}/isFavorited', [ReplyController::class, 'isFavorited'])->name('replies.isFavorited');
 Route::get('/answers/{answer}/isVoted', [AnswerController::class, 'isVoted'])->name('answers.isVoted');
 

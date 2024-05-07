@@ -21,13 +21,14 @@ return new class extends Migration
             $table->unsignedInteger('votes_count')->default(0);
             $table->unsignedInteger('visits')->default(0);
             $table->unsignedInteger('is_answered')->default(0);
-            $table->unsignedBigInteger('best_answer_id')->nullable(); // This should be unsignedBigInteger
+            $table->unsignedBigInteger('best_answer_id')->nullable();
+            $table->boolean('is_solved')->default(false);
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('channel_id')->references('id')->on('channels')->onDelete('cascade');
-            $table->foreign('best_answer_id')->references('id')->on('answers')->onDelete('set null'); // This should be set null
+            $table->foreign('best_answer_id')->references('id')->on('answers')->onDelete('set null');
 
             $table->index('user_id');
             $table->index('channel_id');
