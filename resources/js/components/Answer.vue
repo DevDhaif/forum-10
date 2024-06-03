@@ -4,7 +4,7 @@
 
         <Vote :item="answer" type="answer" :user="user" />
         <div :id="'answer-' + answer.id" name="fade" class="mt-4 p-4 flex-1"
-            :class="{ 'border  outline-blue-500 outline outline-1 bg-blue-50 rounded-lg': answer.is_best }">
+            :class="{ 'border  outline-blue-600 dark:outline-blue-300 outline outline-1 bg-blue-50 dark:bg-slate-800/10 rounded-lg': answer.is_best }">
             <div class="flex items-center justify-between mt-4">
                 <div v-if="editing" class="flex flex-col w-full ">
                     <textarea class="border" v-model="editText"></textarea>
@@ -21,7 +21,7 @@
                     </div>
                 </div>
 
-                <button @click="markAsBest"
+                <button @click="markAsBest" v-if="(user?.id === answer.question.creator.id)"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">
                     {{ answer.is_best ? "Unmark as best" : "Mark as best" }}
                 </button>
@@ -103,14 +103,14 @@ export default {
             this.editing = false;
         },
     },
-    watch: {
-        answer: {
-            handler() {
-                this.$forceUpdate();
-            },
-            deep: true
-        }
-    },
+    // watch: {
+    //     answer: {
+    //         handler() {
+    //             this.$forceUpdate();
+    //         },
+    //         deep: true
+    //     }
+    // },
     mounted() {
         // console.log(this.answer)
     }

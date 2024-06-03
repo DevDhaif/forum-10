@@ -18,9 +18,10 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('channel_id');
             $table->unsignedInteger('answers_count')->default(0);
-            $table->unsignedInteger('votes_count')->default(0);
+            $table->integer('votes_count')->default(0);
             $table->unsignedInteger('visits')->default(0);
             $table->unsignedInteger('is_answered')->default(0);
+            
             $table->unsignedBigInteger('best_answer_id')->nullable();
             $table->boolean('is_solved')->default(false);
             $table->timestamps();

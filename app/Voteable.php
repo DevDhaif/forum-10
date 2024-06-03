@@ -27,7 +27,8 @@ trait Voteable
         }
 
         $votes_count = $this->votes()->where('type', 'upvote')->count() - $this->votes()->where('type', 'downvote')->count();
-
+        $this->votes_count = $votes_count;
+        $this->save();
         return [
             'isUpvoted' => $isUpvoted,
             'votes_count' => $votes_count,
@@ -48,7 +49,8 @@ trait Voteable
         }
 
         $votes_count = $this->votes()->where('type', 'upvote')->count() - $this->votes()->where('type', 'downvote')->count();
-
+        $this->votes_count = $votes_count;
+        $this->save();
         return [
             'isDownvoted' => $isDownvoted,
             'votes_count' => $votes_count,

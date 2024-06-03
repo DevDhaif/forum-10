@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->text('body');
             $table->boolean('is_best')->default(false);
+            $table->integer('votes_count')->default(0);
             $table->timestamps();
         });
     }
