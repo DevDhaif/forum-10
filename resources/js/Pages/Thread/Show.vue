@@ -4,8 +4,7 @@
             <thread-details :thread="thread" :user="user"></thread-details>
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
                 <p class="mt-6 text-sm text-gray-600"> This thread has {{ thread.replies_count }} replies. </p>
-                <post-reply :user="user" :thread="thread" @replyPosted="addReply" @flash="handleFlash"
-                    @posted="posted"></post-reply>
+                <post-reply :user="user" :thread="thread" @replyPosted="addReply" @posted="posted"></post-reply>
                 <replies :replies="replies" :thread="thread" :user="user" @flash="flash">
                 </replies>
                 <pagination :links="replies.links"></pagination>
@@ -24,7 +23,7 @@ export default {
     props: ['thread', 'user', 'replies'],
     data() {
         return {
-            replies: this.replies,
+            // replies: this.replies,
             flashMessage: "",
             errorMessage: "",
             body: "",
@@ -46,7 +45,7 @@ export default {
                 this.flashMessage = flash
             })
         },
-        postReply() {
+        addReply() {
             if (this.body === "") {
                 this.errorMessage = "Please enter a valid reply"
                 return

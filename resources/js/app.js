@@ -49,7 +49,7 @@ createInertiaApp({
         const vueApp = createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(vuetify)
-            .use(InertiaForm)
+            // .use(InertiaForm)
             .mixin(isAdminMixin)
             .component('example-component', ExampleComponent)
             .component('reply', Reply)

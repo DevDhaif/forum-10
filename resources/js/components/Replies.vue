@@ -12,11 +12,11 @@ export default {
     components: {
         Reply,
     },
-    props: ["replies", "thread", "user", "key"],
+    props: ["replies", "thread", "user"],
     data() {
         return {
-            replies: this.replies,
-            thread: this.thread,
+            // replies: this.replies,
+            // thread: this.thread,
             flashMessage: null,
             errorMessage: "",
             body: "",

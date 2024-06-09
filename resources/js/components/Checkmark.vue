@@ -6,11 +6,6 @@
 <script>
 export default {
     name: 'Checkmark',
-    props: {
-        show: {
-            type: Boolean,
-            default: false
-        }
-    }
+    props: ['show'],
 }
 </script>

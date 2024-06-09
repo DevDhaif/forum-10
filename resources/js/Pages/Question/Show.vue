@@ -5,8 +5,7 @@
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
                 <p class="mt-6 text-sm text-gray-600"> This question has {{ question.answers_count }} answers. </p>
                 <Answers :answers="answers" :question="question" :user="user" @flash="flash" />
-                <PostAnswer :user="user" :question="question" @answerPosted="addAnswer" @flash="handleFlash"
-                    @posted="posted"></PostAnswer>
+                <PostAnswer :user="user" :question="question" @answerPosted="addAnswer" @posted="posted"></PostAnswer>
                 <pagination :links="answers.links"></pagination>
             </div>
         </div>
@@ -29,14 +28,11 @@ export default {
     props: ['question', 'user', 'answers'],
     data() {
         return {
-            answers: this.answers,
+            // answers: this.answers,
             flashMessage: "",
             errorMessage: "",
             body: "",
         }
-    },
-    mounted() {
-        // console.log(this.question)
     },
     methods: {
         flash(flash) {
@@ -54,7 +50,7 @@ export default {
                 this.flashMessage = flash
             })
         },
-        postAnswer() {
+        addAnswer() {
             if (this.body === "") {
                 this.errorMessage = "Please enter a valid answer"
                 return

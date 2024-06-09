@@ -12,11 +12,10 @@ export default {
     components: {
         Answer,
     },
-    props: ["answers", "question", "user", "key"],
+    props: ["answers", "question", "user"],
     data() {
         return {
-            answers: this.answers,
-            question: this.question,
+            // answers: this.answers,
             flashMessage: null,
             errorMessage: "",
             body: "",
@@ -51,9 +50,5 @@ export default {
             }
         },
     },
-    mounted() {
-        console.log(this.answers.total)
-    }
-
 };
 </script>

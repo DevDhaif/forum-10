@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Filters\QuestionFilters;
-use App\Http\Requests\CreateQuestionRequest;
+use Inertia\Inertia;
 use App\Models\Answer;
 use App\Models\Channel;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use App\Filters\QuestionFilters;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use Inertia\Inertia;
+use App\Http\Requests\CreateQuestionRequest;
 
 class QuestionController extends Controller
 {
@@ -115,17 +116,45 @@ class QuestionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Channel $channel, Question $question)
     {
-        //
+        if ($question->channel_id !== $channel->id) {
+            abort(404);
+        }
+        $this->authorize('update', $question);
+        return Inertia::render('Question/Edit', [
+            'question' => $question,
+            'user' => auth()->user(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Channel $channel, Question $question)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            if ($question->channel_id != $channel->id) {
+                abort(404, 'Question not found');
+            }
+            $this->authorize('update', $question);
+
+            $question->update($request->only('title', 'body', 'channel_id'));
+
+            $newChannel = Channel::find($request->channel_id);
+
+            session()->flash('success', 'Your question has been updated!');
+
+            DB::commit();
+
+            return Inertia::location(route('questions.show', [$newChannel->slug, $question->id]));
+        } catch (\Exception $e) {
+            DB::rollback();
+            session()->flash('error', 'There was a problem updating your question');
+            return back();
+        }
     }
 
     /**
