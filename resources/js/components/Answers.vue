@@ -2,7 +2,7 @@
     <div>
         <Answer v-for="answer in this.answers.data" :key="answer.id" :answer="answer" :user="user"
             @answerMarkedAsBest="handleMarkedAsBest" @answerDeleted="updateAnswers"
-            @bestAnswerChanged="handleBestAnswerChanged"></Answer>
+            @bestAnswerDeleted="handleBestAnswerDeleted" @bestAnswerChanged="handleBestAnswerChanged"></Answer>
         <flash :flash="flashMessage"></flash>
     </div>
 </template>
@@ -49,6 +49,12 @@ export default {
                 });
             }
         },
+        handleBestAnswerDeleted() {
+            console.log("best answer was deleted ");
+            console.log(this.question.is_solved);
+            this.question.is_solved = false;
+            console.log(this.question.is_solved);
+        }
     },
 };
 </script>

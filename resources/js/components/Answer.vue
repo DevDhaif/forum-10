@@ -56,22 +56,16 @@ export default {
                     .catch((error) => {
                         this.errorMessage = "Could not mark the answer as best";
                     });
-            } else {
-                axios
-                    .delete(`/questions/${this.answer.question.id}/answers/${this.answer.id}/best`)
-                    .then((response) => {
-                        this.answer.is_best = !this.answer.is_best;
-                        this.$emit('answerMarked', this.answer);
-                        this.$emit('bestAnswerChanged', this.answer.is_best, this.answer.id);
-                        this.errorMessage = null;
-                    })
-                    .catch((error) => {
-                        this.errorMessage = "Could not mark the answer as best";
-                    });
-            }
+            } else { this.removeBestMark(); }
         },
         editAnswer() { this.editing = true; },
         deleteAnswer() {
+            if (this.answer.is_best) {
+                this.removeBestMark().then(() => { this.deleteAnswerFromServer(); })
+            }
+            else { this.deleteAnswerFromServer(); }
+        },
+        deleteAnswerFromServer() {
             axios
                 .delete(`/answers/${this.answer.id}`)
                 .then((response) => {
@@ -80,6 +74,19 @@ export default {
                 })
                 .catch((error) => {
                     this.errorMessage = "Could not delete the answer";
+                });
+        },
+        removeBestMark() {
+            return axios
+                .delete(`/questions/${this.answer.question.id}/answers/${this.answer.id}/best`)
+                .then((response) => {
+                    this.answer.is_best = !this.answer.is_best;
+                    this.$emit('answerMarked', this.answer);
+                    this.$emit('bestAnswerChanged', this.answer.is_best, this.answer.id);
+                    this.errorMessage = null;
+                })
+                .catch((error) => {
+                    this.errorMessage = "Could not remove the best mark";
                 });
         },
         saveEdit() {
@@ -102,17 +109,6 @@ export default {
             () {
             this.editing = false;
         },
-    },
-    // watch: {
-    //     answer: {
-    //         handler() {
-    //             this.$forceUpdate();
-    //         },
-    //         deep: true
-    //     }
-    // },
-    mounted() {
-        // console.log(this.answer)
     }
 };
 </script>

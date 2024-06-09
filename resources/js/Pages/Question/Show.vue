@@ -9,9 +9,9 @@
                 <pagination :links="answers.links"></pagination>
             </div>
         </div>
-        <!-- <thread-info :thread="thread" :user="thread.creator" /> -->
     </div>
 </template>
+    <!-- <thread-info :thread="thread" :user="thread.creator" /> -->
 
 <script>
 import Pagination from '../../Shared/Pagination.vue'
