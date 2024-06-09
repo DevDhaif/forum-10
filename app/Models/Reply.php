@@ -71,14 +71,14 @@ class Reply extends Model
     }
     public function isFavoritedByUser($user)
     {
-        // chech if there is no logged in user
         if (!$user) {
             return false;
         }
-        return in_array($this->id, self::$favoritedReplyIds);
+
+        return $this->favorites->where('user_id', $user->id)->isNotEmpty();
     }
     public function getPathAttribute()
     {
-        return $this->path();
+        return $this->thread->path . "#reply-{$this->id}";
     }
 }

@@ -16,7 +16,23 @@ export function getFavoritedType(favoritedType) {
     }
     return type;
 }
-
+export function getVotedType(votedType) {
+    let type = '';
+    switch (votedType) {
+        case 'App\\Models\\Question':
+            type = 'question';
+            break;
+        case 'App\\Models\\Answer':
+            type = 'answer';
+            break;
+        case 'App\\Models\\Vote':
+            type = 'vote';
+            break;
+        default:
+            type = '';
+    }
+    return type;
+}
 
 
 export function formatDate(dateString) {
@@ -34,6 +50,23 @@ export function getPath(favorited, type) {
             break;
         case 'favorite':
             path = `/threads/${favorited.thread.channel.slug}/${favorited.thread.id}#reply-${favorited.reply.id}`;
+            break;
+        default:
+            path = 'no path';
+    }
+    return path;
+}
+export function getVotedPath(voted, type) {
+    let path = '';
+    switch (type) {
+        case 'question':
+            path = `/questions/${voted.channel.slug}/${voted.id}`;
+            break;
+        case 'answer':
+            path = `/questions/${voted.question.channel.slug}/${voted.question.id}#answer-${voted.id}`;
+            break;
+        case 'vote':
+            path = `/question/${voted.question.channel.slug}/${voted.question.id}#answer-${voted.answer.id}`;
             break;
         default:
             path = 'no path';

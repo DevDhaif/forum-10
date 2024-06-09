@@ -100,8 +100,11 @@
 
 <script>
 import CreatedFavorite from '../../Shared/Activity/CreatedFavorite.vue';
+import CreatedVote from '../../Shared/Activity/CreatedVote.vue';
 import CreatedThread from '../../Shared/Activity/CreatedThread.vue';
+import CreatedQuestion from '../../Shared/Activity/CreatedQuestion.vue';
 import CreatedReply from '../../Shared/Activity/CreatedReply.vue';
+import CreatedAnswer from '../../Shared/Activity/CreatedAnswer.vue';
 import ActivityIcon from '../../Shared/Activity/ActivityIcon.vue';
 import { formatDate } from '../../Utils/helpers.js';
 import axios from 'axios';
@@ -111,8 +114,11 @@ export default {
     props: ['profileUser', 'threads', 'activities', 'universities', 'fields', 'user'],
     components: {
         CreatedFavorite,
+        CreatedVote,
         CreatedThread,
+        CreatedQuestion,
         CreatedReply,
+        CreatedAnswer,
         ActivityIcon,
         Dropdown,
     },
@@ -196,10 +202,16 @@ export default {
             switch (type) {
                 case 'created_favorite':
                     return 'CreatedFavorite';
+                case 'created_vote':
+                    return 'CreatedVote';
                 case 'created_thread':
                     return 'CreatedThread';
+                case 'created_question':
+                    return 'CreatedQuestion';
                 case 'created_reply':
                     return 'CreatedReply';
+                case 'created_answer':
+                    return 'CreatedAnswer';
                 default:
                     return null;
             }
@@ -221,7 +233,7 @@ export default {
         },
     },
     mounted() {
-        // console.log(this.isAdmin);
+        console.log(this.activities);
         this.canUpdate = (this.$page.props.user.id === this.profileUser.id) || this.isAdmin;
     }
 }

@@ -49,8 +49,7 @@ export default {
             return formatDate(this.activity.created_at);
         },
         path() {
-            return this.activity.subject.favorited.path;
-            // return getPath(this.activity.subject.favorited, this.type);
+            return getPath(this.activity.subject.favorited, this.type);
         },
 
     }

@@ -69,7 +69,7 @@ class Thread extends Model
     }
     public function isFavorited()
     {
-        return $this->favorites()->where('user_id', auth()->id())->exists();
+        return $this->favorites->where('user_id', auth()->id())->isNotEmpty();
     }
     // public function favorites()
     // {
@@ -77,6 +77,7 @@ class Thread extends Model
     // }`
     public function getPathAttribute()
     {
-        return $this->path();
+        $slug = $this->channel ? $this->channel->slug  : ' ';
+        return "/threads/{$slug}/{$this->id}";
     }
 }

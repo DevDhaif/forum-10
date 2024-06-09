@@ -32,7 +32,7 @@ class QuestionController extends Controller
     {
         $questions = $this->getQuestions($channel, $filters)->latest()->paginate(50);
         $questions->appends($request->query());
-        // dd($questions);
+        $questions->load('creator');
         return Inertia::render('Question/Index', [
             'questions' => $questions,
             'channel' => $channel->slug,
@@ -84,8 +84,8 @@ class QuestionController extends Controller
             $question->increment('visits');
             session()->put("viewed_questions.{$question->id}", true);
         }
-        $channels = Cache::get('channels');
-        $channel = $channels->firstWhere('slug', $channelSlug);
+        // $channels = Cache::get('channels');
+        // $channel = $channels->firstWhere('slug', $channelSlug);
 
         // if (!$channel || $question->channel_id !== $channel->id) {
         //     abort(404);
@@ -104,7 +104,7 @@ class QuestionController extends Controller
         if ($user && $user->roles->isNotEmpty()) {
             $user->role = $user->roles->first()->name;
         }
-
+        $question->load('creator');
         return Inertia::render('Question/Show', [
             'question' => $question,
             'answers' => $answers,
@@ -131,8 +131,18 @@ class QuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($channel, Question $question)
     {
-        //
+        $this->authorize('delete', $question);
+        try {
+            $question->delete();
+
+            session()->flash('success', 'Your question has been deleted!');
+
+            return Inertia::location(route('questions'));
+        } catch (\Exception $e) {
+            session()->flash('error', 'There was a problem deleting your question');
+            return back();
+        }
     }
 }

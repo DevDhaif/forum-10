@@ -13,7 +13,7 @@ class Question extends Model
     use Voteable;
     use RecordsActivity;
     protected $guarded = [];
-    protected $appends = ['votes_count', 'isUpvoted', 'isDownvoted', 'path', 'is_answered', 'is_solved'];
+    protected $appends = ['votes_count', 'isUpvoted', 'isDownvoted', 'path'];
     protected $with = ['creator', 'channel', 'votes'];
 
     protected static function boot()
@@ -82,27 +82,17 @@ class Question extends Model
     {
         return $this->morphMany(Vote::class, 'voted');
     }
-
-    // public function getVotesCountAttribute()
-    // {
-    //     return $this->votes()->sum('vote');
-    // }
-
-    // public function getIsVotedAttribute()
-    // {
-    //     return $this->isVoted();
-    // }
     public function getIsUpvotedAttribute()
     {
-        return $this->isUpvoted();
+        return $this->votes->contains(function ($vote) {
+            return $vote->user_id == auth()->id() && $vote->type == 'upvote';
+        });
     }
     public function getIsDownvotedAttribute()
     {
-        return $this->isDownvoted();
-    }
-    public function getIsAnsweredAttribute()
-    {
-        return $this->answers()->where('is_best', true)->exists();
+        return $this->votes->contains(function ($vote) {
+            return $vote->user_id == auth()->id() && $vote->type == 'downvote';
+        });
     }
 
     public function markAsBest(Answer $answer)
@@ -122,12 +112,6 @@ class Question extends Model
         $this->best_answer_id = null;
         $this->save();
     }
-
-    public function getIsSolvedAttribute()
-    {
-        return $this->answers()->where('is_best', true)->exists();
-    }
-
     public function getPathAttribute()
     {
         return $this->path();

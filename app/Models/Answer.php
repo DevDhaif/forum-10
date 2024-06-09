@@ -16,7 +16,7 @@ class Answer extends Model
     protected $guarded = [];
 
     protected $appends = ['votes_count', 'is_best'];
-    protected $with = ['owner', 'votes', 'channel', 'question'];
+    protected $with = ['owner', 'votes', 'question'];
     protected static $votedAnswerIds = [];
     public static function loadVotedAnswerIdsForUser($user)
     {
@@ -74,23 +74,24 @@ class Answer extends Model
     }
     public function isUpvotedByUser($user)
     {
-        // chech if there is no logged in user
         if (!$user) {
             return false;
         }
-        return in_array($this->id, self::$votedAnswerIds) && $this->votes->where('user_id', $user->id)->where('type', 'upvote')->count() > 0;
+
+        return $this->votes->where('user_id', $user->id)->where('type', 'upvote')->isNotEmpty();
     }
+
     public function isDownvotedByUser($user)
     {
-        // chech if there is no logged in user
         if (!$user) {
             return false;
         }
-        return in_array($this->id, self::$votedAnswerIds) && $this->votes->where('user_id', $user->id)->where('type', 'downvote')->count() > 0;
+
+        return $this->votes->where('user_id', $user->id)->where('type', 'downvote')->isNotEmpty();
     }
     public function getPathAttribute()
     {
-        return $this->path();
+        return $this->question->path . "#answer-{$this->id}";
     }
     public function getIsBestAttribute()
     {

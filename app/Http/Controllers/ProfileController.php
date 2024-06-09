@@ -20,13 +20,20 @@ class ProfileController extends Controller
 {
     public function show(Request $request, User $user)
     {
-        $user->load('university', 'field', 'roles', 'threads');
-
-        $threads = $user->threads()->latest()->get();
+        $user->load([
+            'university' => function ($query) {
+                $query->select('name', 'id');
+            },
+            'field' => function ($query) {
+                $query->select('name', 'id');
+            },
+            'roles',
+            'threads.creator'
+        ]);
 
         return Inertia::render('Profile/Index', [
             'profileUser' => $user,
-            'threads' => $threads,
+            'threads' => $user->threads,
             'activities' => Activity::feed($user, 50),
         ]);
     }
