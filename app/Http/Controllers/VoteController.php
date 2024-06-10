@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Point;
 use Illuminate\Http\Request;
 
 class VoteController extends Controller
@@ -15,6 +16,13 @@ class VoteController extends Controller
     {
         $voteable = $this->getVoteable($type, $id);
 
+        $points = $type === 'question' ? 4 : 2;
+        Point::create([
+            'user_id' => $voteable->user_id,
+            'source' => 'upvote',
+            'source_id' => $voteable->id,
+            'points' => $points,
+        ]);
         $result = $voteable->toggleUpvote();
         if (request()->expectsJson()) {
             return response()->json($result);
@@ -25,6 +33,13 @@ class VoteController extends Controller
     {
         $voteable = $this->getVoteable($type, $id);
 
+        $points = $type === 'question' ? -4 : -2;
+        Point::create([
+            'user_id' => $voteable->user_id,
+            'source' => 'downvote',
+            'source_id' => $voteable->id,
+            'points' => $points,
+        ]);
         $result = $voteable->toggleDownvote();
         if (request()->expectsJson()) {
             return response()->json($result);
@@ -34,6 +49,11 @@ class VoteController extends Controller
     public function removeUpvote($type, $id)
     {
         $voteable = $this->getVoteable($type, $id);
+        Point::where([
+            'user_id' => $voteable->user_id,
+            'source' => 'upvote',
+            'source_id' => $voteable->id,
+        ])->delete();
         $result = $voteable->toggleUpvote();
         if (request()->expectsJson()) {
             return response()->json($result);
@@ -43,6 +63,11 @@ class VoteController extends Controller
     public function removeDownvote($type, $id)
     {
         $voteable = $this->getVoteable($type, $id);
+        Point::where([
+            'user_id' => $voteable->user_id,
+            'source' => 'upvote',
+            'source_id' => $voteable->id,
+        ])->delete();
         $result = $voteable->toggleDownvote();
         if (request()->expectsJson()) {
             return response()->json($result);

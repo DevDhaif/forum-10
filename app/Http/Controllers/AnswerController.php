@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Answer;
+use App\Models\Point;
 use App\Models\Question;
 use Illuminate\Http\Request;
 
@@ -43,6 +44,12 @@ class AnswerController extends Controller
         $answer = $question->addAnswer([
             'body' => request('body'),
             'user_id' => auth()->id(),
+        ]);
+        Point::create([
+            'user_id' => $answer->user_id,
+            'source' => 'answer',
+            'source_id' => $answer->id,
+            'points' => 3,
         ]);
         $question->update(['is_answered' => 1]);
         $question = $question->fresh();
@@ -105,6 +112,11 @@ class AnswerController extends Controller
     {
         $this->authorize('delete', $answer);
         $question = $answer->question;
+        Point::where([
+            'user_id' => $answer->user_id,
+            'source' => 'answer',
+            'source_id' => $answer->id,
+        ])->delete();
         $answer->delete();
         $answers = $question->answers()->latest()->paginate(10)->withPath("/questions/{$question->channel->slug}/{$question->id}");
         if ($question->answers_count == 0) {
@@ -136,6 +148,12 @@ class AnswerController extends Controller
     public function best(Question $question, Answer $answer)
     {
         $this->authorize('update', $question);
+        Point::create([
+            'user_id' => $answer->user_id,
+            'source' => 'best',
+            'source_id' => $answer->id,
+            'points' => 10,
+        ]);
         $question->markAsBest($answer);
         if (request()->expectsJson()) {
             return response()->json([
@@ -149,6 +167,11 @@ class AnswerController extends Controller
     public function removeBest(Question $question, Answer $answer)
     {
         $this->authorize('update', $question);
+        Point::where([
+            'user_id' => $answer->user_id,
+            'source' => 'best',
+            'source_id' => $answer->id,
+        ])->delete();
         $question->removeBestAnswer($answer);
         if (request()->expectsJson()) {
             return response()->json([

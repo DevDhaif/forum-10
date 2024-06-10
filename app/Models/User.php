@@ -77,4 +77,7 @@ class User extends Authenticatable
     {
         return $this->path();
     }
+    public function points(){
+        return $this->hasMany(Point::class);
+    }
 }

@@ -64,6 +64,7 @@
         <div class="flex items-center space-x-4">
 
             <h1 class="text-2xl font-bold">{{ profileUser.name }}</h1>
+            <badge :title="points" color="purple" />
             <badge :title="getRole(profileUser)" />
             <button v-if="canUpdate" @click="updateDialog = !updateDialog"
                 class="px-4 py-1 bg-blue-500 text-white rounded-lg">Edit</button>
@@ -111,7 +112,7 @@ import axios from 'axios';
 import Dropdown from '../../Shared/Dropdown.vue';
 
 export default {
-    props: ['profileUser', 'threads', 'activities', 'universities', 'fields', 'user'],
+    props: ['profileUser', 'threads', 'activities', 'universities', 'fields', 'user', 'points'],
     components: {
         CreatedFavorite,
         CreatedVote,

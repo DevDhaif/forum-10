@@ -22,12 +22,22 @@ class Question extends Model
 
         static::deleting(function ($question) {
             $question->answers->each(function ($answer) {
+                Point::where([
+                    'user_id' => $answer->user_id,
+                    'source' => 'answer',
+                    'source_id' => $answer->id,
+                ])->delete();
                 $answer->delete();
             });
             $question->activity->each(function ($activity) {
                 $activity->delete();
             });
             $question->votes->each(function ($vote) {
+                Point::where([
+                    'user_id' => $vote->user_id,
+                    'source' => 'vote',
+                    'source_id' => $vote->id,
+                ])->delete();
                 $vote->delete();
             });
         });

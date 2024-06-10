@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Filters\ThreadFilters;
 use App\Http\Requests\CreateThreadRequest;
 use App\Models\Channel;
+use App\Models\Point;
 use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Http\Request;
@@ -56,7 +57,12 @@ class ThreadController extends Controller
                     ['user_id' => auth()->id()]
                 )
             );
-
+            Point::create([
+                'user_id' => $thread->user_id,
+                'source' => 'thread',
+                'source_id' => $thread->id,
+                'points' => 3,
+            ]);
             session()->flash('success', 'Your thread has been left!');
 
             return Inertia::location(route('threads.show', [$thread->channel->slug, $thread->id]));
@@ -69,6 +75,14 @@ class ThreadController extends Controller
     {
         if (!session()->has("viewed_threads.{$thread->id}")) {
             $thread->increment('visits');
+            if ($thread->visits % 100 == 0) {
+                Point::create([
+                    'user_id' => $thread->user_id,
+                    'source' => 'visits',
+                    'source_id' => $thread->id,
+                    'points' => 10,
+                ]);
+            }
             session()->put("viewed_threads.{$thread->id}", true);
         }
 
@@ -96,7 +110,7 @@ class ThreadController extends Controller
             'thread' => $thread,
             'replies' => $replies,
             'user' => $user,
-            'relatedThreads' =>$relatedThreads,
+            'relatedThreads' => $relatedThreads,
         ]);
     }
     public function edit(Channel $channel, Thread $thread)
@@ -134,6 +148,11 @@ class ThreadController extends Controller
     {
         $this->authorize('delete', $thread);
         try {
+            Point::where([
+                'user_id' => $thread->user_id,
+                'source' => 'thread',
+                'source_id' => $thread->id,
+            ])->delete();
             $thread->delete();
 
             session()->flash('success', 'Your thread has been deleted!');

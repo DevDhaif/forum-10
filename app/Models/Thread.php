@@ -22,12 +22,22 @@ class Thread extends Model
 
         static::deleting(function ($thread) {
             $thread->replies->each(function ($reply) {
+                Point::where([
+                    'user_id' => $reply->user_id,
+                    'source' => 'reply',
+                    'source_id' => $reply->id,
+                ])->delete();
                 $reply->delete();
             });
             $thread->activity->each(function ($activity) {
                 $activity->delete();
             });
             $thread->favorites->each(function ($favorite) {
+                Point::where([
+                    'user_id' => $favorite->user_id,
+                    'source' => 'favorite',
+                    'source_id' => $favorite->id,
+                ])->delete();
                 $favorite->delete();
             });
         });

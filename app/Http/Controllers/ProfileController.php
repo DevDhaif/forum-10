@@ -28,13 +28,15 @@ class ProfileController extends Controller
                 $query->select('name', 'id');
             },
             'roles',
-            'threads.creator'
+            'threads.creator',
+            'points'
         ]);
-
+        $points = $user->points()->sum('points');
         return Inertia::render('Profile/Index', [
             'profileUser' => $user,
             'threads' => $user->threads,
             'activities' => Activity::feed($user, 50),
+            'points' => $points,
         ]);
     }
     /**

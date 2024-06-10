@@ -11,6 +11,7 @@ use App\Filters\QuestionFilters;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\CreateQuestionRequest;
+use App\Models\Point;
 
 class QuestionController extends Controller
 {
@@ -66,7 +67,12 @@ class QuestionController extends Controller
                     ['user_id' => auth()->id()]
                 )
             );
-
+            Point::create([
+                'user_id' => $question->user_id,
+                'source' => 'question',
+                'source_id' => $question->id,
+                'points' => 5,
+            ]);
             session()->flash('success', 'Your question has been left!');
 
             return Inertia::location(route('questions.show', [$question->channel->slug, $question->id]));
@@ -83,6 +89,14 @@ class QuestionController extends Controller
     {
         if (!session()->has("viewed_questions.{$question->id}")) {
             $question->increment('visits');
+            if ($question->visits % 100 == 0) {
+                Point::create([
+                    'user_id' => $question->user_id,
+                    'source' => 'visits',
+                    'source_id' => $question->id,
+                    'points' => 10,
+                ]);
+            }
             session()->put("viewed_questions.{$question->id}", true);
         }
         // $channels = Cache::get('channels');
@@ -166,6 +180,11 @@ class QuestionController extends Controller
     {
         $this->authorize('delete', $question);
         try {
+            Point::where([
+                'user_id' => $question->user_id,
+                'source' => 'question',
+                'source_id' => $question->id,
+            ])->delete();
             $question->delete();
 
             session()->flash('success', 'Your question has been deleted!');
