@@ -99,7 +99,6 @@ class Question extends Model
     {
         $this->answers()->update(['is_best' => false]);
         $answer->update(['is_best' => true]);
-        $this->is_answered = true;
         $this->is_solved = true;
         $this->best_answer_id = $answer->id;
         $this->save();
@@ -107,7 +106,6 @@ class Question extends Model
     public function removeBestAnswer(Answer $answer)
     {
         $this->answers()->update(['is_best' => false]);
-        $this->is_answered = false;
         $this->is_solved = false;
         $this->best_answer_id = null;
         $this->save();

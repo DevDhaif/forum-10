@@ -44,7 +44,7 @@ class AnswerController extends Controller
             'body' => request('body'),
             'user_id' => auth()->id(),
         ]);
-
+        $question->update(['is_answered' => 1]);
         $question = $question->fresh();
 
         $answers = $question->answers()->latest()->paginate(10)->withPath("/questions/{$question->channel->slug}/{$question->id}");
@@ -107,7 +107,9 @@ class AnswerController extends Controller
         $question = $answer->question;
         $answer->delete();
         $answers = $question->answers()->latest()->paginate(10)->withPath("/questions/{$question->channel->slug}/{$question->id}");
-
+        if ($question->answers_count == 0) {
+            $question->update(['is_answered' => 0]);
+        }
         if (request()->expectsJson()) {
             return response()->json([
                 'flash' => 'Your answer has been deleted!',
