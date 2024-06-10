@@ -10,17 +10,22 @@
                 <pagination :links="replies.links"></pagination>
             </div>
         </div>
-        <thread-info :thread="thread" :user="thread.creator" />
+        <div class="w-1/4 flex flex-col ">
+            <thread-info :thread="thread" :user="thread.creator" />
+            <Related :items="relatedThreads" type="threads" />
+        </div>
     </div>
 </template>
 
 <script>
 import Pagination from '../../Shared/Pagination.vue'
+import Related from "../../components/Related.vue"
 export default {
     components: {
         Pagination,
+        Related,
     },
-    props: ['thread', 'user', 'replies'],
+    props: ['thread', 'user', 'replies', 'relatedThreads'],
     data() {
         return {
             // replies: this.replies,

@@ -1,11 +1,11 @@
 <template>
         <div
             class="bg-slate-50 dark:bg-slate-900 p-4 rounded shadow outline outline-1 outline-slate-200 dark:outline-slate-800">
-            <p class="text-slate-600 dark:text-slate-200 text-sm">This thread was published {{ diffForHumans }} ago by
+            <p class="text-slate-600 dark:text-slate-200 text-sm">This question was published {{ diffForHumans }} ago by
                 <a :href="userPath()" class="text-sm text-blue-600 dark:text-blue-400">
-                    {{ thread.creator.name }}
+                    {{ question.creator.name }}
                 </a>
-                and currently has {{ thread.replies_count }} replies .
+                and currently has {{ question.answers_count }} answers .
             </p>
         </div>
 </template>
@@ -13,16 +13,16 @@
 <script>
 import moment from "moment";
 export default {
-    props: ["thread"],
+    props: ["question"],
 
     methods: {
         userPath() {
-            return `/profiles/${this.thread.creator.name}`;
+            return `/profiles/${this.question.creator.name}`;
         }
     },
     computed: {
         diffForHumans() {
-            return moment(this.thread.created_at).fromNow();
+            return moment(this.question.created_at).fromNow();
         },
     },
 }

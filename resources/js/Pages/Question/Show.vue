@@ -9,23 +9,31 @@
                 <pagination :links="answers.links"></pagination>
             </div>
         </div>
+        <div class="w-1/4 flex flex-col gap-y-4 ">
+            <QuestionInfo :question="question" :user="question.creator" />
+            <Related :items="relatedQuestions" type="questions" />
+        </div>
     </div>
 </template>
-    <!-- <thread-info :thread="thread" :user="thread.creator" /> -->
 
 <script>
 import Pagination from '../../Shared/Pagination.vue'
 import Answers from '../../components/Answers.vue'
 import PostAnswer from '../../components/PostAnswer.vue'
 import QuestionDetails from '../../components/QuestionDetails.vue'
+import QuestionInfo from '../../components/QuestionInfo.vue'
+import Related from "../../components/Related.vue"
+
 export default {
     components: {
         Pagination,
+        QuestionInfo,
         QuestionDetails,
         Answers,
         PostAnswer,
+        Related,
     },
-    props: ['question', 'user', 'answers'],
+    props: ['question', 'user', 'answers', 'relatedQuestions'],
     data() {
         return {
             // answers: this.answers,

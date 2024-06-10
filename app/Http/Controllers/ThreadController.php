@@ -79,7 +79,7 @@ class ThreadController extends Controller
         if (!$channel || $thread->channel_id !== $channel->id) {
             abort(404);
         }
-
+        $relatedThreads = Thread::where('channel_id', $thread->channel->id)->latest()->take(10)->get();
         Reply::loadFavoritedReplyIdsForUser(auth()->user());
 
         $replies = $thread->replies()->latest()->paginate(10);
@@ -96,6 +96,7 @@ class ThreadController extends Controller
             'thread' => $thread,
             'replies' => $replies,
             'user' => $user,
+            'relatedThreads' =>$relatedThreads,
         ]);
     }
     public function edit(Channel $channel, Thread $thread)

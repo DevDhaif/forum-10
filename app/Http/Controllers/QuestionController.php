@@ -91,6 +91,7 @@ class QuestionController extends Controller
         // if (!$channel || $question->channel_id !== $channel->id) {
         //     abort(404);
         // }
+        $relatedQuestions = Question::where('channel_id', $question->channel->id)->latest()->take(10)->get();
 
         Answer::loadVotedAnswerIdsForUser(auth()->user());
 
@@ -110,6 +111,7 @@ class QuestionController extends Controller
             'question' => $question,
             'answers' => $answers,
             'user' => $user,
+            'relatedQuestions' => $relatedQuestions,
         ]);
     }
 
