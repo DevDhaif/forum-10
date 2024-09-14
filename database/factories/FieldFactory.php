@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\University;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class FieldFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
+            'university_id' => University::factory(),
         ];
     }
 }

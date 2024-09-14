@@ -8,8 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Field extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'university_id'];
 
+    public function university()
+    {
+        return $this->belongsTo(University::class);
+    }
     public function users()
     {
         return $this->hasMany(User::class);

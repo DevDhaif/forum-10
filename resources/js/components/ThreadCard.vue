@@ -16,7 +16,7 @@
                 <h3 class="text-base font-semibold tracking-tight text-slate-900 dark:text-slate-200 ">
                     {{ thread.title }}
                 </h3>
-                <Link :href="'threads/' + thread.channel.slug"
+                <Link :href="'/threads/' + thread.channel.slug"
                     class="text-sm font-medium text-sky-500 dark:text-sky-400 hover:underline">
                 <badge :title="thread.channel.name || ''" :channelId="thread.channel.id" />
                 </Link>

@@ -10,6 +10,16 @@ return new class() extends Migration {
      */
     public function up(): void
     {
+        // Create fields table
+        Schema::create('fields', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->unsignedBigInteger('university_id');
+            $table->foreign('university_id')->references('id')->on('universities')->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        // Add field_id to users table
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedBigInteger('field_id')->nullable();
             $table->foreign('field_id')->references('id')->on('fields')->onDelete('set null');
@@ -21,9 +31,13 @@ return new class() extends Migration {
      */
     public function down(): void
     {
+        // Drop field_id from users
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['field_id']); // Drop the foreign key
+            $table->dropForeign(['field_id']);
             $table->dropColumn('field_id');
         });
+
+        // Drop fields table
+        Schema::dropIfExists('fields');
     }
 };

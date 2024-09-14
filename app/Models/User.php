@@ -63,10 +63,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Thread::class)->latest();
     }
-
-    public function getRouteKeyName()
+    public function replies()
     {
-        return 'name';
+        return $this->hasMany(Reply::class);
     }
 
     public function activity()
@@ -77,7 +76,12 @@ class User extends Authenticatable
     {
         return $this->path();
     }
-    public function points(){
+    public function points()
+    {
         return $this->hasMany(Point::class);
+    }
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 }

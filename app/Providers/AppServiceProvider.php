@@ -16,14 +16,14 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
-        if ($this->app->environment('local')) {
-            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
-        }
+        // if ($this->app->environment('local')) {
+        //     $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+        // }
     }
 
     /**
-         * Bootstrap any application services.
-         */
+     * Bootstrap any application services.
+     */
     public function boot(): void
     {
         // send all channels to all views
@@ -31,10 +31,10 @@ class AppServiceProvider extends ServiceProvider
             $channels = Cache::rememberForever(
                 'channels',
                 function () {
-                return \App\Models\Channel::all();
-            }
+                    return \App\Models\Channel::all();
+                }
             );
-            $view->with('channels',$channels);
+            $view->with('channels', $channels);
         });
     }
 }

@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class University extends Model
 {
     use HasFactory;
-
     protected $fillable = ['name'];
+    protected $withCount = ['fields'];
+    public function fields()
+    {
+        return $this->hasMany(Field::class);
+    }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
