@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Achievement;
 use App\Models\Activity;
 use App\Models\Thread;
 
 use App\Models\User;
+use App\Services\AchievementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +22,28 @@ class ProfileController extends Controller
 {
     public function show(Request $request, User $user)
     {
+        $user->increment('profile_visits');
+
+        $achievementService = new AchievementService();
+        $achievementService->checkForAchievements($user);
+
+        $allAchievements = Achievement::all();
+        $unlockedAchievements = $user->achievements;
+
+        // Current user progress for various achievement types
+        $currentProgress = [
+            'threads' => $user->threads()->count(),
+            'questions' => $user->questions()->count(),
+            'replies_count' => $user->threads()->sum('replies_count'),
+            'answers_count' => $user->answers()->count(),
+            'favorites' => $user->favorites()->count(),
+            'votes' => $user->votes()->count(),
+            'visits' => $user->threads()->sum('visits') + $user->questions()->sum('visits'),
+            'profile_visits' => $user->profile_visits,
+            'points' => $user->points()->sum('points'),
+            'streak' => $user->streak_days,
+            'milestone' => $user->achievements()->count(),
+        ];
         $user->load([
             'university' => function ($query) {
                 $query->select('name', 'id');
@@ -37,6 +61,9 @@ class ProfileController extends Controller
             'threads' => $user->threads,
             'activities' => Activity::feed($user, 50),
             'points' => $points,
+            'allAchievements' => $allAchievements,
+            'unlockedAchievements' => $unlockedAchievements,
+            'currentProgress' => $currentProgress,
         ]);
     }
     /**

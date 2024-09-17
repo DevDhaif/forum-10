@@ -18,6 +18,10 @@ class Vote extends Model
             $vote->activity()->delete();
         });
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function voted()
     {
         return $this->morphTo();

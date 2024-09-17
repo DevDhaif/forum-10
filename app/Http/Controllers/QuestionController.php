@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\CreateQuestionRequest;
 use App\Models\Point;
+use App\Services\AchievementService;
 
 class QuestionController extends Controller
 {
@@ -73,6 +74,9 @@ class QuestionController extends Controller
                 'source_id' => $question->id,
                 'points' => 5,
             ]);
+
+            $achievementService = new AchievementService();
+            $achievementService->checkForAchievements($question->creator);
             session()->flash('success', 'Your question has been left!');
 
             return Inertia::location(route('questions.show', [$question->channel->slug, $question->id]));
@@ -96,6 +100,8 @@ class QuestionController extends Controller
                     'source_id' => $question->id,
                     'points' => 10,
                 ]);
+                $achievementService = new AchievementService();
+                $achievementService->checkForAchievements($question->creator);
             }
             session()->put("viewed_questions.{$question->id}", true);
         }

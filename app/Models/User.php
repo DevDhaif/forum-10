@@ -24,6 +24,8 @@ class User extends Authenticatable
         'password',
         'university_id',
         'field_id',
+        'streak_days',
+        'last_login'
     ];
 
     protected $appends = ['path'];
@@ -63,6 +65,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Thread::class)->latest();
     }
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
     public function replies()
     {
         return $this->hasMany(Reply::class);
@@ -83,5 +89,18 @@ class User extends Authenticatable
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
+    public function achievements()
+    {
+        return $this->belongsToMany(Achievement::class, 'user_achievements')->withTimestamps();
     }
 }

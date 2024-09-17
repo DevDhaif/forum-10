@@ -8,6 +8,7 @@ use App\Models\Channel;
 use App\Models\Point;
 use App\Models\Reply;
 use App\Models\Thread;
+use App\Services\AchievementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -15,9 +16,7 @@ use Inertia\Inertia;
 
 class ThreadController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function getThreads(Channel $channel, ThreadFilters $filters)
     {
@@ -63,6 +62,9 @@ class ThreadController extends Controller
                 'source_id' => $thread->id,
                 'points' => 3,
             ]);
+            $achievementService = new AchievementService();
+            $achievementService->checkForAchievements($thread->creator);
+
             session()->flash('success', 'Your thread has been left!');
 
             return Inertia::location(route('threads.show', [$thread->channel->slug, $thread->id]));
@@ -82,6 +84,8 @@ class ThreadController extends Controller
                     'source_id' => $thread->id,
                     'points' => 10,
                 ]);
+                $achievementService = new AchievementService();
+                $achievementService->checkForAchievements($thread->creator);
             }
             session()->put("viewed_threads.{$thread->id}", true);
         }

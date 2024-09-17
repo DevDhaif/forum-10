@@ -13,11 +13,16 @@ class Favorite extends Model
     protected $guarded = [];
     protected static function booted()
     {
-        static::deleted(function ($favorite){
+        static::deleted(function ($favorite) {
             $favorite->activity()->delete();
         });
     }
-    public function favorited(){
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function favorited()
+    {
         return $this->morphTo();
     }
 

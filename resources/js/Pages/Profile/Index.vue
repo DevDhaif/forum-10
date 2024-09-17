@@ -1,5 +1,7 @@
 <template>
     <div class="mt-4">
+        <AchievementsList :all-achievements="allAchievements" :unlocked-achievements="unlockedAchievements"
+            :current-progress="currentProgress" />
         <v-dialog v-model="updateDialog" persistent max-width="600px">
             <v-card>
                 <v-card-title>
@@ -76,7 +78,7 @@
             <h1 class="px-4 py-1 font-semibold text-blue-800 bg-blue-100 border border-blue-500 rounded-xl">{{
                 profileUser.university.name }}</h1>
             <h1 class="px-4 py-1 font-semibold text-green-800 bg-green-100 border border-green-500 rounded-xl">{{
-                profileUser.field.name }}</h1>
+                profileUser.field?.name }}</h1>
         </div>
 
         <p class="mt-2">Since {{ formattedDate(profileUser.created_at) }}</p>
@@ -110,9 +112,9 @@ import ActivityIcon from '../../Shared/Activity/ActivityIcon.vue';
 import { formatDate } from '../../Utils/helpers.js';
 import axios from 'axios';
 import Dropdown from '../../Shared/Dropdown.vue';
-
+import AchievementsList from '../../components/AchievementsList.vue';
 export default {
-    props: ['profileUser', 'threads', 'activities', 'universities', 'fields', 'user', 'points'],
+    props: ['profileUser', 'threads', 'activities', 'universities', 'fields', 'user', 'points', 'allAchievements', 'unlockedAchievements', 'currentProgress'],
     components: {
         CreatedFavorite,
         CreatedVote,
@@ -122,6 +124,7 @@ export default {
         CreatedAnswer,
         ActivityIcon,
         Dropdown,
+        AchievementsList
     },
     data() {
         return {
@@ -133,7 +136,7 @@ export default {
                 name: this.profileUser.name,
                 email: this.profileUser.email,
                 university_id: this.profileUser.university.id,
-                field_id: this.profileUser.field.id,
+                field_id: this.profileUser.field?.id,
                 password: '',
             },
             errors: {},
@@ -171,7 +174,6 @@ export default {
                     }
                 })
                 .catch(error => {
-                    // Handle error
                 });
         },
         deleteProfile() {
@@ -181,7 +183,6 @@ export default {
                         this.$inertia.visit(`/`);
                     })
                     .catch(error => {
-                        // Handle error
                         this.errors = error.response.data.errors;
                     });
             } else {
@@ -195,7 +196,6 @@ export default {
                     this.$inertia.visit(`/`);
                 })
                 .catch(error => {
-                    // Handle error
                     this.errors = error.response.data.errors;
                 });
         },

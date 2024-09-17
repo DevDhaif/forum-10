@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Favoritable;
 use App\RecordsActivity;
+use App\Services\AchievementService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,11 @@ class Thread extends Model
     {
         parent::boot();
 
+        // When a thread is created, check for achievements
+        static::created(function ($thread) {
+            $achievementService = new AchievementService();
+            $achievementService->checkForAchievements($thread->creator);
+        });
         static::deleting(function ($thread) {
             $thread->replies->each(function ($reply) {
                 Point::where([

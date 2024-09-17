@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Point;
+use App\Services\AchievementService;
 use Illuminate\Http\Request;
 
 class VoteController extends Controller
@@ -23,6 +24,8 @@ class VoteController extends Controller
             'source_id' => $voteable->id,
             'points' => $points,
         ]);
+        $achievementService = new AchievementService();
+        $achievementService->checkForAchievements($voteable->user);
         $result = $voteable->toggleUpvote();
         if (request()->expectsJson()) {
             return response()->json($result);
@@ -40,6 +43,10 @@ class VoteController extends Controller
             'source_id' => $voteable->id,
             'points' => $points,
         ]);
+
+        $achievementService = new AchievementService();
+        $achievementService->checkForAchievements($voteable->user);
+
         $result = $voteable->toggleDownvote();
         if (request()->expectsJson()) {
             return response()->json($result);

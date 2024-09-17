@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Answer;
 use App\Models\Point;
 use App\Models\Question;
+use App\Services\AchievementService;
 use Illuminate\Http\Request;
 
 class AnswerController extends Controller
@@ -53,6 +54,9 @@ class AnswerController extends Controller
         ]);
         $question->update(['is_answered' => 1]);
         $question = $question->fresh();
+
+        $achievementService = new AchievementService();
+        $achievementService->checkForAchievements($answer->owner);
 
         $answers = $question->answers()->latest()->paginate(10)->withPath("/questions/{$question->channel->slug}/{$question->id}");
         if (request()->expectsJson()) {
@@ -108,7 +112,7 @@ class AnswerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Answer $answer)
+    public function destroy(Answer $answer) 
     {
         $this->authorize('delete', $answer);
         $question = $answer->question;
@@ -155,6 +159,10 @@ class AnswerController extends Controller
             'points' => 10,
         ]);
         $question->markAsBest($answer);
+
+        $achievementService = new AchievementService();
+        $achievementService->checkForAchievements($answer->owner);
+
         if (request()->expectsJson()) {
             return response()->json([
                 'flash' => 'The best answer has been marked!',
