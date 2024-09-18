@@ -5,16 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Achievement;
 use App\Models\Activity;
-use App\Models\Thread;
 
 use App\Models\User;
 use App\Services\AchievementService;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Inertia\Inertia;
 
@@ -30,7 +25,6 @@ class ProfileController extends Controller
         $allAchievements = Achievement::all();
         $unlockedAchievements = $user->achievements;
 
-        // Current user progress for various achievement types
         $currentProgress = [
             'threads' => $user->threads()->count(),
             'questions' => $user->questions()->count(),
@@ -53,12 +47,23 @@ class ProfileController extends Controller
             },
             'roles',
             'threads.creator',
-            'points'
+            'points',
+            'questions',
+            'answers',
+            'replies',
+            'votes.voted',
+            'favorites.favorited',
+
         ]);
         $points = $user->points()->sum('points');
         return Inertia::render('Profile/Index', [
             'profileUser' => $user,
             'threads' => $user->threads,
+            'questions' => $user->questions,
+            'answers' => $user->answers,
+            'replies' => $user->replies,
+            'votes' => $user->votes,
+            'favorites' => $user->favorites,
             'activities' => Activity::feed($user, 50),
             'points' => $points,
             'allAchievements' => $allAchievements,

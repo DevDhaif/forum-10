@@ -10,7 +10,7 @@
             </li>
         </ul>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 my-4">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 my-4 max-h-96 overflow-y-scroll">
             <Achievement v-for="achievement in filteredAchievements" :key="achievement.id" :achievement="achievement"
                 :is-unlocked="isUnlocked(achievement)" :current-progress="currentProgressFor(achievement)" />
         </div>

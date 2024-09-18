@@ -1,103 +1,76 @@
 <template>
     <div class="mt-4">
-        <AchievementsList :all-achievements="allAchievements" :unlocked-achievements="unlockedAchievements"
-            :current-progress="currentProgress" />
-        <v-dialog v-model="updateDialog" persistent max-width="600px">
-            <v-card>
-                <v-card-title>
-                    <span class="headline">Edit Profile</span>
-                </v-card-title>
-                <v-card-text>
-                    <form class="relative " @submit.prevent="updateProfile">
-                        <v-text-field label="Name" v-model="form.name"></v-text-field>
-                        <v-text-field label="Email" v-model="form.email"></v-text-field>
+        <ul class="flex border-b overflow-scroll pb-2">
+            <li v-for="tab in tabs" :key="tab" :class="{ 'border-blue-500 text-blue-500': activeTab === tab }"
+                class="mr-4 cursor-pointer py-2 px-4 border-b-2 flex items-center" @click="setActiveTab(tab)">
+                <span class="mr-2">{{ capitalize(tab) }}</span>
+            </li>
+        </ul>
 
-                        <div class="col-md-6">
-                            <select v-model="form.field_id"
-                                class="w-full text-base px-4 py-2 roundede-md border border-1 bg-slate-50 my-2 "
-                                required>
-                                <option class="hover:bg-green-600" v-for="field in fields" :key="field.id"
-                                    :value="field.id">
-                                    {{ field.name }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <select v-model="form.university_id"
-                                class="w-full text-base px-4 py-2 roundede-md border border-1 bg-slate-50 my-2 "
-                                required>
-                                <option class="hover:bg-green-600" v-for="university in universities"
-                                    :key="university.id" :value="university.id">
-                                    {{ university.name }}
-                                </option>
-                            </select>
-                        </div>
-
-                    </form>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="updateDialog = false">Close</v-btn>
-                    <v-btn color="blue darken-1" text @click="updateProfile">Save</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <v-dialog v-model="deleteDialog" persistent max-width="600px">
-            <v-card>
-                <v-card-title>
-                    <span class="headline">Delete Account</span>
-                </v-card-title>
-                <v-card-text>
-                    <form class="relative " @submit.prevent="updateProfile">
-                        <!-- <v-text-field label="Name" v-model="form.name"></v-text-field> -->
-                        <!-- enter password to delete account -->
-                        <v-text-field label="Password" v-model="form.password" type="password"></v-text-field>
-                        <!-- show error  -->
-                        <v-alert v-if="showAlert && errors.password" type="error">{{ errors.password }}</v-alert>
-                    </form>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="deleteDialog = false">Close</v-btn>
-                    <v-btn color="blue darken-1" text @click="confirmDelete">Save</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <div class="flex items-center space-x-4">
-
-            <h1 class="text-2xl font-bold">{{ profileUser.name }}</h1>
-            <badge :title="points" color="purple" />
-            <badge :title="getRole(profileUser)" />
-            <button v-if="canUpdate" @click="updateDialog = !updateDialog"
-                class="px-4 py-1 bg-blue-500 text-white rounded-lg">Edit</button>
-            <button v-if="canUpdate" class="px-4 py-1 bg-red-500 text-white rounded-lg"
-                @click="deleteProfile">Delete</button>
-        </div>
-        <h1 class="text-2xl font-bold">{{ profileUser.email }}</h1>
-        <div class="flex mt-4 space-x-2">
-            <h1 class="px-4 py-1 font-semibold text-blue-800 bg-blue-100 border border-blue-500 rounded-xl">{{
-                profileUser.university.name }}</h1>
-            <h1 class="px-4 py-1 font-semibold text-green-800 bg-green-100 border border-green-500 rounded-xl">{{
-                profileUser.field?.name }}</h1>
-        </div>
-
-        <p class="mt-2">Since {{ formattedDate(profileUser.created_at) }}</p>
-        <h2 class="text-2xl font-bold mt-8">Threads</h2>
-        <div class="mx-auto grid grid-cols-3 gap-4">
-            <thread-card v-for="( thread, index ) in threads " :key="thread.id" :thread="thread" :index="index" />
-            <h1 v-if="threads.length === 0">no threads yet</h1>
-        </div>
-        <h2 class="text-2xl font-bold mt-8">Activities</h2>
-        <time-line>
-
-            <div class="space-y-12" v-for="( activitiesOnDate, date ) in activities " :key="date">
-                <component v-for="( activity ) in activitiesOnDate " :key="activity.id" :date="date"
-                    :is="getComponentName(activity.type)" v-bind="activityProps(activity)" :user="profileUser">
-                </component>
+        <div v-if="activeTab === 'threads'">
+            <h2 class="text-2xl font-bold mt-8">Threads</h2>
+            <div class="mx-auto grid grid-cols-3 gap-4">
+                <thread-card v-for="( thread ) in threads" :key="thread.id" :thread="thread" />
+                <h1 v-if="threads.length === 0">No threads yet</h1>
             </div>
-            <h1 v-if="activities.length === 0">no activities yet</h1>
+        </div>
 
-        </time-line>
+        <div v-if="activeTab === 'questions'">
+            <h2 class="text-2xl font-bold mt-8">Questions</h2>
+            <div class="mx-auto grid grid-cols-3 gap-4">
+                <QuestionCard v-for="( question ) in questions" :key="question.id" :question="question" />
+                <h1 v-if="questions.length === 0">No questions yet</h1>
+            </div>
+        </div>
+
+        <div v-if="activeTab === 'activities'">
+            <h2 class="text-2xl font-bold mt-8">Activities</h2>
+            <time-line>
+                <div class="space-y-12" v-for="( activitiesOnDate, date ) in activities" :key="date">
+                    <component v-for="( activity ) in activitiesOnDate" :key="activity.id" :date="date"
+                        :is="getComponentName(activity.type)" v-bind="activityProps(activity)" :user="profileUser">
+                    </component>
+                </div>
+                <h1 v-if="activities.length === 0">No activities yet</h1>
+            </time-line>
+        </div>
+
+        <div v-if="activeTab === 'answers'">
+            <h2 class="text-2xl font-bold mt-8">Answers</h2>
+            <div class="mx-auto grid grid-cols-3 gap-4">
+                <AnswerCard v-for="( answer ) in answers" :key="answer.id" :answer="answer" />
+                <h1 v-if="answers.length === 0">No answers yet</h1>
+            </div>
+        </div>
+
+        <div v-if="activeTab === 'replies'">
+            <h2 class="text-2xl font-bold mt-8">Replies</h2>
+            <div class="mx-auto grid grid-cols-3 gap-4">
+                <ReplyCard v-for="( reply ) in replies" :key="reply.id" :reply="reply" />
+                <h1 v-if="replies.length === 0">No replies yet</h1>
+            </div>
+        </div>
+
+        <div v-if="activeTab === 'votes'">
+            <h2 class="text-2xl font-bold mt-8">Votes</h2>
+            <div class="mx-auto grid grid-cols-3 gap-4">
+                <VoteCard v-for="( vote ) in votes" :key="vote.id" :vote="vote" />
+                <h1 v-if="votes.length === 0">No votes yet</h1>
+            </div>
+        </div>
+
+        <div v-if="activeTab === 'favorites'">
+            <h2 class="text-2xl font-bold mt-8">Favorites</h2>
+            <div class="mx-auto grid grid-cols-3 gap-4">
+                <FavoriteCard v-for="( favorite ) in favorites" :key="favorite.id" :favorite="favorite" />
+                <h1 v-if="favorites.length === 0">No favorites yet</h1>
+            </div>
+        </div>
+
+        <div v-if="activeTab === 'achievements'">
+            <AchievementsList :all-achievements="allAchievements" :unlocked-achievements="unlockedAchievements"
+                :current-progress="currentProgress" />
+        </div>
     </div>
 </template>
 
@@ -109,12 +82,14 @@ import CreatedQuestion from '../../Shared/Activity/CreatedQuestion.vue';
 import CreatedReply from '../../Shared/Activity/CreatedReply.vue';
 import CreatedAnswer from '../../Shared/Activity/CreatedAnswer.vue';
 import ActivityIcon from '../../Shared/Activity/ActivityIcon.vue';
-import { formatDate } from '../../Utils/helpers.js';
-import axios from 'axios';
-import Dropdown from '../../Shared/Dropdown.vue';
 import AchievementsList from '../../components/AchievementsList.vue';
+import QuestionCard from '../../components/QuestionCard.vue';
+import AnswerCard from '../../components/AnswerCard.vue';
+import ReplyCard from '../../components/ReplyCard.vue';
+import FavoriteCard from '../../components/FavoriteCard.vue';
+import VoteCard from '../../components/VoteCard.vue';
 export default {
-    props: ['profileUser', 'threads', 'activities', 'universities', 'fields', 'user', 'points', 'allAchievements', 'unlockedAchievements', 'currentProgress'],
+    props: ['profileUser', 'threads', 'questions', 'activities', 'answers', 'replies', 'votes', 'favorites', 'user', 'points', 'allAchievements', 'unlockedAchievements', 'currentProgress'],
     components: {
         CreatedFavorite,
         CreatedVote,
@@ -123,81 +98,26 @@ export default {
         CreatedReply,
         CreatedAnswer,
         ActivityIcon,
-        Dropdown,
-        AchievementsList
+        AchievementsList,
+        QuestionCard,
+        AnswerCard,
+        ReplyCard,
+        FavoriteCard,
+        VoteCard,
+
     },
     data() {
         return {
-            editing: false,
-            updateDialog: false,
-            deleteDialog: false,
-            canUpdate: false,
-            form: {
-                name: this.profileUser.name,
-                email: this.profileUser.email,
-                university_id: this.profileUser.university.id,
-                field_id: this.profileUser.field?.id,
-                password: '',
-            },
-            errors: {},
-            showAlert: false,
-        }
-    },
-    watch: {
-        profileUser(newProfileUser) {
-            this.canUpdate = this.$page.props.user.id === newProfileUser.id;
-        },
-        errors: {
-            handler() {
-                if (this.errors.password) {
-                    this.showAlert = true;
-                    setTimeout(() => {
-                        this.showAlert = false;
-                    }, 3000);
-                }
-            },
-            deep: true
-        }
+            activeTab: 'threads',
+            tabs: ['threads', 'questions', 'activities', 'answers', 'replies', 'votes', 'favorites', 'achievements'],
+        };
     },
     methods: {
-        updateProfile() {
-            const oldName = this.profileUser.name;
-            axios.patch(`/profile/${this.profileUser.name}`, { ...this.form, user_id: this.profileUser.id })
-                .then(response => {
-                    this.profileUser.name = response.data.name;
-                    this.profileUser.email = response.data.email;
-                    this.profileUser.field = response.data.field;
-                    this.profileUser.university = response.data.university;
-                    this.updateDialog = false;
-                    if (oldName !== response.data.name) {
-                        this.$inertia.visit(`/profiles/${response.data.name}`);
-                    }
-                })
-                .catch(error => {
-                });
+        setActiveTab(tab) {
+            this.activeTab = tab;
         },
-        deleteProfile() {
-            if (this.isAdmin) {
-                axios.delete(`/profile/${this.profileUser.name}`)
-                    .then(response => {
-                        this.$inertia.visit(`/`);
-                    })
-                    .catch(error => {
-                        this.errors = error.response.data.errors;
-                    });
-            } else {
-                this.deleteDialog = true;
-            }
-        },
-        confirmDelete() {
-            axios.delete(`/profile/${this.profileUser.name}`, { data: { password: this.form.password } })
-                .then(response => {
-                    this.deleteDialog = false;
-                    this.$inertia.visit(`/`);
-                })
-                .catch(error => {
-                    this.errors = error.response.data.errors;
-                });
+        capitalize(word) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
         },
         getComponentName(type) {
             switch (type) {
@@ -217,27 +137,19 @@ export default {
                     return null;
             }
         },
-        formattedDate(date) {
-            return formatDate(date);
-        },
         activityProps(activity) {
             return {
                 activity: activity,
             };
         },
-        getRole(user) {
-            if (user.roles.some(role => role.name === 'admin')) {
-                return 'Admin';
-            } else {
-                return 'User';
-            }
-        },
     },
     mounted() {
-        this.canUpdate = (this.$page.props.user.id === this.profileUser.id) || this.isAdmin;
+        console.log(this.questions);
+        this.canUpdate = (this.$page.props.user.id === this.profileUser.id);
     }
-}
+};
 </script>
+
 <style>
 option {
     background-color: #f8f9fa !important;
