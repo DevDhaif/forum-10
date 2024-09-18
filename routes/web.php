@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AllContentController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\FavoriteController;
@@ -41,12 +42,14 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/threads', [ThreadController::class, 'index'])->name('threads');
 Route::get('/questions', [QuestionController::class, 'index'])->name('questions');
+Route::get('/all', [AllContentController::class, 'index'])->name('all.content');
 
 Route::get("/threads/create", [ThreadController::class, 'create'])->middleware('auth')->name('threads.create');
 Route::get("/questions/create", [QuestionController::class, 'create'])->middleware('auth')->name('questions.create');
 
 Route::get("/threads/{channel}", [ThreadController::class, 'index'])->name('threads.channel');
 Route::get("/questions/{channel}", [QuestionController::class, 'index'])->name('questions.channel');
+Route::get('/all/{channel}', [AllContentController::class, 'index'])->name('all.channel');
 
 Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
 Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
