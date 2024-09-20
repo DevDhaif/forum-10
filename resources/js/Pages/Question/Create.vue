@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import { Inertia } from '@inertiajs/inertia'
 import MyEditor from "../../components/Editor/MyEditor.vue";
 import { route } from "ziggy-js"
+import axios from 'axios';
 export default {
     components: {
         MyEditor,
@@ -51,7 +51,7 @@ export default {
 
     methods: {
         submitForm() {
-            Inertia.post(route("questions.store"), this.form.data())
+            axios.post(route("questions.store"), this.form.data())
                 .then(() => {
                     this.form.reset();
                 })

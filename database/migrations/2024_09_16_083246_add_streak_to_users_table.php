@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('streak_days')->default(1); // Days of login streak
-            $table->date('last_login')->nullable(); // Last login date
+            $table->integer('streak_days')->default(1);
+            $table->date('last_login')->nullable(); 
         });
     }
 

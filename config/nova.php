@@ -72,8 +72,13 @@ return [
     |
     */
 
-    'guard' => env('NOVA_GUARD', null),
+    // 'guard' => env('NOVA_GUARD', null),
+    'guard' => env('NOVA_GUARD', 'web'),
 
+    'authorization' => [
+        'gate' => 'viewNova',
+        'debug' => false,
+    ],
     /*
     |--------------------------------------------------------------------------
     | Nova Password Reset Broker

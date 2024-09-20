@@ -25,7 +25,8 @@ class VoteController extends Controller
             'points' => $points,
         ]);
         $achievementService = new AchievementService();
-        $achievementService->checkForAchievements($voteable->user);
+        $user = $this->getVoteableUser($voteable);
+        $achievementService->checkForAchievements($user);
         $result = $voteable->toggleUpvote();
         if (request()->expectsJson()) {
             return response()->json($result);
@@ -45,7 +46,8 @@ class VoteController extends Controller
         ]);
 
         $achievementService = new AchievementService();
-        $achievementService->checkForAchievements($voteable->user);
+        $user = $this->getVoteableUser($voteable);
+        $achievementService->checkForAchievements($user);
 
         $result = $voteable->toggleDownvote();
         if (request()->expectsJson()) {
@@ -85,5 +87,15 @@ class VoteController extends Controller
     {
         $class = "App\\Models\\" . ucfirst($type);
         return $class::findOrFail($id);
+    }
+    protected function getVoteableUser($voteable)
+    {
+        if (method_exists($voteable, 'creator')) {
+            return $voteable->creator;
+        } elseif (method_exists($voteable, 'owner')) {
+            return $voteable->owner;
+        }
+
+        return null;
     }
 }
