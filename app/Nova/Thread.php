@@ -2,34 +2,35 @@
 
 namespace App\Nova;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Gravatar;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Resource;
 
-class User extends Resource
+class Thread extends Resource
 {
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        // Ensure that favorites_count is included in the query for sorting
+        return $query->withCount('favorites');
+    }
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Models\User>
+     * @var class-string<\App\Models\Thread>
      */
-    public static $model = \App\Models\User::class;
+    public static $model = \App\Models\Thread::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -38,8 +39,6 @@ class User extends Resource
      */
     public static $search = [
         'id',
-        'name',
-        'email',
     ];
 
     /**
@@ -52,44 +51,29 @@ class User extends Resource
     {
         return [
             ID::make()->sortable(),
-
-            Text::make('Name')
+            Text::make('Title')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('Email')
-                ->sortable()
-                ->rules('required', 'email', 'max:254')
-                ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
+            Textarea::make('Body')
+                ->rules('required'),
 
-            Password::make('Password')
-                ->onlyOnForms()
-                ->creationRules('required')
-                ->updateRules('nullable'),
+            // Display the user who created the thread
+            BelongsTo::make('Creator', 'creator', User::class)
+                ->sortable(),
 
-            Boolean::make('Is Admin')
-                ->trueValue(1)
-                ->falseValue(0)
-                ->resolveUsing(function () {
-                    return $this->hasRole('admin');
-                })
-                ->fillUsing(function ($request, $model, $attribute, $requestAttribute) {
-                    if ($request->$requestAttribute) {
-                        $model->assignRole('admin');
-                    } else {
-                        $model->removeRole('admin');
-                    }
-                }),
 
-            // In User.php Nova Resource
-
-            HasMany::make('Threads', 'threads', Thread::class),
-
-            HasMany::make('Questions', 'questions', Question::class),
-            HasMany::make('Replies', 'replies', Reply::class),
-            HasMany::make('Points', 'points', Point::class),
-            BelongsToMany::make('Achievements', 'achievements', Achievement::class),
+            BelongsTo::make('Channel', 'channel', Channel::class)->display('name'),
+            // Display the number of replies
+            Number::make('Replies Count')
+                ->onlyOnDetail()
+                ->sortable(),
+            
+            Number::make('Favorites Count', 'favorites_count')->sortable(),
+            // Display the number of visits
+            Number::make('Visits')
+                ->onlyOnDetail()
+                ->sortable(),
         ];
     }
 

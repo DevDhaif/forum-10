@@ -124,4 +124,13 @@ class Question extends Model
     {
         return $this->path();
     }
+    public function upvotes()
+    {
+        return $this->votes()->where('type', 'upvote');
+    }
+
+    public function downvotes()
+    {
+        return $this->votes()->where('type', 'downvote');
+    }
 }

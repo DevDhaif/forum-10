@@ -1,17 +1,18 @@
 <x-guest-layout>
+    <h1>{{ __('messages.welcome') }}</h1>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
         <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" :value="__('register.name')" />
             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
-                autofocus autocomplete="name" />
+                autofocus autocomplete="name"  />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
         <!-- University -->
-        <label for="university_id" class="col-md-4 col-form-label text-md-right">{{ __('University') }}</label>
+        <label for="university_id" class="col-md-4 col-form-label text-md-right">{{ __('register.university') }}</label>
 
         <div class="col-md-6">
             <select id="university_id" class="form-control @error('university_id') is-invalid @enderror"
@@ -28,7 +29,8 @@
             @enderror
         </div>
 
-        <label for="field_id" class="col-md-4 col-form-label text-md-right">{{ __('Field') }}</label>
+        <!-- Field -->
+        <label for="field_id" class="col-md-4 col-form-label text-md-right">{{ __('register.field') }}</label>
 
         <div class="col-md-6">
             <select id="field_id" class="form-control @error('field_id') is-invalid @enderror"
@@ -44,9 +46,10 @@
                 </span>
             @enderror
         </div>
+
         <!-- Email Address -->
         <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" :value="__('register.email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
                 required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
@@ -54,7 +57,7 @@
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('register.password')" />
 
             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
                 autocomplete="new-password" />
@@ -64,7 +67,7 @@
 
         <!-- Confirm Password -->
         <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <x-input-label for="password_confirmation" :value="__('register.confirm_password')" />
 
             <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
                 name="password_confirmation" required autocomplete="new-password" />
@@ -75,11 +78,11 @@
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 href="{{ route('login') }}">
-                {{ __('Already registered?') }}
+                {{ __('register.already_registered') }}
             </a>
 
             <x-primary-button class="ml-4">
-                {{ __('Register') }}
+                {{ __('register.register') }}
             </x-primary-button>
         </div>
     </form>

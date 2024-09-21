@@ -2,34 +2,27 @@
 
 namespace App\Nova;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Resource;
 
-class User extends Resource
+class Channel extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Models\User>
+     * @var class-string<\App\Models\Channel>
      */
-    public static $model = \App\Models\User::class;
+    public static $model = \App\Models\Channel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -38,8 +31,6 @@ class User extends Resource
      */
     public static $search = [
         'id',
-        'name',
-        'email',
     ];
 
     /**
@@ -52,44 +43,15 @@ class User extends Resource
     {
         return [
             ID::make()->sortable(),
-
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('Email')
+            Text::make('Slug')
                 ->sortable()
-                ->rules('required', 'email', 'max:254')
-                ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
+                ->rules('required', 'max:255'),
 
-            Password::make('Password')
-                ->onlyOnForms()
-                ->creationRules('required')
-                ->updateRules('nullable'),
-
-            Boolean::make('Is Admin')
-                ->trueValue(1)
-                ->falseValue(0)
-                ->resolveUsing(function () {
-                    return $this->hasRole('admin');
-                })
-                ->fillUsing(function ($request, $model, $attribute, $requestAttribute) {
-                    if ($request->$requestAttribute) {
-                        $model->assignRole('admin');
-                    } else {
-                        $model->removeRole('admin');
-                    }
-                }),
-
-            // In User.php Nova Resource
-
-            HasMany::make('Threads', 'threads', Thread::class),
-
-            HasMany::make('Questions', 'questions', Question::class),
-            HasMany::make('Replies', 'replies', Reply::class),
-            HasMany::make('Points', 'points', Point::class),
-            BelongsToMany::make('Achievements', 'achievements', Achievement::class),
+            HasMany::make('Threads'),
         ];
     }
 
