@@ -2,12 +2,10 @@
 
 namespace App\Nova;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Gravatar;
+use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
@@ -82,14 +80,26 @@ class User extends Resource
                     }
                 }),
 
-            // In User.php Nova Resource
 
             HasMany::make('Threads', 'threads', Thread::class),
-
             HasMany::make('Questions', 'questions', Question::class),
             HasMany::make('Replies', 'replies', Reply::class),
+            HasMany::make('Answers', 'answers', Answer::class),
             HasMany::make('Points', 'points', Point::class),
             BelongsToMany::make('Achievements', 'achievements', Achievement::class),
+            BelongsTo::make('University')
+                ->searchable()
+                ->rules('required'),
+
+
+            BelongsTo::make('Field')
+                ->hide()
+                ->dependsOn(['university'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+                    if ($formData->university) {
+                        $field->show()->rules('required');
+                    }
+                }),
+
         ];
     }
 

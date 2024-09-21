@@ -5,25 +5,24 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Answer extends Resource
+class Field extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Models\Answer>
+     * @var class-string<\App\Models\Field>
      */
-    public static $model = \App\Models\Answer::class;
+    public static $model = \App\Models\Field::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -32,6 +31,7 @@ class Answer extends Resource
      */
     public static $search = [
         'id',
+        'name'
     ];
 
     /**
@@ -44,13 +44,9 @@ class Answer extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Body')
-                ->rules('required'),
-            BelongsTo::make('Question', 'question', Question::class),
-            BelongsTo::make('User', 'owner', User::class),
-            Number::make('Votes Count', 'votes_count')
-                ->exceptOnForms()
-                ->sortable(),
+            Text::make('Name')->sortable()->rules('required', 'max:255'),
+            BelongsTo::make('University', 'university', University::class),
+
         ];
     }
 
