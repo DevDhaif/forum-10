@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -51,10 +52,24 @@ class Channel extends Resource
                 ->sortable()
                 ->rules('required', 'max:255'),
 
+            Number::make('Total Threads', function () {
+                return $this->threads_count;
+            })->sortable(),
+            Number::make('Total Questions', function () {
+                return $this->questions_count;
+            })->sortable(),
+
+            Number::make('Total Contributions', function () {
+                return $this->threads_count + $this->questions_count;
+            })->sortable(),
+
             HasMany::make('Threads'),
         ];
     }
-
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->withCount(['threads', 'questions']);
+    }
     /**
      * Get the cards available for the request.
      *

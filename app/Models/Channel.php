@@ -9,7 +9,8 @@ class Channel extends Model
 {
     use HasFactory;
 
-    public function getRouteKeyName(){
+    public function getRouteKeyName()
+    {
         return 'slug';
     }
 
@@ -17,5 +18,8 @@ class Channel extends Model
     {
         return $this->hasMany(Thread::class);
     }
-
+    function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
 }

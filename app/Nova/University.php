@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -45,10 +46,16 @@ class University extends Resource
         return [
             ID::make()->sortable(),
             Text::make('Name')->sortable()->rules('required', 'max:255'),
-            HasMany::make('Fields', 'fields', Field::class)
+            HasMany::make('Fields', 'fields', Field::class),
+            Number::make('Users Count', function () {
+                return $this->users_count;
+            })->sortable(),
         ];
     }
-
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->withCount('users');
+    }
     /**
      * Get the cards available for the request.
      *
