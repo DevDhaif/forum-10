@@ -47,8 +47,12 @@ class University extends Resource
             ID::make()->sortable(),
             Text::make('Name')->sortable()->rules('required', 'max:255'),
             HasMany::make('Fields', 'fields', Field::class),
+            HasMany::make('Users', 'users', User::class),
             Number::make('Users Count', function () {
                 return $this->users_count;
+            })->sortable(),
+            Number::make('Fields Count', function () {
+                return $this->fields_count;
             })->sortable(),
         ];
     }

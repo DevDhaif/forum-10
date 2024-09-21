@@ -9,7 +9,7 @@ class University extends Model
 {
     use HasFactory;
     protected $fillable = ['name'];
-    protected $withCount = ['fields'];
+    protected $withCount = ['fields', 'users'];
     public function fields()
     {
         return $this->hasMany(Field::class);

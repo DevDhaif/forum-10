@@ -17,6 +17,8 @@ class Thread extends Model
     protected $appends = ['favorites_count', 'isFavorited', 'path'];
     protected $with = ['creator', 'channel', 'favorites'];
 
+    protected $dates = ['created_at', 'updated_at'];
+
     protected static function boot()
     {
         parent::boot();
