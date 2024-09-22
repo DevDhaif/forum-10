@@ -27,35 +27,35 @@
             </div>
 
         </div>
-        <div class="flex justify-between space-x-4 items-center my-4">
-            <div class="flex space-x-4 w-fit">
-                <div class="flex  space-x-2 items-center text-sm font-medium text-sky-500 dark:text-sky-400">
-                    <svg class="fill-blue-500" xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+        <div class="flex justify-betweenw items-center my-4">
+            <div class="flex w-fit">
+                <div class="flex items-center text-sm font-medium text-sky-500 dark:text-sky-400">
+                    <svg class="fill-blue-500 mx-2" xmlns="http://www.w3.org/2000/svg" width="25" height="25"
                         viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="M5.486 0c-1.92 0-2.881 0-3.615.373A3.428 3.428 0 0 0 .373 1.871C-.001 2.605 0 3.566 0 5.486v9.6c0 1.92 0 2.88.373 3.613c.329.645.853 1.17 1.498 1.498c.734.374 1.695.375 3.615.375h11.657V24l.793-.396c2.201-1.101 3.3-1.652 4.105-2.473a6.852 6.852 0 0 0 1.584-2.56C24 17.483 24 16.251 24 13.79V5.486c0-1.92 0-2.881-.373-3.615A3.428 3.428 0 0 0 22.129.373C21.395-.001 20.434 0 18.514 0H5.486zm1.371 10.285h10.286a5.142 5.142 0 0 1-10.286.024v-.024z" />
                     </svg>
                     <span class="sr-only">View answers to</span><span>{{ question.answers_count }}</span>
                 </div>
-                <div class="flex  space-x-2 items-center text-sm font-medium text-rose-500 dark:text-rose-400">
-                    <svg v-if="question.votes_count >= 0" aria-hidden="true" class="w-6 h-6 fill-green-400 "
+                <div class="flex items-center text-sm font-medium text-rose-500 dark:text-rose-400">
+                    <svg v-if="question.votes_count >= 0" aria-hidden="true" class="w-6 h-6 mx-2 fill-green-400 "
                         viewBox="0 0 18 18">
                         <path d="M1 12h16L9 4l-8 8Z"></path>
                     </svg>
-                    <svg v-else aria-hidden="true" class="w-6 h-6 fill-red-400 " viewBox="0 0 18 18">
+                    <svg v-else aria-hidden="true" class="w-6 h-6 fill-red-400 mx-2 " viewBox="0 0 18 18">
                         <path d="M1 6h16l-8 8-8-8Z"></path>
                     </svg>
                     <span class="sr-only">View likes for</span><span
                         :class="question.votes_count > 0 ? 'text-green-500' : 'text-red-500'">{{ question.votes_count
                         }}</span>
                 </div>
-                <div class="flex  space-x-2 items-center text-sm font-medium text-slate-500 dark:text-slate-400">
-                    <VisitIcon class=" text-slate-500 dark:text-slate-400"></VisitIcon>
+                <div class="flex  items-center text-sm font-medium text-slate-500 dark:text-slate-400">
+                    <VisitIcon class="mx-2 text-slate-500 dark:text-slate-400"></VisitIcon>
                     <span class="sr-only">View likes for</span><span>{{ question.visits }}</span>
                 </div>
             </div>
             <p class="text-sm text-gray-500 dark:text-gray-200
-            ">{{ formatDate(question.created_at) }}</p>
+            ">{{ formatRelativeTime(question.created_at) }}</p>
         </div>
         <div class="flex justify-between">
             <Link class="flex items-center text-sm text-sky-500 font-medium" :href="question.creator.path">
@@ -69,9 +69,9 @@
                     {{ question.title }}
                 </span>
             </span>
-            <svg class="relative mt-px overflow-visible ml-2.5 text-sky-300 dark:text-sky-700" width="3" height="6"
-                viewBox="0 0 3 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
+            <svg class="relative mt-px overflow-visible ml-2.5 rtl:mr-2.5 rtl:-scale-x-100 text-sky-300 dark:text-sky-700"
+                width="3" height="6" viewBox="0 0 3 6" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <path d="M0 0L3 3L0 6"></path>
             </svg>
             </Link>

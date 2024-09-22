@@ -27,23 +27,23 @@
             </div>
 
         </div>
-        <div class="flex justify-between space-x-4 items-center my-4">
-            <div class="flex space-x-4 w-fit">
-                <div class="flex  space-x-2 items-center text-sm font-medium text-sky-500 dark:text-sky-400">
-                    <reply-icon class=" text-sky-500 dark:text-sky-400"></reply-icon>
+        <div class="flex justify-between items-center my-4">
+            <div class="flex w-fit">
+                <div class="flex items-center text-sm font-medium text-sky-500 dark:text-sky-400">
+                    <reply-icon class=" mx-2 text-sky-500 dark:text-sky-400"></reply-icon>
                     <span class="sr-only">View replies to</span><span>{{ thread.replies_count }}</span>
                 </div>
-                <div class="flex  space-x-2 items-center text-sm font-medium text-rose-500 dark:text-rose-400">
-                    <Heart class=" text-rose-500 dark:text-rose-400"></Heart>
+                <div class="flex items-center text-sm font-medium text-rose-500 dark:text-rose-400">
+                    <Heart class=" mx-2 text-rose-500 dark:text-rose-400"></Heart>
                     <span class="sr-only">View likes for</span><span>{{ thread.favorites_count }}</span>
                 </div>
-                <div class="flex  space-x-2 items-center text-sm font-medium text-slate-500 dark:text-slate-400">
-                    <VisitIcon class=" text-slate-500 dark:text-slate-400"></VisitIcon>
+                <div class="flex  items-center text-sm font-medium text-slate-500 dark:text-slate-400">
+                    <VisitIcon class=" mx-2 text-slate-500 dark:text-slate-400"></VisitIcon>
                     <span class="sr-only">View likes for</span><span>{{ thread.visits }}</span>
                 </div>
             </div>
             <p class="text-sm text-gray-500 dark:text-gray-200
-            ">{{ formatDate(thread.created_at) }}</p>
+            ">{{ formatRelativeTime(thread.created_at) }}</p>
         </div>
         <div class="flex justify-between">
             <Link class="flex items-center text-sm text-sky-500 font-medium" :href="thread.creator.path">
@@ -53,13 +53,14 @@
 
             <Link class="flex items-center text-sm text-sky-500 font-medium" :href="thread.path">
             <!-- <span class="absolute -inset-y-2.5 -inset-x-4 md:-inset-y-4 md:-inset-x-6 sm:rounded-2xl"></span> -->
-            <span class="relative">Read more<span class="sr-only">,
+            <span class="relative"> {{ $t('readMore') }}
+                <span class="sr-only">,
                     {{ thread.title }}
                 </span>
             </span>
-            <svg class="relative mt-px overflow-visible ml-2.5 text-sky-300 dark:text-sky-700" width="3" height="6"
-                viewBox="0 0 3 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
+            <svg class="relative mt-px overflow-visible ml-2.5 rtl:mr-2.5 rtl:-scale-x-100 text-sky-300 dark:text-sky-700"
+                width="3" height="6" viewBox="0 0 3 6" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <path d="M0 0L3 3L0 6"></path>
             </svg>
             </Link>
@@ -69,13 +70,11 @@
 </template>
 <script>
 import { Link } from '@inertiajs/inertia-vue3'
-import moment from 'moment'
 import { highlightCode } from '../Utils/highlightCode.js'
 import Badge from '../Shared/Badge.vue'
 import ReplyIcon from 'vue-material-design-icons/MessageReply.vue';
 import Heart from 'vue-material-design-icons/Heart.vue';
 import VisitIcon from 'vue-material-design-icons/Eye.vue';
-
 export default {
     components: {
         Link,
@@ -87,11 +86,7 @@ export default {
     props: ['thread', 'channel', 'channels', 'index'],
 
     computed: {
-        formatDate() {
-            return date => moment(date).fromNow()
-        },
         mounted() {
-            console.log("Mounted")
             this.$nextTick(() => {
                 const blocks = this.$el.querySelectorAll('pre code')
                 blocks.forEach(block => {
@@ -107,33 +102,9 @@ export default {
             return highlightCode(body)
         },
 
-    },
+    }
 }
 </script>
-<!-- <style scoped>
-.article::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 25%;
-    background: red;
-    transform: skewX(-30deg);
-}
-
-.left-triangle {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 0;
-    border-top: 20% solid transparent;
-    border-left: 75px solid red;
-    border-bottom: 20% solid transparent;
-
-}
-</style> -->
 <style scoped>
 .triangle {
     position: absolute;

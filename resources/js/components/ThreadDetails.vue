@@ -6,22 +6,22 @@
             <div class="flex items-center justify-between mt-4">
                 <div class="flex items-center space-x-2">
                     <p class="text-sm text-slate-600 dark:text-slate-400">
-                        This thread was published {{ diffForHumans }} ago by
+                        {{ $t('threadPublished') }} {{ formatRelativeTime(thread.created_at) }} {{ $t('by') }}
                         <a :href="userPath()" class="text-sm text-blue-600 dark:text-blue-400">
                             {{ thread.creator.name }}
                         </a>
-                        in
+                        {{ $t('in') }}
                         <a v-if="thread.channel" :href="`/threads/${thread.channel.slug}`"
                             class="text-sm text-blue-600 dark:text-blue-400">
                             {{ thread.channel.name }}
                         </a>
-                        and currently has {{ thread.replies_count }} replies .
+                        {{ $t('threadHasReplies', { count: thread.replies_count }) }}
                     </p>
                 </div>
                 <Visits :item="thread"></Visits>
                 <div v-if="canUpdate" class="flex items-center space-x-2">
                     <form @submit.prevent="deleteThread">
-                        <button title="Delete this thread" type="submit" class="bg-red-50  rounded p-1  hover:outline hover:outline-1 hover:outline-red-500 ring-1 ring-red-400 dark:ring-red-700 dark:bg-red-500 bg-text-red-700 dark:text-red-50
+                        <button :title="$t('deleteThread')" type="submit" class="bg-red-50  rounded p-1  hover:outline hover:outline-1 hover:outline-red-500 ring-1 ring-red-400 dark:ring-red-700 dark:bg-red-500 bg-text-red-700 dark:text-red-50
                             group">
                             <svg class="w-6 h-6 text-red-700 group-hover:text-red-500 dark:text-red-200 dark:group-hover:text-red-300 group-hover:scale-95"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -31,7 +31,7 @@
                             </svg>
                         </button>
                     </form>
-                    <Link title="Update this thread"
+                    <Link :title="$t('updateThread')"
                         :href="route('threads.edit', { channel: thread.channel.slug, thread: thread.id })"
                         class=" bg-blue-50 text-blue-700 dark:bg-blue-500 dark:text-blue-200  rounded p-1  hover:outline hover:outline-1 hover:outline-blue-500 dark:hover:outline-blue-200 ring-1 ring-blue-400 dark:ring-blue-700 group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

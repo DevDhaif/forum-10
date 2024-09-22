@@ -3,7 +3,8 @@
         <div class="w-3/4">
             <thread-details :thread="thread" :user="user"></thread-details>
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
-                <p class="mt-6 text-sm text-gray-600"> This thread has {{ thread.replies_count }} replies. </p>
+                <p class="mt-6 text-sm text-gray-600"> {{ $t('threadHasReplies', { count: thread.replies_count }) }}
+                </p>
                 <post-reply :user="user" :thread="thread" @replyPosted="addReply" @posted="posted"></post-reply>
                 <replies :replies="replies" :thread="thread" :user="user" @flash="flash">
                 </replies>

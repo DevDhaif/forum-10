@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h1>replies all here </h1>
         <reply v-for="reply in this.replies.data" :key="reply.id" :reply="reply" :user="user"
             @replyDeleted="updateReplies"></reply>
         <flash :flash="flashMessage"></flash>

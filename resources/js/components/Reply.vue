@@ -4,15 +4,15 @@
             <div v-if="editing" class="flex flex-col ">
                 <textarea v-model="editText"></textarea>
                 <div class="mt-2">
-                    <btn color="blue" @click="saveEdit">Save</btn>
-                    <btn color="red" @click="cancelEdit">Cancel</btn>
+                    <btn color="blue" @click="saveEdit">{{ $t('save') }}</btn>
+                    <btn color="red" @click="cancelEdit">{{ $t('cancel') }}</btn>
                 </div>
             </div>
-            <div v-else class="flex space-x-4">
+            <div v-else class="flex flex-col ">
                 <p>{{ reply.body }}</p>
-                <div v-if="(user?.id === reply.user_id) || this.isAdmin">
-                    <btn color="blue" @click="editReply">Edit</btn>
-                    <btn color="red" @click="deleteReply">Delete</btn>
+                <div class="mt-2" v-if="(user?.id === reply.user_id) || this.isAdmin">
+                    <btn color="blue" @click="editReply">{{ $t('edit') }}</btn>
+                    <btn color="red" @click="deleteReply">{{ $t('delete') }}</btn>
                 </div>
             </div>
             <favorite :item="reply" type="reply" :user="user" />

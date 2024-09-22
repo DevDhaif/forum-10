@@ -9,21 +9,21 @@
                 <div v-if="editing" class="flex flex-col w-full ">
                     <textarea class="border" v-model="editText"></textarea>
                     <div class="mt-2">
-                        <btn color="blue" @click="saveEdit">Save</btn>
-                        <btn color="red" @click="cancelEdit">Cancel</btn>
+                        <btn color="blue" @click="saveEdit">{{ $t('save') }}</btn>
+                        <btn color="red" @click="cancelEdit">{{ $t('cancel') }}</btn>
                     </div>
                 </div>
                 <div v-else class="flex space-x-4 justify-between w-full">
                     <p>{{ answer.body }}</p>
                     <div v-if="(user?.id === answer.user_id) || this.isAdmin">
-                        <btn color="blue" @click="editAnswer">Edit</btn>
-                        <btn color="red" @click="deleteAnswer">Delete</btn>
+                        <btn color="blue" @click="editAnswer">{{ $t('edit') }}</btn>
+                        <btn color="red" @click="deleteAnswer">{{ $t('delete') }}</btn>
                     </div>
                 </div>
 
                 <button @click="markAsBest" v-if="(user?.id === answer.question.creator.id)"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">
-                    {{ answer.is_best ? "Unmark as best" : "Mark as best" }}
+                    {{ answer.is_best ? $t('unmarkAsBest') : $t('markAsBest') }}
                 </button>
             </div>
             <flash :flash="flashMessage"></flash>
@@ -54,7 +54,7 @@ export default {
                         this.errorMessage = null;
                     })
                     .catch((error) => {
-                        this.errorMessage = "Could not mark the answer as best";
+                        this.errorMessage = this.$t('couldNotMarkAsBest');
                     });
             } else { this.removeBestMark(); }
         },
@@ -73,7 +73,7 @@ export default {
                     this.errorMessage = null;
                 })
                 .catch((error) => {
-                    this.errorMessage = "Could not delete the answer";
+                    this.errorMessage = this.$t('couldNotDelete');
                 });
         },
         removeBestMark() {
@@ -86,7 +86,7 @@ export default {
                     this.errorMessage = null;
                 })
                 .catch((error) => {
-                    this.errorMessage = "Could not remove the best mark";
+                    this.errorMessage = this.$t('couldNotRemoveBestMark');
                 });
         },
         saveEdit() {
@@ -102,7 +102,7 @@ export default {
                 })
                 .catch((error) => {
                     this.flashMessage = { message: response.data.flash, type: "error" }
-                    this.errorMessage = "Could not save the answer";
+                    this.errorMessage = this.$t('couldNotSaveAnswer');
                 });
         },
         cancelEdit

@@ -1,15 +1,16 @@
 <template>
-    <div class="container flex items-start justify-between mx-auto mt-6 space-x-8">
-        <div class="w-3/4">
+    <div class="container flex items-start justify-between mx-auto mt-12 space-x-4">
+        <div class="w-[70%]">
             <QuestionDetails :question="question" :user="user"></QuestionDetails>
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
-                <p class="mt-6 text-sm text-gray-600"> This question has {{ question.answers_count }} answers. </p>
+                <p class="mt-6 text-sm text-gray-600">{{ $t('questionHasAnswers', { count: question.answers_count }) }}
+                </p>
                 <Answers :answers="answers" :question="question" :user="user" @flash="flash" />
                 <PostAnswer :user="user" :question="question" @answerPosted="addAnswer" @posted="posted"></PostAnswer>
                 <pagination :links="answers.links"></pagination>
             </div>
         </div>
-        <div class="w-1/4 flex flex-col gap-y-4 ">
+        <div class="w-1/4 flex flex-col gap-y-4">
             <QuestionInfo :question="question" :user="question.creator" />
             <Related :items="relatedQuestions" type="questions" />
         </div>

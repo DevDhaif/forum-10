@@ -1,9 +1,13 @@
 <template>
-    <h1 class="capitalize">Related {{ type }} </h1>
+    <h1 class="capitalize">{{ $t('a' + type) }} {{ $t('related') }} </h1>
     <div class="max-h-[540px] overflow-y-scroll space-y-4 py-2 shadow-md">
 
-        <thread-card v-if="type === 'threads'" v-for="item in items" :key="item.id" :thread="item"></thread-card>
-        <QuestionCard v-if="type === 'questions'" v-for="item in items" :key="item.id" :question="item"></QuestionCard>
+        <div v-if="type === 'threads'">
+            <thread-card class="my-2" v-for="item in items" :key="item.id" :thread="item"></thread-card>
+        </div>
+        <div v-if="type === 'questions'">
+            <question-card class="my-2" v-for="item in items" :key="item.id" :question="item"></question-card>
+        </div>
     </div>
 </template>
 <script>

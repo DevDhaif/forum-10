@@ -1,13 +1,14 @@
 <template>
     <div v-if="user">
+        <h1 class="text-2xl font-bold">{{ $t('yourReply') }}</h1>
         <form class="relative my-6" @submit.prevent="postReply">
             <div class="mt-6">
                 <textarea v-model="body" name="body" class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500
-                " placeholder="Have something to say?" rows="5"></textarea>
+                " :placeholder="$t('haveSomethingToSay')" rows="5"></textarea>
             </div>
             <button type="submit"
                 class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
-                Post
+                {{ $t('post') }}
             </button>
         </form>
         <flash :flash="flashMessage"></flash>

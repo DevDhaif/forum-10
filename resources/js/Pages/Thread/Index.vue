@@ -1,10 +1,12 @@
 <template>
     <div class="mx-auto">
         <h1 class="p-6 my-10 text-4xl font-bold text-blue-700 bg-blue-100 border-2 border-blue-200 rounded-md">
-            {{ channel || 'All' }} threads
+            <span v-if="isArabic">{{ $t('athreads') }} {{ channel || $t('all') }}</span>
+            <span v-else>{{ channel || $t('all') }} {{ $t('athreads') }}</span>
         </h1>
-        <div v-if="threads.length === 0" class="px-4 py-3">
-            <p class="text-sm leading-5">No threads yet.</p>
+        <div v-if="threads.data.length === 0" class="px-4 py-3">
+            <p class="text-sm leading-5">
+                {{ $t('noThreads') }} </p>
         </div>
         <div class="max-w-[52rem] mx-auto px-4 pb-28 sm:px-6 md:px-8 xl:px-12 lg:max-w-6xl">
             <div
@@ -31,6 +33,11 @@ export default {
     props: {
         threads: Object,
         channel: String,
+    },
+    computed: {
+        isArabic() {
+            return this.$i18n.locale === 'ar';
+        },
     },
 }
 </script>
