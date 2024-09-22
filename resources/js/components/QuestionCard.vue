@@ -65,7 +65,7 @@
 
             <Link class="flex items-center text-sm text-sky-500 font-medium" :href="question.path">
             <!-- <span class="absolute -inset-y-2.5 -inset-x-4 md:-inset-y-4 md:-inset-x-6 sm:rounded-2xl"></span> -->
-            <span class="relative">Read more<span class="sr-only">,
+            <span class="relative">{{ $t('readMore') }}<span class="sr-only">,
                     {{ question.title }}
                 </span>
             </span>

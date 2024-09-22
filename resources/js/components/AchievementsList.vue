@@ -5,7 +5,7 @@
             <li v-for="type in achievementTypes" :key="type"
                 :class="{ 'border-blue-500 text-blue-500': activeTab === type }"
                 class="mr-4 cursor-pointer py-2 px-4 border-b-2 flex items-center" @click="setActiveTab(type)">
-                <span class="mr-2">{{ capitalize(type) }}</span>
+                <span class="mr-2">{{ translateType(type) }}</span>
                 <span v-html="getIcon(type)"></span>
             </li>
         </ul>
@@ -82,7 +82,10 @@ export default {
         },
         currentProgressFor(achievement) {
             return this.currentProgress[achievement.type] || 0;
-        }
+        },
+        translateType(type) {
+            return this.$t(type.toLowerCase());
+        },
     }
 };
 </script>

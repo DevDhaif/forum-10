@@ -3,67 +3,67 @@
         <ul class="flex border-b overflow-scroll pb-2">
             <li v-for="tab in tabs" :key="tab" :class="{ 'border-blue-500 text-blue-500': activeTab === tab }"
                 class="mr-4 cursor-pointer py-2 px-4 border-b-2 flex items-center" @click="setActiveTab(tab)">
-                <span class="mr-2">{{ capitalize(tab) }}</span>
+                <span class="mr-2">{{ $t(tab) }}</span>
             </li>
         </ul>
 
         <div v-if="activeTab === 'threads'">
-            <h2 class="text-2xl font-bold mt-8">Threads</h2>
+            <h2 class="text-2xl font-bold mt-8">{{ $t('threads') }}</h2>
             <div class="mx-auto grid grid-cols-3 gap-4">
                 <thread-card v-for="( thread ) in threads" :key="thread.id" :thread="thread" />
-                <h1 v-if="threads.length === 0">No threads yet</h1>
+                <h1 v-if="threads.length === 0">{{ $t('noThreads') }}</h1>
             </div>
         </div>
 
         <div v-if="activeTab === 'questions'">
-            <h2 class="text-2xl font-bold mt-8">Questions</h2>
+            <h2 class="text-2xl font-bold mt-8">{{ $t('questions') }}</h2>
             <div class="mx-auto grid grid-cols-3 gap-4">
                 <QuestionCard v-for="( question ) in questions" :key="question.id" :question="question" />
-                <h1 v-if="questions.length === 0">No questions yet</h1>
+                <h1 v-if="questions.length === 0">{{ $t('noQuestions') }}</h1>
             </div>
         </div>
 
         <div v-if="activeTab === 'activities'">
-            <h2 class="text-2xl font-bold mt-8">Activities</h2>
+            <h2 class="text-2xl font-bold mt-8">{{ $t('activities') }}</h2>
             <time-line>
                 <div class="space-y-12" v-for="( activitiesOnDate, date ) in activities" :key="date">
                     <component v-for="( activity ) in activitiesOnDate" :key="activity.id" :date="date"
                         :is="getComponentName(activity.type)" v-bind="activityProps(activity)" :user="profileUser">
                     </component>
                 </div>
-                <h1 v-if="activities.length === 0">No activities yet</h1>
+                <h1 v-if="activities.length === 0">{{ $t('noActivities') }}</h1>
             </time-line>
         </div>
 
         <div v-if="activeTab === 'answers'">
-            <h2 class="text-2xl font-bold mt-8">Answers</h2>
+            <h2 class="text-2xl font-bold mt-8"> {{ $t('answers') }}</h2>
             <div class="mx-auto grid grid-cols-3 gap-4">
                 <AnswerCard v-for="( answer ) in answers" :key="answer.id" :answer="answer" />
-                <h1 v-if="answers.length === 0">No answers yet</h1>
+                <h1 v-if="answers.length === 0">{{ $t('noAnswers') }}</h1>
             </div>
         </div>
 
         <div v-if="activeTab === 'replies'">
-            <h2 class="text-2xl font-bold mt-8">Replies</h2>
+            <h2 class="text-2xl font-bold mt-8">{{ $t('replies') }}</h2>
             <div class="mx-auto grid grid-cols-3 gap-4">
                 <ReplyCard v-for="( reply ) in replies" :key="reply.id" :reply="reply" />
-                <h1 v-if="replies.length === 0">No replies yet</h1>
+                <h1 v-if="replies.length === 0">{{ $t('noReplies') }}</h1>
             </div>
         </div>
 
         <div v-if="activeTab === 'votes'">
-            <h2 class="text-2xl font-bold mt-8">Votes</h2>
+            <h2 class="text-2xl font-bold mt-8">{{ $t('votes') }}</h2>
             <div class="mx-auto grid grid-cols-3 gap-4">
                 <VoteCard v-for="( vote ) in votes" :key="vote.id" :vote="vote" />
-                <h1 v-if="votes.length === 0">No votes yet</h1>
+                <h1 v-if="votes.length === 0">{{ $t('noVotes') }}</h1>
             </div>
         </div>
 
         <div v-if="activeTab === 'favorites'">
-            <h2 class="text-2xl font-bold mt-8">Favorites</h2>
+            <h2 class="text-2xl font-bold mt-8">{{ $t('favorites') }}</h2>
             <div class="mx-auto grid grid-cols-3 gap-4">
                 <FavoriteCard v-for="( favorite ) in favorites" :key="favorite.id" :favorite="favorite" />
-                <h1 v-if="favorites.length === 0">No favorites yet</h1>
+                <h1 v-if="favorites.length === 0">{{ $t('noFavorites') }}</h1>
             </div>
         </div>
 
