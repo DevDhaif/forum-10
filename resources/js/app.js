@@ -6,13 +6,13 @@ import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { createI18n } from "vue-i18n";
 import { formatRelativeTime } from "./Utils/dateUtils";
-import ExampleComponent from "/resources/js/components/ExampleComponent.vue";
-import Reply from "/resources/js/components/Reply.vue";
-import Replies from "/resources/js/components/Replies.vue";
-import Favorite from "/resources/js/components/Favorite.vue";
-import Flash from "/resources/js/components/Flash.vue";
-import Btn from "/resources/js/components/Btn.vue";
-import PostReply from "/resources/js/components/PostReply.vue";
+// import ExampleComponent from "/resources/js/components/ExampleComponent.vue";
+// import Reply from "/resources/js/components/Reply.vue";
+// import Replies from "/resources/js/components/Replies.vue";
+// import Favorite from "/resources/js/components/Favorite.vue";
+// import Flash from "/resources/js/components/Flash.vue";
+// import Btn from "/resources/js/components/Btn.vue";
+// import PostReply from "/resources/js/components/PostReply.vue";
 import ThreadInfo from "/resources/js/components/ThreadInfo.vue";
 import ThreadDetails from "/resources/js/components/ThreadDetails.vue";
 import ThreadCard from "/resources/js/components/ThreadCard.vue";
@@ -72,13 +72,13 @@ createInertiaApp({
                     },
                 },
             })
-            .component("example-component", ExampleComponent)
-            .component("reply", Reply)
-            .component("replies", Replies)
-            .component("favorite", Favorite)
-            .component("flash", Flash)
-            .component("btn", Btn)
-            .component("post-reply", PostReply)
+            // .component("example-component", ExampleComponent)
+            // .component("reply", Reply)
+            // .component("replies", Replies)
+            // .component("favorite", Favorite)
+            // .component("flash", Flash)
+            // .component("btn", Btn)
+            // .component("post-reply", PostReply)
             .component("thread-info", ThreadInfo)
             .component("thread-details", ThreadDetails)
             .component("thread-card", ThreadCard)

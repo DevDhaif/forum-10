@@ -15,7 +15,7 @@
                     <btn color="red" @click="deleteReply">{{ $t('delete') }}</btn>
                 </div>
             </div>
-            <favorite :item="reply" type="reply" :user="user" />
+            <Favorite :item="reply" type="reply" :user="user" />
         </div>
         <flash :flash="flashMessage"></flash>
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>

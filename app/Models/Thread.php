@@ -95,7 +95,6 @@ class Thread extends Model
     // }`
     public function getPathAttribute()
     {
-        $slug = $this->channel ? $this->channel->slug  : ' ';
-        return "/threads/{$slug}/{$this->id}";
+        return $this->path();
     }
 }

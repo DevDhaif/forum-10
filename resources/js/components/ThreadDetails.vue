@@ -43,7 +43,7 @@
 
                     </Link>
                 </div>
-                <favorite :item="thread" type="thread" :user="user"></favorite>
+                <Favorite :item="thread" type="thread" :user="user"></Favorite>
             </div>
         </div>
         <hr class="my-4 border-gray-200" />
@@ -60,12 +60,14 @@ import { route } from "ziggy-js";
 import moment from "moment";
 import { highlightCode } from "../Utils/highlightCode";
 import { Link } from '@inertiajs/inertia-vue3'
+import Favorite from "../components/Favorite.vue";
 
 export default {
     props: ["thread", "user"],
     components: {
         Visits,
         Link,
+        Favorite,
     },
     data() {
         return {

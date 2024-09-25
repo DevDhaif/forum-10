@@ -9,15 +9,15 @@
                 <div v-if="editing" class="flex flex-col w-full ">
                     <textarea class="border" v-model="editText"></textarea>
                     <div class="mt-2">
-                        <btn color="blue" @click="saveEdit">{{ $t('save') }}</btn>
-                        <btn color="red" @click="cancelEdit">{{ $t('cancel') }}</btn>
+                        <Btn color="blue" @click="saveEdit">{{ $t('save') }}</Btn>
+                        <Btn color="red" @click="cancelEdit">{{ $t('cancel') }}</Btn>
                     </div>
                 </div>
                 <div v-else class="flex space-x-4 justify-between w-full">
                     <p>{{ answer.body }}</p>
                     <div v-if="(user?.id === answer.user_id) || this.isAdmin">
-                        <btn color="blue" @click="editAnswer">{{ $t('edit') }}</btn>
-                        <btn color="red" @click="deleteAnswer">{{ $t('delete') }}</btn>
+                        <Btn color="blue" @click="editAnswer">{{ $t('edit') }}</Btn>
+                        <Btn color="red" @click="deleteAnswer">{{ $t('delete') }}</Btn>
                     </div>
                 </div>
 
@@ -26,7 +26,7 @@
                     {{ answer.is_best ? $t('unmarkAsBest') : $t('markAsBest') }}
                 </button>
             </div>
-            <flash :flash="flashMessage"></flash>
+            <Flash :flash="flashMessage"></Flash>
             <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
         </div>
     </div>
@@ -35,11 +35,14 @@
 <script>
 import axios from "axios";
 import Vote from "./Vote.vue";
-
+import Flash from "./Flash.vue";
+import Btn from "./Btn.vue";
 export default {
     props: ["answer", "user"],
     components: {
         Vote,
+        Flash,
+        Btn,
     },
     data() { return { editing: false, editText: this.answer.body, errorMessage: "", flashMessage: null }; },
     methods: {

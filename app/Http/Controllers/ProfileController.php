@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Achievement;
 use App\Models\Activity;
-
+use App\Models\Field;
+use App\Models\University;
 use App\Models\User;
 use App\Services\AchievementService;
 use Illuminate\Http\Request;
@@ -25,6 +26,8 @@ class ProfileController extends Controller
         $allAchievements = Achievement::all();
         $unlockedAchievements = $user->achievements;
 
+        $universities = University::all();
+        $fields = Field::all();
         $currentProgress = [
             'threads' => $user->threads()->count(),
             'questions' => $user->questions()->count(),
@@ -69,6 +72,8 @@ class ProfileController extends Controller
             'allAchievements' => $allAchievements,
             'unlockedAchievements' => $unlockedAchievements,
             'currentProgress' => $currentProgress,
+            'universities' => $universities,
+            'fields' => $fields,
         ]);
     }
     /**

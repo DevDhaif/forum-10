@@ -5,6 +5,7 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ReplyController;
@@ -89,7 +90,7 @@ Route::patch("/answers/{answer}", [AnswerController::class, 'update'])->name('an
 
 Route::delete("/replies/{reply}", [ReplyController::class, 'destroy'])->name('replies.destroy');
 Route::delete("/answers/{answer}", [AnswerController::class, 'destroy'])->name('answers.destroy');
-
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
 
 Route::get('/profiles/{user:name}', [ProfileController::class, 'show'])->name('profile.show');
 Route::post('/upload-image', [ImageController::class, 'upload'])->name('image.upload');

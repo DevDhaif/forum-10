@@ -11,7 +11,16 @@
             <DropdownLink @click="switchLocale('ar')" title="العربية" />
         </Dropdown>
         <div class="hidden sm:-my-px sm:ml-10  sm:flex sm:items-center">
-            <!-- New Dropdown -->
+            <DropdownLink :href="route('leaderboard')" :title="$t('leaderboard')" class="flex items-center text-sm px- font-medium space-x-2 !capitalize leading-4
+                bg-slate-50
+                !text-slate-900
+                dark:focus:ring-slate-600
+                dark:!text-slate-100
+                hover:text-slate-700
+                hover:bg-slate-100
+                dark:hover:bg-slate-800
+                dark:hover:text-slate-300
+                dark:bg-slate-900 border border-transparent  focus:outline-none shadow-none" />
             <Dropdown class="mx-2" :title="$t('new')">
                 <DropdownLink :href="route('threads.create')" :title="$t('newThread')" />
                 <DropdownLink :href="route('questions.create')" :title="$t('newQuestion')" />

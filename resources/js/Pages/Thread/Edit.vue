@@ -7,7 +7,7 @@
         <form v-if="user" @submit.prevent="submitForm" class="space-y-4">
             <div class="mt-6">
                 {{ $t('title') }}
-                <input type="text" v-model="title" :placeholder="t('editThread')" required
+                <input type="text" v-model="title" :placeholder="$t('editThread')" required
                     class="w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div class="mt-6">

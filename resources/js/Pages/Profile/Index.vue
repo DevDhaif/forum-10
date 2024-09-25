@@ -71,6 +71,113 @@
             <AchievementsList :all-achievements="allAchievements" :unlocked-achievements="unlockedAchievements"
                 :current-progress="currentProgress" />
         </div>
+        <div v-if="activeTab === 'details'">
+            <div class="mt-8">
+                <h2 class="text-2xl font-bold">{{ $t('details') }}</h2>
+                <div class="mt-4">
+                    <div class="flex items-start ">
+                        <div class="flex flex-col items-center">
+                            <span class="text-2xl font-bold">{{ points }}</span>
+                            <span class="text-sm">{{ $t('points') }}</span>
+                        </div>
+                        <div class="flex flex-col mx-4 items-center">
+                            <span class="text-2xl font-bold">{{ threads.length }}</span>
+                            <span class="text-sm">{{ $t('threads') }}</span>
+                        </div>
+                        <div class="flex flex-col mx-4 items-center">
+                            <span class="text-2xl font-bold">{{ questions.length }}</span>
+                            <span class="text-sm">{{ $t('questions') }}</span>
+                        </div>
+                        <div class="flex flex-col mx-4 items-center">
+                            <span class="text-2xl font-bold">{{ answers.length }}</span>
+                            <span class="text-sm">{{ $t('answers') }}</span>
+                        </div>
+                        <div class="flex flex-col mx-4 items-center">
+                            <span class="text-2xl font-bold">{{ replies.length }}</span>
+                            <span class="text-sm">{{ $t('replies') }}</span>
+                        </div>
+                        <div class="flex flex-col mx-4 items-center">
+                            <span class="text-2xl font-bold">{{ votes.length }}</span>
+                            <span class="text-sm">{{ $t('votes') }}</span>
+                        </div>
+                        <div class="flex flex-col mx-4 items-center">
+                            <span class="text-2xl font-bold">{{ favorites.length }}</span>
+                            <span class="text-sm">{{ $t('favorites') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <p><strong>{{ $t('name') }}:</strong> {{ profileUser.name }}</p>
+                <p><strong>{{ $t('email') }}:</strong> {{ profileUser.email }}</p>
+                <p><strong>{{ $t('university') }}:</strong> {{ profileUser.university.name }}</p>
+                <p><strong>{{ $t('field') }}:</strong> {{ profileUser.field.name }}</p>
+                <p><strong>{{ $t('joinedOn') }}:</strong> {{ formattedDate(profileUser.created_at) }}</p>
+
+                <div class="flex mt-4">
+                    <button @click="updateDialog = true" class="px-4 mx-2 py-2 bg-blue-600 text-white rounded-md">{{
+                        $t('editAccount') }}</button>
+                    <button @click="deleteDialog = true" class="px-4 mx-2 py-2 bg-red-600 text-white rounded-md">{{
+                        $t('deleteAccount') }}</button>
+                </div>
+            </div>
+        </div>
+        <v-dialog v-model="updateDialog" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">{{ $t('editAccount') }}</span>
+                </v-card-title>
+                <v-card-text>
+                    <form @submit.prevent="updateProfile">
+                        <v-text-field :label="$t('name')" v-model="form.name"></v-text-field>
+                        <v-text-field :label="$t('email')" v-model="form.email"></v-text-field>
+
+                        <div class="col-md-6">
+                            <label for="field_id">{{ $t('field') }}</label>
+                            <select v-model="form.field_id" class="w-full px-4 py-2 bg-gray-100 border rounded-md"
+                                required>
+                                <option v-for="field in fields" :key="field.id" :value="field.id">{{ field.name }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="university_id">{{ $t('university') }}</label>
+                            <select v-model="form.university_id" class="w-full px-4 py-2 bg-gray-100 border rounded-md"
+                                required>
+                                <option v-for="university in universities" :key="university.id" :value="university.id">
+                                    {{ university.name }}</option>
+                            </select>
+                        </div>
+                    </form>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text @click="updateDialog = false">{{ $t('cancel') }}</v-btn>
+                    <v-btn text @click="updateProfile">{{ $t('save') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- Delete Account Dialog -->
+        <v-dialog v-model="deleteDialog" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">{{ $t('deleteAccount') }}</span>
+                </v-card-title>
+                <v-card-text>
+                    <form @submit.prevent="confirmDelete">
+                        <v-text-field :label="$t('password')" v-model="form.password" type="password"></v-text-field>
+                        <v-alert v-if="showAlert && errors.password" type="error">{{ errors.password }}</v-alert>
+                    </form>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text @click="deleteDialog = false">Close</v-btn>
+                    <v-btn text @click="confirmDelete">Confirm</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -89,7 +196,7 @@ import ReplyCard from '../../components/ReplyCard.vue';
 import FavoriteCard from '../../components/FavoriteCard.vue';
 import VoteCard from '../../components/VoteCard.vue';
 export default {
-    props: ['profileUser', 'threads', 'questions', 'activities', 'answers', 'replies', 'votes', 'favorites', 'user', 'points', 'allAchievements', 'unlockedAchievements', 'currentProgress'],
+    props: ['profileUser', 'threads', 'questions', 'activities', 'answers', 'replies', 'votes', 'favorites', 'user', 'points', 'allAchievements', 'unlockedAchievements', 'currentProgress', 'fields', 'universities'],
     components: {
         CreatedFavorite,
         CreatedVote,
@@ -108,8 +215,19 @@ export default {
     },
     data() {
         return {
-            activeTab: 'threads',
-            tabs: ['threads', 'questions', 'activities', 'answers', 'replies', 'votes', 'favorites', 'achievements'],
+            activeTab: 'details',
+            tabs: ['threads', 'questions', 'activities', 'answers', 'replies', 'votes', 'favorites', 'achievements', 'details'],
+            updateDialog: false,
+            deleteDialog: false,
+            form: {
+                name: this.profileUser.name,
+                email: this.profileUser.email,
+                university_id: this.profileUser.university.id,
+                field_id: this.profileUser.field.id,
+                password: '',
+            },
+            errors: {},
+            showAlert: false,
         };
     },
     methods: {
@@ -142,9 +260,34 @@ export default {
                 activity: activity,
             };
         },
+        updateProfile() {
+            axios.patch(`/profile/${this.profileUser.id}`, { ...this.form, user_id: this.profileUser.id })
+                .then(response => {
+                    this.updateDialog = false;
+                    if (this.profileUser.name !== response.data.name) {
+                        this.$inertia.visit(`/profiles/${response.data.name}`);
+                    }
+                }).catch(error => {
+                    // Handle error
+                });
+        },
+        confirmDelete() {
+            axios.delete(`/profile/${this.profileUser.id}`, { data: { password: this.form.password } })
+                .then(() => {
+                    this.deleteDialog = false;
+                    // this.$inertia.visit('/all');
+                }).catch(error => {
+                    // Handle error
+                    this.errors = error.response.data.errors;
+                });
+        },
+        formattedDate(date) {
+            return new Date(date).toLocaleDateString();
+        }
     },
     mounted() {
-        console.log(this.questions);
+        console.log(this.universities);
+        console.log(this.fields);
         this.canUpdate = (this.$page.props.user.id === this.profileUser.id);
     }
 };

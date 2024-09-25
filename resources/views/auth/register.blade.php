@@ -12,40 +12,40 @@
         </div>
 
         <!-- University -->
-        <label for="university_id" class="col-md-4 col-form-label text-md-right">{{ __('register.university') }}</label>
+        <div class="flex flex-col space-y-6">
+            <!-- University Field -->
+            <div class="flex flex-col">
+                <label for="university_id" class="text-lg font-semibold text-gray-700">{{ __('register.university') }}</label>
+                <select id="university_id" name="university_id" required
+                    class="mt-2 rounded-md border-2 border-blue-500 focus:ring-blue-500 focus:border-blue-500 w-full px-3 py-2 bg-white text-gray-900 shadow-sm @error('university_id') border-red-500 @enderror">
+                    @foreach ($universities as $university)
+                        <option value="{{ $university->id }}">{{ $university->name }}</option>
+                    @endforeach
+                </select>
+                @error('university_id')
+                    <span class="text-sm text-red-500 mt-1">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
 
-        <div class="col-md-6">
-            <select id="university_id" class="form-control @error('university_id') is-invalid @enderror"
-                name="university_id" required>
-                @foreach ($universities as $university)
-                    <option value="{{ $university->id }}">{{ $university->name }}</option>
-                @endforeach
-            </select>
-
-            @error('university_id')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
+            <!-- Field -->
+            <div class="flex flex-col">
+                <label for="field_id" class="text-lg font-semibold text-gray-700">{{ __('register.field') }}</label>
+                <select id="field_id" name="field_id" required
+                    class="mt-2 rounded-md border-2 border-blue-500 focus:ring-blue-500 focus:border-blue-500 w-full px-3 py-2 bg-white text-gray-900 shadow-sm @error('field_id') border-red-500 @enderror">
+                    @foreach ($fields as $field)
+                        <option value="{{ $field->id }}">{{ $field->name }}</option>
+                    @endforeach
+                </select>
+                @error('field_id')
+                    <span class="text-sm text-red-500 mt-1">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
         </div>
 
-        <!-- Field -->
-        <label for="field_id" class="col-md-4 col-form-label text-md-right">{{ __('register.field') }}</label>
-
-        <div class="col-md-6">
-            <select id="field_id" class="form-control @error('field_id') is-invalid @enderror"
-                name="field_id" required>
-                @foreach ($fields as $field)
-                    <option value="{{ $field->id }}">{{ $field->name }}</option>
-                @endforeach
-            </select>
-
-            @error('field_id')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
 
         <!-- Email Address -->
         <div class="mt-4">
