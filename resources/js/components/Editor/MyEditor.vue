@@ -38,7 +38,7 @@ const editor = useEditor({
     editorProps: {
         attributes: {
             class:
-                ' min-h-[28rem] max-h-[12rem] prose dark:prose-invert !bg-slate-800/10 p-4 overflow-y-auto outline-none  max-w-none border-[1px] border-slate-500 dark:border-slate-600',
+                ' min-h-[28rem] max-h-[12rem] prose dark:prose-invert  p-4 overflow-y-auto outline-none  max-w-none border-[1px] border-slate-500 dark:border-slate-600',
         },
     },
 })

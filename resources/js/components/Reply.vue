@@ -4,20 +4,20 @@
             <div v-if="editing" class="flex flex-col ">
                 <textarea v-model="editText"></textarea>
                 <div class="mt-2">
-                    <btn color="blue" @click="saveEdit">{{ $t('save') }}</btn>
-                    <btn color="red" @click="cancelEdit">{{ $t('cancel') }}</btn>
+                    <Btn color="blue" @click="saveEdit">{{ $t('save') }}</Btn>
+                    <Btn color="red" @click="cancelEdit">{{ $t('cancel') }}</Btn>
                 </div>
             </div>
             <div v-else class="flex flex-col ">
                 <p>{{ reply.body }}</p>
                 <div class="mt-2" v-if="(user?.id === reply.user_id) || this.isAdmin">
-                    <btn color="blue" @click="editReply">{{ $t('edit') }}</btn>
-                    <btn color="red" @click="deleteReply">{{ $t('delete') }}</btn>
+                    <Btn color="blue" @click="editReply">{{ $t('edit') }}</Btn>
+                    <Btn color="red" @click="deleteReply">{{ $t('delete') }}</Btn>
                 </div>
             </div>
             <Favorite :item="reply" type="reply" :user="user" />
         </div>
-        <flash :flash="flashMessage"></flash>
+        <Flash :flash="flashMessage"></Flash>
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
 </template>
@@ -25,8 +25,11 @@
 <script>
 import axios from "axios";
 import Favorite from "./Favorite.vue";
+import Flash from "./Flash.vue";
+import Btn from "./Btn.vue";
+
 export default {
-    components: { Favorite },
+    components: { Favorite, Flash, Btn },
     props: ["reply", "user"],
     data() { return { editing: false, editText: this.reply.body, errorMessage: "", flashMessage: null }; },
     methods: {

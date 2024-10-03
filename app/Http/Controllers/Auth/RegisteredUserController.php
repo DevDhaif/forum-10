@@ -24,9 +24,10 @@ class RegisteredUserController extends Controller
     {
         $universities = University::all();
         $fields = Field::all();
-        return view('auth.register', ['universities' => $universities
-        , 'fields' => $fields
-    ]);
+        return view('auth.register', [
+            'universities' => $universities,
+            'fields' => $fields
+        ]);
     }
 
     /**
@@ -56,6 +57,35 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('all.content');
+    }
+    public function apiStore(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'university_id' => ['required', 'integer', 'exists:universities,id'],
+            'field_id' => ['required', 'integer', 'exists:fields,id'],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'university_id' => $request->university_id,
+            'field_id' => $request->field_id,
+        ]);
+
+        // Generate token for the new user
+        $token = $user->createToken('authToken')->plainTextToken;
+
+        // Return JSON response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User registered successfully',
+            'user' => $user,
+            'token' => $token
+        ], 201);
     }
 }

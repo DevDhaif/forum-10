@@ -3,14 +3,16 @@
         <Answer v-for="answer in this.answers.data" :key="answer.id" :answer="answer" :user="user"
             @answerMarkedAsBest="handleMarkedAsBest" @answerDeleted="updateAnswers"
             @bestAnswerDeleted="handleBestAnswerDeleted" @bestAnswerChanged="handleBestAnswerChanged"></Answer>
-        <flash :flash="flashMessage"></flash>
+        <FLash :flash="flashMessage"></FLash>
     </div>
 </template>
 <script>
 import Answer from "./Answer.vue";
+import Flash from "./Flash.vue";
 export default {
     components: {
         Answer,
+        Flash,
     },
     props: ["answers", "question", "user"],
     data() {

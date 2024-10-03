@@ -4,6 +4,7 @@
             @keydown.enter.prevent="event => event.target.click()" @click="open = !open"
             v-click-outside="() => open = false" class="
             flex items-center text-sm px- font-medium space-x-2 !capitalize leading-4
+            w-full
                 bg-slate-50
                 !text-slate-900
                 dark:focus:ring-slate-600

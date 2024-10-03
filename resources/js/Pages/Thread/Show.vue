@@ -1,18 +1,18 @@
 <template>
     <div class="container flex items-start justify-between mx-auto mt-6 space-x-8">
         <div class="w-3/4">
-            <thread-details :thread="thread" :user="user"></thread-details>
+            <ThreadDetails :thread="thread" :user="user"></ThreadDetails>
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
                 <p class="mt-6 text-sm text-gray-600"> {{ $t('threadHasReplies', { count: thread.replies_count }) }}
                 </p>
-                <post-reply :user="user" :thread="thread" @replyPosted="addReply" @posted="posted"></post-reply>
-                <replies :replies="replies" :thread="thread" :user="user" @flash="flash">
-                </replies>
-                <pagination :links="replies.links"></pagination>
+                <PostReply :user="user" :thread="thread" @replyPosted="addReply" @posted="posted"></PostReply>
+                <Replies :replies="replies" :thread="thread" :user="user" @flash="flash">
+                </Replies>
+                <Pagination :links="replies.links"></Pagination>
             </div>
         </div>
         <div class="w-1/4 flex flex-col ">
-            <thread-info :thread="thread" :user="thread.creator" />
+            <ThreadInfo :thread="thread" :user="thread.creator" />
             <Related :items="relatedThreads" type="threads" />
         </div>
     </div>
@@ -21,10 +21,18 @@
 <script>
 import Pagination from '../../Shared/Pagination.vue'
 import Related from "../../components/Related.vue"
+import Replies from "../../components/Replies.vue"
+import PostReply from "../../components/PostReply.vue"
+import ThreadDetails from "../../components/ThreadDetails.vue"
+import ThreadInfo from "../../components/ThreadInfo.vue"
 export default {
     components: {
         Pagination,
         Related,
+        Replies,
+        PostReply,
+        ThreadDetails,
+        ThreadInfo,
     },
     props: ['thread', 'user', 'replies', 'relatedThreads'],
     data() {

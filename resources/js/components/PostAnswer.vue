@@ -11,14 +11,16 @@
                 {{ $t('post') }}
             </button>
         </form>
-        <flash :flash="$t('somethingWentWrong')"></flash>
+        <Flash :flash="$t('somethingWentWrong')"></Flash>
         <p v-if="errorMessage" class="text-red-500">{{ $t('pleaseEnterValidAnswer') }}</p>
     </div>
 </template>
 <script>
 import axios from 'axios';
+import Flash from './Flash.vue';
 export default {
     name: "PostAnswer",
+    components: { Flash },
     props: ["question", "user"],
     data() {
         return {

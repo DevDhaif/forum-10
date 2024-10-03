@@ -15,14 +15,17 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/all">
-                        <img src="{{ asset('favicon-96x96.png') }}" alt="logo" class="w-20 h-20">
-                </a>
-            </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-slate-100 shadow-md overflow-hidden sm:rounded-lg">
+        <!-- Background Image -->
+        <div class="bg-cover bg-center bg-fixed min-h-screen flex justify-center items-center" style="background-image: url('{{ asset('bg.webp') }}')">
+
+            <!-- Centered Form -->
+            <div class="mx-4 p-8 rounded-lg shadow-white/50 backdrop-blur-xl shadow-lg bg-white/40 w-full sm:max-w-2xl  z-10 text-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}">
+                <div class="flex justify-center mb-6">
+                    <a href="/all">
+                        <img src="{{ asset('favicon-96x96.png') }}" alt="logo" class="w-20 h-20 rounded-full">
+                    </a>
+                </div>
                 {{ $slot }}
             </div>
         </div>
