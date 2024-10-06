@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -11,6 +12,15 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Channel extends Resource
 {
+    public static function label()
+    {
+        return App::isLocale('ar') ? 'القنوات' : 'Channels';
+    }
+
+    public static function singularLabel()
+    {
+        return App::isLocale('ar') ? 'قناة' : 'Channel';
+    }
     /**
      * The model the resource corresponds to.
      *
@@ -44,26 +54,28 @@ class Channel extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Name')
+            Text::make(__('name'), 'name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('Slug')
+            Text::make(__('slug'), 'slug')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Number::make('Total Threads', function () {
-                return $this->threads_count;
-            })->sortable(),
-            Number::make('Total Questions', function () {
-                return $this->questions_count;
+            Number::make(__('total_threads'), function () {
+                return $this->threads_count ?? 0;  // Fallback to 0 if null
             })->sortable(),
 
-            Number::make('Total Contributions', function () {
-                return $this->threads_count + $this->questions_count;
+            // Use translation key for Total Questions
+            Number::make(__('total_questions'), function () {
+                return $this->questions_count ?? 0;  // Fallback to 0 if null
             })->sortable(),
 
-            HasMany::make('Threads'),
+            // Use translation key for Total Contributions (calculated field)
+            Number::make(__('total_contributions'), function () {
+                return ($this->threads_count ?? 0) + ($this->questions_count ?? 0);
+            })->sortable(),
+            HasMany::make(__('threads'), 'threads', Thread::class),
         ];
     }
     public static function indexQuery(NovaRequest $request, $query)

@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -14,6 +15,15 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Thread extends Resource
 {
+    public static function label()
+    {
+        return App::isLocale('ar') ? 'المواضيع' : 'Threads';
+    }
+
+    public static function singularLabel()
+    {
+        return App::isLocale('ar') ? 'موضوع' : 'Thread';
+    }
     public static function indexQuery(NovaRequest $request, $query)
     {
         // Ensure that favorites_count is included in the query for sorting
@@ -52,28 +62,29 @@ class Thread extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Title')
+            Text::make(__('title'), 'title')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Markdown::make('Body')
+            Markdown::make(__('body'), 'body')
                 ->rules('required'),
 
             // Display the user who created the thread
-            BelongsTo::make('Creator', 'creator', User::class)
+            BelongsTo::make(__('creator'), 'creator', User::class)
+                ->readonly()
                 ->sortable(),
 
 
-            BelongsTo::make('Channel', 'channel', Channel::class)->display('name'),
+            BelongsTo::make(__('channel'), 'channel', Channel::class)->display('name')->readonly(),
             // Display the number of replies
             Number::make('Replies Count')
                 ->onlyOnDetail()
                 ->sortable(),
 
-            Number::make('Favorites Count', 'favorites_count')->sortable(),
+            Number::make(__('favorites_count'), 'favorites_count')->readonly()->sortable(),
             // Display the number of visits
-            Number::make('Visits')
-                ->onlyOnDetail()
+            Number::make(__('visits'), 'visits')
+                ->readonly()
                 ->sortable(),
         ];
     }

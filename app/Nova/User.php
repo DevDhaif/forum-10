@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Illuminate\Support\Facades\App;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
@@ -15,6 +16,17 @@ use Laravel\Nova\Resource;
 
 class User extends Resource
 {
+    public static function label()
+    {
+        // Use localization for plural label (e.g., "Users")
+        return App::isLocale('ar') ? 'المستخدمين' : 'Users';
+    }
+
+    public static function singularLabel()
+    {
+        // Use localization for singular label (e.g., "User")
+        return App::isLocale('ar') ? 'مستخدم' : 'User';
+    }
     /**
      * The model the resource corresponds to.
      *
@@ -51,22 +63,22 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Name')
+            Text::make(__('name'), 'name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('Email')
+            Text::make(__('email'), 'email')
                 ->sortable()
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
-            Password::make('Password')
+            Password::make(__('password'), 'password')
                 ->onlyOnForms()
                 ->creationRules('required')
                 ->updateRules('nullable'),
 
-            Boolean::make('Is Admin')
+            Boolean::make(__('is_admin'), 'is_admin')
                 ->trueValue(1)
                 ->falseValue(0)
                 ->resolveUsing(function () {
@@ -81,24 +93,28 @@ class User extends Resource
                 }),
 
 
-            HasMany::make('Threads', 'threads', Thread::class),
-            HasMany::make('Questions', 'questions', Question::class),
-            HasMany::make('Replies', 'replies', Reply::class),
-            HasMany::make('Answers', 'answers', Answer::class),
-            HasMany::make('Points', 'points', Point::class),
-            BelongsToMany::make('Achievements', 'achievements', Achievement::class),
-            BelongsTo::make('University')
+            HasMany::make(__('threads'), 'threads', Thread::class),
+            HasMany::make(__('questions'), 'questions', Question::class),
+            HasMany::make(__('replies'), 'replies', Reply::class),
+            HasMany::make(__('answers'), 'answers', Answer::class),
+            HasMany::make(__('points'), 'points', Point::class),
+            BelongsToMany::make(__('achievements'), 'achievements', Achievement::class),
+            BelongsTo::make(__('University'), 'university', University::class)
                 ->searchable()
                 ->rules('required'),
 
-
-            BelongsTo::make('Field')
-                ->hide()
+            BelongsTo::make(__('field'), 'field', Field::class)
+                ->hide()  // Initially hide the field
                 ->dependsOn(['university'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
                     if ($formData->university) {
+                        // Show the field and make it required if a university is selected
                         $field->show()->rules('required');
+                    } else {
+                        // Hide the field if no university is selected
+                        $field->hide();
                     }
                 }),
+
 
         ];
     }

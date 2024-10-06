@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -11,6 +12,15 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Point extends Resource
 {
+    public static function label()
+    {
+        return App::isLocale('ar') ? 'النقاط' : 'Points';
+    }
+
+    public static function singularLabel()
+    {
+        return App::isLocale('ar') ? 'نقطة' : 'Point';
+    }
     /**
      * The model the resource corresponds to.
      *
@@ -44,16 +54,15 @@ class Point extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('User', 'user', User::class)->sortable(),
+            BelongsTo::make(__('user'), 'user', User::class)->readonly()->sortable(),
 
             // Source of points
-            Text::make('Source')->sortable(),
+            Text::make(__('source'), 'source')->readonly()->sortable(),
 
-            Number::make('Source ID')
-                ->sortable()
+            Number::make(__('source_id'), 'source_id')->sortable()->readonly()
                 ->rules('required', 'integer'),
 
-            Number::make('Points')
+            Number::make(__('points'), 'points')
                 ->sortable()
                 ->rules('required', 'integer'),
         ];

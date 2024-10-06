@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -11,6 +12,15 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Field extends Resource
 {
+    public static function label()
+    {
+        return App::isLocale('ar') ? 'التخصصات' : 'Fields';
+    }
+
+    public static function singularLabel()
+    {
+        return App::isLocale('ar') ? 'التخصص' : 'Field';
+    }
     /**
      * The model the resource corresponds to.
      *
@@ -45,9 +55,17 @@ class Field extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Name')->sortable()->rules('required', 'max:255'),
-            BelongsTo::make('University', 'university', University::class),
-            HasMany::make('Users', 'users', User::class)
+            Text::make(__('name'), 'name')->sortable()->rules('required', 'max:255'),
+            BelongsTo::make(
+                __('university'),
+                'university',
+                University::class
+            ),
+            HasMany::make(
+                __('users'),
+                'users',
+                User::class
+            )
         ];
     }
 

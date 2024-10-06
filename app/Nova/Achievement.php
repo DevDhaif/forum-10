@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
@@ -13,6 +14,15 @@ use Laravel\Nova\Resource;
 
 class Achievement extends Resource
 {
+    public static function label()
+    {
+        return App::isLocale('ar') ? 'الإنجازات' : 'Achievements';
+    }
+
+    public static function singularLabel()
+    {
+        return App::isLocale('ar') ? 'إنجاز' : 'Achievement';
+    }
     /**
      * The model the resource corresponds to.
      *
@@ -50,42 +60,42 @@ class Achievement extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Name')
+            Text::make(__('name'), 'name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Textarea::make('Description')
+            Textarea::make(__('description'), 'description')
                 ->rules('required'),
 
-            Select::make('Type')->options([
-                'threads' => 'Threads',
-                'questions' => 'Questions',
-                'replies_count' => 'Replies',
-                'answers_count' => 'Answers',
-                'favorites' => 'Favorites',
-                'votes' => 'Votes',
-                'visits' => 'Visits',
-                'profile_visits' => 'Profile Visits',
-                'points' => 'Points',
-                'streak' => 'Streak',
-                'milestone' => 'Milestone',
+            Select::make(__('type'), 'type')->options([
+                'threads' => __('threads'),
+                'questions' => __('questions'),
+                'replies_count' => __('replies'),
+                'answers_count' => __('answers'),
+                'favorites' => __('favorites'),
+                'votes' => __('votes'),
+                'visits' => __('visits'),
+                'profile_visits' => __('profile_visits'),
+                'points' => __('points'),
+                'streak' => __('streak'),
+                'milestone' => __('milestone'),
             ])->displayUsingLabels()
                 ->sortable()
                 ->rules('required'),
 
-            Number::make('Target')
+            Number::make(__('target'), 'target')
                 ->sortable()
                 ->rules('required', 'min:1', 'max:1000000'),
 
-            Select::make('Level')->options([
-                'Beginner' => 'Beginner',
-                'Intermediate' => 'Intermediate',
-                'Advanced' => 'Advanced',
-                'Expert' => 'Expert',
-                'Master' => 'Master',
-                'Grandmaster' => 'Grandmaster',
-                'Legend' => 'Legend',
-                'Champion' => 'Champion',
+            Select::make(__('level'), 'level')->options([
+                'Beginner' => __('beginner'),
+                'Intermediate' => __('intermediate'),
+                'Advanced' => __('advanced'),
+                'Expert' => __('expert'),
+                'Master' => __('master'),
+                'Grandmaster' => __('grandmaster'),
+                'Legend' => __('legend'),
+                'Champion' => __('champion'),
             ])->displayUsingLabels()
                 ->sortable()
                 ->rules('required'),

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Channel extends Model
 {
     use HasFactory;
-
+    protected $withCount = ['threads', 'questions'];
     public function getRouteKeyName()
     {
         return 'slug';

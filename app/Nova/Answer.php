@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -11,6 +12,15 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Answer extends Resource
 {
+    public static function label()
+    {
+        return App::isLocale('ar') ? 'الإجابات' : 'Answers';
+    }
+
+    public static function singularLabel()
+    {
+        return App::isLocale('ar') ? 'إجابة' : 'Answer';
+    }
     /**
      * The model the resource corresponds to.
      *
@@ -44,12 +54,16 @@ class Answer extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Body')
+            Text::make(__('body'), 'body')
                 ->rules('required'),
-            BelongsTo::make('Question', 'question', Question::class),
-            BelongsTo::make('User', 'owner', User::class),
-            Number::make('Votes Count', 'votes_count')
-                ->exceptOnForms()
+            BelongsTo::make(__('question'), 'question', Question::class)
+                ->readonly()
+                ->sortable(),
+            BelongsTo::make(__('user'), 'owner', User::class)
+                ->readonly()
+                ->sortable(),
+            Number::make(__('votes_count'), 'votes_count')
+                ->readonly()
                 ->sortable(),
         ];
     }
