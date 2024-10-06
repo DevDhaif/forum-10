@@ -72,6 +72,9 @@ export default {
     data() {
         return {
             errorMessage: "",
+            form: this.$inertia.form({
+                thread_id: this.thread.id,
+            })
 
         };
     },
@@ -85,20 +88,18 @@ export default {
             return `/profiles/${this.thread.creator.name}`;
         },
         deleteThread() {
-            Inertia.delete(
-                route("threads.destroy", {
-                    channel: this.thread.channel.slug,
-                    thread: this.thread.id,
-                }),
-            )
-                .then(() => {
-                    flash("Thread deleted");
-                })
-                .catch((error) => {
-                    this.errorMessage =
-                        error.response.data.message ||
-                        "Could not delete the thread";
-                });
+            return this.form.delete(route("threads.destroy", {
+                channel: this.thread.channel.slug,
+                thread: this.thread.id,
+            }), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    Inertia.visit(route("threads"));
+                },
+                onError: (errors) => {
+                    this.errorMessage = errors.message;
+                },
+            });
         },
         decodeHtml(html) {
             var txt = document.createElement("textarea");

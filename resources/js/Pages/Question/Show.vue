@@ -1,6 +1,6 @@
 <template>
-    <div class="container flex items-start justify-between mx-auto mt-12 space-x-4">
-        <div class="w-[70%]">
+    <div class="container flex flex-col lg:flex-row items-start justify-between mx-auto mt-6 space-x-8">
+        <div class="lg:w-3/4">
             <QuestionDetails :question="question" :user="user"></QuestionDetails>
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
                 <p class="mt-6 text-sm text-gray-600">{{ $t('questionHasAnswers', { count: question.answers_count }) }}
@@ -10,8 +10,8 @@
                 <pagination :links="answers.links"></pagination>
             </div>
         </div>
-        <div class="w-1/4 flex flex-col gap-y-4">
-            <QuestionInfo :question="question" :user="question.creator" />
+        <div class="lg:w-1/4 flex flex-col  w-full">
+            <!-- <QuestionInfo :question="question" :user="question.creator" /> -->
             <Related :items="relatedQuestions" type="questions" />
         </div>
     </div>
@@ -24,7 +24,7 @@ import PostAnswer from '../../components/PostAnswer.vue'
 import QuestionDetails from '../../components/QuestionDetails.vue'
 import QuestionInfo from '../../components/QuestionInfo.vue'
 import Related from "../../components/Related.vue"
-
+import { useToast } from 'vue-toastification'
 export default {
     components: {
         Pagination,
@@ -34,13 +34,24 @@ export default {
         PostAnswer,
         Related,
     },
-    props: ['question', 'user', 'answers', 'relatedQuestions'],
+    props: ['question', 'user', 'answers', 'relatedQuestions', 'flash'],
     data() {
         return {
             // answers: this.answers,
             flashMessage: "",
             errorMessage: "",
             body: "",
+        }
+    },
+    mounted() {
+        const toast = useToast();
+
+        if (this.flash && this.flash.success) {
+            toast.success(this.$t(this.flash.success));
+        }
+
+        if (this.flash && this.flash.error) {
+            toast.error(this.$t(this.flash.error));
         }
     },
     methods: {
@@ -54,10 +65,6 @@ export default {
             Object.assign(this.question, question);
             Object.assign(this.answers, answers);
             window.history.pushState({}, '', `/questions/${this.question.channel.slug}/${this.question.id}?page=${this.answers.current_page}`);
-            this.flashMessage = null
-            this.$nextTick(() => {
-                this.flashMessage = flash
-            })
         },
         addAnswer() {
             if (this.body === "") {
@@ -74,10 +81,6 @@ export default {
                         Object.assign(this.question, response.data.question);
                         Object.assign(this.answers, response.data.answers);
                         window.history.pushState({}, '', `/questions/${this.question.channel.slug}/${this.question.id}?page=${this.answers.current_page}`);
-                        this.flashMessage = null
-                        this.$nextTick(() => {
-                            this.flashMessage = response.data.flash
-                        })
                         this.body = ""
                     })
                     .catch((error) => {

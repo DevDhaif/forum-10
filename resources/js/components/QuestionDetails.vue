@@ -75,7 +75,9 @@ export default {
     data() {
         return {
             errorMessage: "",
-
+            form: this.$inertia.form({
+                question_id: this.question.id,
+            })
         };
     },
     setup() {
@@ -88,20 +90,18 @@ export default {
             return `/profiles/${this.question.creator.name}`;
         },
         deleteQuestion() {
-            Inertia.delete(
-                route("questions.destroy", {
-                    channel: this.question.channel.slug,
-                    question: this.question.id,
-                }),
-            )
-                .then(() => {
-                    flash("question deleted");
-                })
-                .catch((error) => {
-                    this.errorMessage =
-                        error.response.data.message ||
-                        $t('couldNotDeleteQuestion');
-                });
+            return this.form.delete(route("questions.destroy", {
+                channel: this.question.channel.slug,
+                question: this.question.id,
+            }), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    Inertia.visit(route("questions"));
+                },
+                onError: (errors) => {
+                    this.errorMessage = errors.message;
+                },
+            });
         },
         decodeHtml(html) {
             var txt = document.createElement("textarea");

@@ -16,9 +16,7 @@ use App\Services\AchievementService;
 
 class QuestionController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
     public function getQuestions(Channel $channel, QuestionFilters $filters)
     {
         $questions = Question::latest()->filter($filters);
@@ -39,6 +37,10 @@ class QuestionController extends Controller
         return Inertia::render('Question/Index', [
             'questions' => $questions,
             'channel' => $channel->slug,
+            'flash' => [
+                'success' => session('success'),
+                'error' => session('error')
+            ],
         ]);
     }
 
@@ -77,9 +79,9 @@ class QuestionController extends Controller
 
             $achievementService = new AchievementService();
             $achievementService->checkForAchievements($question->creator);
-            session()->flash('success', 'Your question has been left!');
+            session()->flash('success', 'questionLeft');
 
-            return Inertia::location(route('questions.show', [$question->channel->slug, $question->id]));
+            return redirect()->route('questions.show', [$question->channel->slug, $question->id]);
         } catch (\Exception $e) {
             session()->flash('error', 'There was a problem creating your question');
             return back();
@@ -132,6 +134,7 @@ class QuestionController extends Controller
             'answers' => $answers,
             'user' => $user,
             'relatedQuestions' => $relatedQuestions,
+            'flashMessage' => session('success'),
         ]);
     }
 
@@ -167,11 +170,10 @@ class QuestionController extends Controller
 
             $newChannel = Channel::find($request->channel_id);
 
-            session()->flash('success', 'Your question has been updated!');
+            session()->flash('success', 'questionUpdated');
 
             DB::commit();
-
-            return Inertia::location(route('questions.show', [$newChannel->slug, $question->id]));
+            return redirect()->route('questions.show', [$newChannel->slug, $question->id]);
         } catch (\Exception $e) {
             DB::rollback();
             session()->flash('error', 'There was a problem updating your question');
@@ -193,9 +195,9 @@ class QuestionController extends Controller
             ])->delete();
             $question->delete();
 
-            session()->flash('success', 'Your question has been deleted!');
+            session()->flash('success', 'questionDeleted');
 
-            return Inertia::location(route('questions'));
+            return redirect()->route('questions', $channel);
         } catch (\Exception $e) {
             session()->flash('error', 'There was a problem deleting your question');
             return back();

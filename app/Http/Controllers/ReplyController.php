@@ -32,7 +32,7 @@ class ReplyController extends Controller
         if (request()->expectsJson()) {
             return response()->json([
                 'reply' => $reply,
-                'flash' => 'Your reply has been left!',
+                'flash' => 'leftReply',
                 'replies' => $replies,
                 'thread' => $thread,
             ]);
@@ -53,10 +53,10 @@ class ReplyController extends Controller
 
             return response()->json([
                 'reply' => $reply,
-                'flash' => 'Your reply has been updated!'
+                'flash' => 'updatedReply',
             ]);
         }
-        session()->flash('message', 'Your reply has been updated!');
+        session()->flash('message', 'updatedReply');
         return redirect()->back();
     }
 
@@ -69,7 +69,7 @@ class ReplyController extends Controller
 
         if (request()->expectsJson()) {
             return response()->json([
-                'flash' => 'Your reply has been deleted!',
+                'flash' => 'deletedReply',
                 'replies' => $replies,
                 'thread' => $thread,
             ]);

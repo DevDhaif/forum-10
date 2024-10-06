@@ -31,7 +31,8 @@
 <script>
 import QuestionCard from '../../components/QuestionCard.vue';
 
-import Pagination from '../../Shared/Pagination.vue'
+import Pagination from '../../Shared/Pagination.vue';
+import { useToast } from 'vue-toastification';
 export default {
     components: {
         Pagination,
@@ -40,11 +41,23 @@ export default {
     props: {
         questions: Object,
         channel: String,
+        flash: Object,
     },
     computed: {
         isArabic() {
             return this.$i18n.locale === 'ar';
         },
+    },
+    mounted() {
+        const toast = useToast();
+
+        if (this.flash && this.flash.success) {
+            toast.success(this.$t(this.flash.success));
+        }
+
+        if (this.flash && this.flash.error) {
+            toast.error(this.$t(this.flash.error));
+        }
     },
 }
 </script>

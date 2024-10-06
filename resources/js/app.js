@@ -31,7 +31,8 @@ import isAdminMixin from "./mixins/isAdminMixin";
 // Import translations
 import en from "./locales/en";
 import ar from "./locales/ar";
-
+import Toast, { POSITION } from "vue-toastification";
+import "vue-toastification/dist/index.css";
 const vuetify = createVuetify({
     components,
     directives,
@@ -63,6 +64,14 @@ createInertiaApp({
             .use(plugin)
             .use(vuetify)
             .use(i18n)
+            .use(Toast, {
+                position: POSITION.BOTTOM_CENTER,
+                timeout: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            })
             // .use(InertiaForm)
             .mixin(isAdminMixin)
             .mixin({

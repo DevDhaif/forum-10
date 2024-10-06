@@ -1,6 +1,6 @@
 <template>
-    <div class="container flex items-start justify-between mx-auto mt-6 space-x-8">
-        <div class="w-3/4">
+    <div class="container flex flex-col lg:flex-row items-start justify-between mx-auto mt-6 space-x-8">
+        <div class="lg:w-3/4">
             <ThreadDetails :thread="thread" :user="user"></ThreadDetails>
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
                 <p class="mt-6 text-sm text-gray-600"> {{ $t('threadHasReplies', { count: thread.replies_count }) }}
@@ -11,8 +11,8 @@
                 <Pagination :links="replies.links"></Pagination>
             </div>
         </div>
-        <div class="w-1/4 flex flex-col ">
-            <ThreadInfo :thread="thread" :user="thread.creator" />
+        <div class="lg:w-1/4 flex flex-col  w-full">
+            <!-- <ThreadInfo :thread="thread" :user="thread.creator" /> -->
             <Related :items="relatedThreads" type="threads" />
         </div>
     </div>
@@ -25,6 +25,7 @@ import Replies from "../../components/Replies.vue"
 import PostReply from "../../components/PostReply.vue"
 import ThreadDetails from "../../components/ThreadDetails.vue"
 import ThreadInfo from "../../components/ThreadInfo.vue"
+import { useToast } from 'vue-toastification';
 export default {
     components: {
         Pagination,
@@ -34,13 +35,24 @@ export default {
         ThreadDetails,
         ThreadInfo,
     },
-    props: ['thread', 'user', 'replies', 'relatedThreads'],
+    props: ['thread', 'user', 'replies', 'relatedThreads', 'flash'],
     data() {
         return {
             // replies: this.replies,
             flashMessage: "",
             errorMessage: "",
             body: "",
+        }
+    },
+    mounted() {
+        const toast = useToast();
+
+        if (this.flash && this.flash.success) {
+            toast.success(this.$t(this.flash.success));
+        }
+
+        if (this.flash && this.flash.error) {
+            toast.error(this.$t(this.flash.error));
         }
     },
     methods: {
@@ -54,10 +66,6 @@ export default {
             Object.assign(this.thread, thread);
             Object.assign(this.replies, replies);
             window.history.pushState({}, '', `/threads/${this.thread.channel.slug}/${this.thread.id}?page=${this.replies.current_page}`);
-            this.flashMessage = null
-            this.$nextTick(() => {
-                this.flashMessage = flash
-            })
         },
         addReply() {
             if (this.body === "") {
@@ -74,10 +82,6 @@ export default {
                         Object.assign(this.thread, response.data.thread);
                         Object.assign(this.replies, response.data.replies);
                         window.history.pushState({}, '', `/threads/${this.thread.channel.slug}/${this.thread.id}?page=${this.replies.current_page}`);
-                        this.flashMessage = null
-                        this.$nextTick(() => {
-                            this.flashMessage = response.data.flash
-                        })
                         this.body = ""
                     })
                     .catch((error) => {

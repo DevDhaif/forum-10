@@ -35,6 +35,10 @@ class ThreadController extends Controller
         return Inertia::render('Thread/Index', [
             'threads' => $threads,
             'channel' => $channel->slug,
+            'flash' => [
+                'success' => session('success'),
+                'error' => session('error')
+            ],
         ]);
     }
     public function create()
@@ -64,10 +68,9 @@ class ThreadController extends Controller
             ]);
             $achievementService = new AchievementService();
             $achievementService->checkForAchievements($thread->creator);
+            session()->flash('success', 'threadLeft');
 
-            session()->flash('success', 'Your thread has been left!');
-
-            return Inertia::location(route('threads.show', [$thread->channel->slug, $thread->id]));
+            return redirect()->route('threads.show', [$thread->channel->slug, $thread->id]);
         } catch (\Exception $e) {
             session()->flash('error', 'There was a problem creating your thread');
             return back();
@@ -115,6 +118,7 @@ class ThreadController extends Controller
             'replies' => $replies,
             'user' => $user,
             'relatedThreads' => $relatedThreads,
+            'flashMessage' => session('success'),
         ]);
     }
     public function edit(Channel $channel, Thread $thread)
@@ -140,9 +144,9 @@ class ThreadController extends Controller
 
             $newChannel = Channel::find($request->channel_id);
 
-            session()->flash('success', 'Your thread has been updated!');
+            session()->flash('success', 'threadUpdated');
 
-            return Inertia::location(route('threads.show', [$newChannel->slug, $thread->id]));
+            return redirect()->route('threads.show', [$newChannel->slug, $thread->id]);
         } catch (\Exception $e) {
             session()->flash('error', 'There was a problem updating your thread');
             return back();
@@ -159,9 +163,9 @@ class ThreadController extends Controller
             ])->delete();
             $thread->delete();
 
-            session()->flash('success', 'Your thread has been deleted!');
+            session()->flash('success', 'threadDeleted');
 
-            return Inertia::location(route('threads'));
+            return redirect()->route('threads', $channel);
         } catch (\Exception $e) {
             session()->flash('error', 'There was a problem deleting your thread');
             return back();

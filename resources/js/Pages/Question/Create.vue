@@ -34,6 +34,7 @@
 import MyEditor from "../../components/Editor/MyEditor.vue";
 import { route } from "ziggy-js"
 import axios from 'axios';
+import { Inertia } from "@inertiajs/inertia";
 export default {
     components: {
         MyEditor,
@@ -52,13 +53,15 @@ export default {
 
     methods: {
         submitForm() {
-            axios.post(route("questions.store"), this.form.data())
-                .then(() => {
+            this.form.post(route("questions.store"), {
+                preserveScroll: true,
+                onSuccess: () => {
                     this.form.reset();
-                })
-                .catch((error) => {
-                    this.errors = error.response.data.errors;
-                });
+                },
+                onError: (errors) => {
+                    this.errors = errors.title || errors.body || errors.channel_id;
+                },
+            });
         },
     },
 };

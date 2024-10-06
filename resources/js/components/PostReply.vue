@@ -11,13 +11,14 @@
                 {{ $t('post') }}
             </button>
         </form>
-        <Flash :flash="flashMessage"></Flash>
+        <!-- <Flash :flash="flashMessage"></Flash> -->
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
 </template>
 <script>
 import axios from 'axios';
 import Flash from './Flash.vue';
+import { useToast } from 'vue-toastification';
 export default {
     name: "PostReply",
     components: { Flash },
@@ -31,7 +32,7 @@ export default {
     },
     methods: {
         postReply() {
-
+            const toast = useToast();
             if (this.body === "") {
                 this.errorMessage = "Please enter a valid reply"
                 return
@@ -45,12 +46,16 @@ export default {
                     .then((response) => {
                         this.$emit('posted', response.data.thread, response.data.replies, response.data.flash)
                         this.flashMessage = { message: response.data.flash, type: "success" }
+                        // use toast with the $t function with this.data.flash
+                        let msg = this.$t(response.data.flash)
+                        toast.success(msg);
                         this.body = ""
                     })
                     .catch((error) => {
                         console.error(error)
                         this.flashMessage = { message: response.data.flash, type: "error" }
-                        this.errorMessage = "Something went wrong. Please try again"
+                        toast.error("Something went wrong. Please try again.");
+                        this.errorMessage = error.response?.data?.message || "An error occurred.";
                     })
             }
         },

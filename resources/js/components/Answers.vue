@@ -3,7 +3,7 @@
         <Answer v-for="answer in this.answers.data" :key="answer.id" :answer="answer" :user="user"
             @answerMarkedAsBest="handleMarkedAsBest" @answerDeleted="updateAnswers"
             @bestAnswerDeleted="handleBestAnswerDeleted" @bestAnswerChanged="handleBestAnswerChanged"></Answer>
-        <FLash :flash="flashMessage"></FLash>
+        <!-- <FLash :flash="flashMessage"></FLash> -->
     </div>
 </template>
 <script>
@@ -27,9 +27,9 @@ export default {
         updateAnswers(answerId, question, answers, flash) {
             Object.assign(this.question, question);
             Object.assign(this.answers, answers);
-            console.log(flash)
-            this.flashMessage = null;
-            this.flashMessage = { message: flash, type: "success" }
+            // console.log(flash)
+            // this.flashMessage = null;
+            // this.flashMessage = { message: flash, type: "success" }
         },
         handleMarkedAsBest(updatedAnswer) {
             const index = this.answers.data.findIndex(answer => answer.id === updatedAnswer.id);

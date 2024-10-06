@@ -6,8 +6,8 @@
         <section class="max-w-[52rem] mx-auto px-4 pb-28 sm:px-6 md:px-8 xl:px-12 lg:max-w-6xl">
             <slot />
         </section>
-        <FlashMessages v-if="$page.props.flash.success || $page.props.flash.error">
-        </FlashMessages>
+        <!-- <FlashMessages v-if="$page.props.flash.success || $page.props.flash.error">
+        </FlashMessages> -->
     </main>
 </template>
 

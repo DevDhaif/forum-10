@@ -62,7 +62,7 @@ class AnswerController extends Controller
         if (request()->expectsJson()) {
             return response()->json([
                 'answer' => $answer,
-                'flash' => 'Your answer has been left!',
+                'flash' => 'leftAnswer',
                 'answers' => $answers,
                 'question' => $question,
             ]);
@@ -102,7 +102,7 @@ class AnswerController extends Controller
 
             return response()->json([
                 'answer' => $answer,
-                'flash' => 'Your answer has been updated!'
+                'flash' => 'updatedAnswer',
             ]);
         }
         session()->flash('message', 'Your answer has been updated!');
@@ -112,7 +112,7 @@ class AnswerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Answer $answer) 
+    public function destroy(Answer $answer)
     {
         $this->authorize('delete', $answer);
         $question = $answer->question;
@@ -128,7 +128,7 @@ class AnswerController extends Controller
         }
         if (request()->expectsJson()) {
             return response()->json([
-                'flash' => 'Your answer has been deleted!',
+                'flash' => 'deletedAnswer',
                 'answers' => $answers,
                 'question' => $question,
             ]);
@@ -165,7 +165,7 @@ class AnswerController extends Controller
 
         if (request()->expectsJson()) {
             return response()->json([
-                'flash' => 'The best answer has been marked!',
+                'flash' => 'bestAnswerMarked',
                 'question' => $question,
             ]);
         }
@@ -183,7 +183,7 @@ class AnswerController extends Controller
         $question->removeBestAnswer($answer);
         if (request()->expectsJson()) {
             return response()->json([
-                'flash' => 'The best answer has been removed!',
+                'flash' => 'bestAnswerRemoved',
                 'question' => $question,
             ]);
         }

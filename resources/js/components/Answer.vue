@@ -26,7 +26,7 @@
                     {{ answer.is_best ? $t('unmarkAsBest') : $t('markAsBest') }}
                 </button>
             </div>
-            <Flash :flash="flashMessage"></Flash>
+            <!-- <Flash :flash="flashMessage"></Flash> -->
             <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
         </div>
     </div>
@@ -37,6 +37,8 @@ import axios from "axios";
 import Vote from "./Vote.vue";
 import Flash from "./Flash.vue";
 import Btn from "./Btn.vue";
+import { useToast } from 'vue-toastification';
+
 export default {
     props: ["answer", "user"],
     components: {
@@ -47,6 +49,8 @@ export default {
     data() { return { editing: false, editText: this.answer.body, errorMessage: "", flashMessage: null }; },
     methods: {
         markAsBest() {
+            const toast = useToast();
+
             if (!this.answer.is_best) {
                 axios
                     .post(`/questions/${this.answer.question.id}/answers/${this.answer.id}/best`)
@@ -54,25 +58,33 @@ export default {
                         this.answer.is_best = !this.answer.is_best;
                         this.$emit('answerMarked', this.answer);
                         this.$emit('bestAnswerChanged', this.answer.is_best, this.answer.id);
+                        let msg = this.$t(response.data.flash)
+                        toast.success(msg);
                         this.errorMessage = null;
                     })
                     .catch((error) => {
                         this.errorMessage = this.$t('couldNotMarkAsBest');
                     });
-            } else { this.removeBestMark(); }
+            } else {
+                this.removeBestMark();
+            }
         },
         editAnswer() { this.editing = true; },
         deleteAnswer() {
+            const toast = useToast();
             if (this.answer.is_best) {
                 this.removeBestMark().then(() => { this.deleteAnswerFromServer(); })
             }
             else { this.deleteAnswerFromServer(); }
         },
         deleteAnswerFromServer() {
+            const toast = useToast();
             axios
                 .delete(`/answers/${this.answer.id}`)
                 .then((response) => {
                     this.$emit('answerDeleted', this.answer.id, response.data.question, response.data.answers, response.data.flash);
+                    let msg = this.$t(response.data.flash)
+                    toast.success(msg);
                     this.errorMessage = null;
                 })
                 .catch((error) => {
@@ -80,12 +92,15 @@ export default {
                 });
         },
         removeBestMark() {
+            const toast = useToast();
             return axios
                 .delete(`/questions/${this.answer.question.id}/answers/${this.answer.id}/best`)
                 .then((response) => {
                     this.answer.is_best = !this.answer.is_best;
                     this.$emit('answerMarked', this.answer);
                     this.$emit('bestAnswerChanged', this.answer.is_best, this.answer.id);
+                    let msg = this.$t(response.data.flash)
+                    toast.success(msg);
                     this.errorMessage = null;
                 })
                 .catch((error) => {
@@ -93,6 +108,7 @@ export default {
                 });
         },
         saveEdit() {
+            const toast = useToast();
             axios.patch(`/answers/${this.answer.id}`, {
                 body: this.editText,
             })
@@ -101,6 +117,8 @@ export default {
                     this.answer.body = this.editText;
                     this.editing = false;
                     this.flashMessage = { message: response.data.flash, type: "success" }
+                    let msg = this.$t(response.data.flash)
+                    toast.success(msg);
                     this.errorMessage = null;
                 })
                 .catch((error) => {

@@ -74,7 +74,7 @@
                 class="border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 font-bold py-2 px-4 rounded">{{
                     $t('register') }}</a>
         </div>
-        <div v-if="menuOpen" class="sm:hidden absolute top-16 left-0 w-full bg-slate-50 dark:bg-slate-900 shadow-lg">
+        <div v-if="menuOpen" class="sm:hidden absolute top-16 z-50 left-0 w-full bg-slate-50 dark:bg-slate-900 shadow-lg">
             <div class="grid grid-cols-2 gap-4 px-8 py-4 place-items-center">
                 <DropdownLink class="!w-40 flex items-center text-sm px- font-medium space-x-2 !capitalize leading-4
                 bg-slate-50

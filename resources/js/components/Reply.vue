@@ -17,7 +17,7 @@
             </div>
             <Favorite :item="reply" type="reply" :user="user" />
         </div>
-        <Flash :flash="flashMessage"></Flash>
+        <!-- <Flash :flash="flashMessage"></Flash> -->
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
     </div>
 </template>
@@ -27,6 +27,7 @@ import axios from "axios";
 import Favorite from "./Favorite.vue";
 import Flash from "./Flash.vue";
 import Btn from "./Btn.vue";
+import { useToast } from 'vue-toastification';
 
 export default {
     components: { Favorite, Flash, Btn },
@@ -35,10 +36,15 @@ export default {
     methods: {
         editReply() { this.editing = true; },
         deleteReply() {
+            const toast = useToast();
+
             axios
                 .delete(`/replies/${this.reply.id}`)
                 .then((response) => {
                     this.$emit('replyDeleted', this.reply.id, response.data.thread, response.data.replies, response.data.flash);
+                    let msg = this.$t(response.data.flash)
+                    toast.success(msg);
+                    
                     this.errorMessage = null;
                 })
                 .catch((error) => {
@@ -46,6 +52,8 @@ export default {
                 });
         },
         saveEdit() {
+            const toast = useToast();
+
             axios.patch(`/replies/${this.reply.id}`, {
                 body: this.editText,
             })
@@ -53,11 +61,14 @@ export default {
                     this.body = this.editText;
                     this.reply.body = this.editText;
                     this.editing = false;
-                    this.flashMessage = { message: response.data.flash, type: "success" }
+                    // this.flashMessage = { message: response.data.flash, type: "success" }
+                    let msg = this.$t(response.data.flash)
+                    toast.success(msg);
                     this.errorMessage = null;
                 })
                 .catch((error) => {
                     this.flashMessage = { message: response.data.flash, type: "error" }
+                    toast.error("Something went wrong. Please try again.");
                     this.errorMessage = "Could not save the reply";
                 });
         },
