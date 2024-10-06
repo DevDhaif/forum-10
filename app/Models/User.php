@@ -103,4 +103,30 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Achievement::class, 'user_achievements')->withTimestamps();
     }
+    public function getLevelAttribute()
+    {
+        $points = $this->points()->sum('points');
+
+        if ($points >= 1000) {
+            return 'Legend';
+        } elseif ($points >= 900) {
+            return 'Grandmaster';
+        } elseif ($points >= 800) {
+            return 'Master';
+        } elseif ($points >= 700) {
+            return 'Expert';
+        } elseif ($points >= 600) {
+            return 'Advanced';
+        } elseif ($points >= 500) {
+            return 'Proficient';
+        } elseif ($points >= 400) {
+            return 'Intermediate';
+        } elseif ($points >= 350) {
+            return 'Apprentice';
+        } elseif ($points >= 300) {
+            return 'Novice';
+        } else {
+            return 'Beginner';  // For users with less than 300 points
+        }
+    }
 }

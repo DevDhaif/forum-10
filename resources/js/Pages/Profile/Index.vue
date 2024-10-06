@@ -107,20 +107,89 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <p><strong>{{ $t('name') }}:</strong> {{ profileUser.name }}</p>
-                <p><strong>{{ $t('email') }}:</strong> {{ profileUser.email }}</p>
-                <p><strong>{{ $t('university') }}:</strong> {{ profileUser.university.name }}</p>
-                <p><strong>{{ $t('field') }}:</strong> {{ profileUser.field.name }}</p>
-                <p><strong>{{ $t('joinedOn') }}:</strong> {{ formattedDate(profileUser.created_at) }}</p>
+            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mt-8">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ $t('profileDetails') }}</h2>
 
-                <div class="flex mt-4">
-                    <button @click="updateDialog = true" class="px-4 mx-2 py-2 bg-blue-600 text-white rounded-md">{{
-                        $t('editAccount') }}</button>
-                    <button @click="deleteDialog = true" class="px-4 mx-2 py-2 bg-red-600 text-white rounded-md">{{
-                        $t('deleteAccount') }}</button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Name -->
+                    <div class="flex items-center">
+                        <strong class="text-gray-700 dark:text-gray-300">{{ $t('name') }}:</strong>
+                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ profileUser.name }}</span>
+                    </div>
+
+                    <!-- Level with Badge and Progress Bar -->
+                    <div class="flex items-center space-x-4 mt-4">
+                        <!-- Badge for the Level -->
+                        <div class="flex-shrink-0">
+                            <span
+                                class="inline-flex items-center  px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200">
+                                {{ $t(level) }}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 rtl:-scale-x-100"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                            </span>
+                        </div>
+
+                        <!-- Progress Bar for Level Progress -->
+                        <div class="flex-grow mt-2">
+                            <div class="relative pt-1">
+                                <!-- Progress bar container -->
+                                <div class="overflow-hidden h-3.5 text-xs flex rounded bg-gray-400 relative">
+                                    <!-- Progress bar -->
+                                    <div class="bg-blue-600 h-full" :style="{ width: levelProgress + '%' }"></div>
+                                    <span
+                                        class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                                        {{ levelProgress + '%' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{ levelProgress }}% {{
+                                $t('toNextLevel') }}</p>
+                        </div>
+                    </div>
+
+
+                    <!-- Email -->
+                    <div class="flex items-center">
+                        <strong class="text-gray-700 dark:text-gray-300">{{ $t('email') }}:</strong>
+                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ profileUser.email }}</span>
+                    </div>
+
+                    <!-- University -->
+                    <div class="flex items-center">
+                        <strong class="text-gray-700 dark:text-gray-300">{{ $t('university') }}:</strong>
+                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ profileUser.university.name }}</span>
+                    </div>
+
+                    <!-- Field -->
+                    <div class="flex items-center">
+                        <strong class="text-gray-700 dark:text-gray-300">{{ $t('field') }}:</strong>
+                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ profileUser.field.name }}</span>
+                    </div>
+
+                    <!-- Joined On -->
+                    <div class="flex items-center">
+                        <strong class="text-gray-700 dark:text-gray-300">{{ $t('joinedOn') }}:</strong>
+                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ formattedDate(profileUser.created_at)
+                            }}</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-center md:justify-end mt-6">
+                    <button @click="updateDialog = true"
+                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md mx-2 transition duration-300">
+                        {{ $t('editAccount') }}
+                    </button>
+                    <button @click="deleteDialog = true"
+                        class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md mx-2 transition duration-300">
+                        {{ $t('deleteAccount') }}
+                    </button>
                 </div>
             </div>
+
         </div>
         <v-dialog v-model="updateDialog" persistent max-width="600px">
             <v-card>
@@ -196,7 +265,7 @@ import ReplyCard from '../../components/ReplyCard.vue';
 import FavoriteCard from '../../components/FavoriteCard.vue';
 import VoteCard from '../../components/VoteCard.vue';
 export default {
-    props: ['profileUser', 'threads', 'questions', 'activities', 'answers', 'replies', 'votes', 'favorites', 'user', 'points', 'allAchievements', 'unlockedAchievements', 'currentProgress', 'fields', 'universities'],
+    props: ['profileUser', 'threads', 'questions', 'activities', 'answers', 'replies', 'votes', 'favorites', 'user', 'points', 'allAchievements', 'unlockedAchievements', 'currentProgress', 'fields', 'universities', 'level'],
     components: {
         CreatedFavorite,
         CreatedVote,
@@ -286,10 +355,25 @@ export default {
         }
     },
     mounted() {
-        console.log(this.universities);
-        console.log(this.fields);
+        console.log(this.level);
         this.canUpdate = (this.$page.props.user.id === this.profileUser.id);
-    }
+    },
+    computed: {
+        levelProgress() {
+            const points = this.points;
+
+            if (points >= 1000) return 100;
+            else if (points >= 900) return ((points - 900) / 100) * 100;
+            else if (points >= 800) return ((points - 800) / 100) * 100;
+            else if (points >= 700) return ((points - 700) / 100) * 100;
+            else if (points >= 600) return ((points - 600) / 100) * 100;
+            else if (points >= 500) return ((points - 500) / 100) * 100;
+            else if (points >= 400) return ((points - 400) / 100) * 100;
+            else if (points >= 350) return ((points - 350) / 50) * 100;
+            else if (points >= 300) return ((points - 300) / 50) * 100;
+            else return (points / 300) * 100;
+        },
+    },
 };
 </script>
 

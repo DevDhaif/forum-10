@@ -74,6 +74,7 @@ class ProfileController extends Controller
             'currentProgress' => $currentProgress,
             'universities' => $universities,
             'fields' => $fields,
+            'level' => $user->level,
         ]);
     }
     /**

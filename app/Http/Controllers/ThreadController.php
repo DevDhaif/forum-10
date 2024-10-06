@@ -161,11 +161,11 @@ class ThreadController extends Controller
                 'source' => 'thread',
                 'source_id' => $thread->id,
             ])->delete();
+            $channel = Channel::where('id', $thread->channel_id)->first();
             $thread->delete();
-
             session()->flash('success', 'threadDeleted');
-
-            return redirect()->route('threads', $channel);
+            return redirect()->route('threads.channel', $channel);
+            // return redirect()->route('threads', $channel);
         } catch (\Exception $e) {
             session()->flash('error', 'There was a problem deleting your thread');
             return back();

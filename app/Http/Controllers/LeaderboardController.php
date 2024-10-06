@@ -4,40 +4,103 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Point;
+use App\Models\Question;
 use App\Models\Thread;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Str;
 
 class LeaderboardController extends Controller
 {
+
+
     public function index(Request $request)
     {
-        $range = $request->input('range', 7); // Default to past 7 days
+        $range = $request->query('range', '7'); // Default to 7 days
 
-        // Get the start date based on the selected range
-        $startDate = $range === 'all' ? null : Carbon::now()->subDays($range);
+        // Determine the start date based on the range
+        switch ($range) {
+            case '7':
+                $startDate = Carbon::now()->subDays(7);
+                break;
+            case '14':
+                $startDate = Carbon::now()->subDays(14);
+                break;
+            case '30':
+                $startDate = Carbon::now()->subDays(30);
+                break;
+            case '60':
+                $startDate = Carbon::now()->subDays(60);
+                break;
+            case '180':
+                $startDate = Carbon::now()->subDays(180);
+                break;
+            case '365':
+                $startDate = Carbon::now()->subDays(365);
+                break;
+            case 'all':
+            default:
+                $startDate = null; // No date filter for "all"
+                break;
+        }
 
-        // Get leaderboard data
-        $topThreads = $this->getTopFavoriteThreads($startDate);
-        $topUsersByPoints = $this->getTopUsersByPoints($startDate);
-        $topUsersByAchievements = $this->getTopUsersByAchievements($startDate);
-        $topThreadCreators = $this->getTopThreadCreators($startDate);
-        $topUsersByProfileVisits = $this->getTopUsersByProfileVisits($startDate);
+        // Build the query to get top users with points in the given range
+        $query = User::query()->withSum('points', 'points');
 
-        // Return data using Inertia
+        // If there is a start date, filter points based on the date range
+        if ($startDate) {
+            $query->whereHas('points', function ($q) use ($startDate) {
+                $q->where('created_at', '>=', $startDate);
+            });
+        }
+
+        // Get the top 10 users
+        $topUsers = $query->orderBy('points_sum_points', 'desc')->take(10)->get();
+
+        $topThreads = Thread::query()
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->where('created_at', '>=', $startDate);
+            })
+            ->withCount('replies') // Assuming replies count is a criteria for top threads
+            ->orderBy('replies_count', 'desc') // Order by most replies
+            ->take(10)
+            ->get();
+
+        $topQuestions = Question::query()
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->where('created_at', '>=', $startDate);
+            })
+            ->withCount('answers') // Assuming replies count is a criteria for top threads
+            ->orderBy('answers_count', 'desc') // Order by most replies
+            ->take(10)
+            ->get();
+
+        $topChannels = DB::table('channels')
+            ->leftJoin('threads', 'channels.id', '=', 'threads.channel_id')
+            ->leftJoin('questions', 'channels.id', '=', 'questions.channel_id')
+            ->select('channels.id', 'channels.name', DB::raw('COUNT(threads.id) + COUNT(questions.id) as contributions'))
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->where('threads.created_at', '>=', $startDate)
+                    ->orWhere('questions.created_at', '>=', $startDate);
+            })
+            ->groupBy('channels.id', 'channels.name')
+            ->orderByDesc('contributions')
+            ->take(10)
+            ->get();
+
         return Inertia::render('Leaderboard/Index', [
-            'leaderboardData' => [
-                'topThreads' => $topThreads,
-                'topUsersByPoints' => $topUsersByPoints,
-                'topUsersByAchievements' => $topUsersByAchievements,
-                'topThreadCreators' => $topThreadCreators,
-                'topUsersByProfileVisits' => $topUsersByProfileVisits,
-            ],
+            'topUsers' => $topUsers,
+            'topThreads' => $topThreads,
+            'topQuestions' => $topQuestions,
+            'topChannels' => $topChannels,
         ]);
     }
+
+
+
 
 
     // Methods to retrieve the top data for each category
