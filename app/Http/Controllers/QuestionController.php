@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\CreateQuestionRequest;
 use App\Models\Point;
 use App\Services\AchievementService;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class QuestionController extends Controller
 {
@@ -23,7 +25,6 @@ class QuestionController extends Controller
         if ($channel->exists) {
             $questions = $questions->where('channel_id', $channel->id);
         }
-        // return json questions
         return $questions;
     }
     /**
@@ -62,6 +63,7 @@ class QuestionController extends Controller
      */
     public function store(CreateQuestionRequest $request)
     {
+
         try {
 
             $question = Question::create(
@@ -70,17 +72,44 @@ class QuestionController extends Controller
                     ['user_id' => auth()->id()]
                 )
             );
+            $response = Http::withHeaders([
+                'content-type' => 'application/json',
+                'x-api-key' => env('ANTHROPIC_API_KEY'),
+                'anthropic-version' => '2023-06-01'
+            ])->post('https://api.anthropic.com/v1/messages', [
+                'model' => 'claude-3-5-sonnet-20240620',
+                'max_tokens' => 1024,
+                'messages' => [
+                    ['role' => 'user', 'content' => 'You are a mentor and a senior developer. You are helping a junior developer with their questions and providing guidance, you should be able to answer this question based on the language and the context the question is asked, here is the question: ' . $question->body . 'do not ask for more information, answer the question based on the context and the language used, and do not introduce yourself or ask for more information or make an interoduction saying you are a mentor or a senior developer or you are happy to help, just answer the question.']
+                ]
+            ]);
+
+            if ($response->successful()) {
+                Log::info('Anthropic API Response:', $response->json());
+                $generatedAnswer = $response->json()['content'][0]['text'];
+
+                Answer::create([
+                    'question_id' => $question->id,
+                    'user_id' => auth()->id(),
+                    'body' => $generatedAnswer,
+                    'by_ai' => true,
+                ]);
+            } else {
+                Log::error('Anthropic API Request Failed', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+            }
             Point::create([
                 'user_id' => $question->user_id,
                 'source' => 'question',
                 'source_id' => $question->id,
                 'points' => 5,
             ]);
-
             $achievementService = new AchievementService();
             $achievementService->checkForAchievements($question->creator);
-            session()->flash('success', 'questionLeft');
 
+            session()->flash('success', 'questionLeft');
             return redirect()->route('questions.show', [$question->channel->slug, $question->id]);
         } catch (\Exception $e) {
             session()->flash('error', 'There was a problem creating your question');
@@ -117,7 +146,7 @@ class QuestionController extends Controller
 
         Answer::loadVotedAnswerIdsForUser(auth()->user());
 
-        $answers = $question->answers()->latest()->paginate(10);
+        $answers = $question->answers()->orderByRaw('is_best DESC')->orderBy('by_ai', 'desc')->latest()->paginate(10);
 
         foreach ($answers as $answer) {
             $answer->isUpvoted = $answer->isUpvotedByUser(auth()->user());

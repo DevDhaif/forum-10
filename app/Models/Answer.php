@@ -14,6 +14,7 @@ class Answer extends Model
     use RecordsActivity;
 
     protected $guarded = [];
+    protected $fillable = ['question_id', 'user_id', 'body', 'by_ai'];
 
     protected $appends = ['votes_count', 'is_best'];
     protected $with = ['owner', 'votes', 'question'];

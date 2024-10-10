@@ -37,9 +37,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $channels = Cache::remember('channels', 5, function () {
-            return \App\Models\Channel::all();
-        });
+        $channels = \App\Models\Channel::all();
         // $universities = \App\Models\University::all();
         // $fields = \App\Models\Field::all();
 
@@ -47,12 +45,12 @@ class HandleInertiaRequests extends Middleware
             'channels' => $channels,
             // 'universities' => $universities,
             // 'fields' => $fields,
-            'user' => fn () => $request->user()
+            'user' => fn() => $request->user()
                 ? $request->user()->only('id', 'name', 'email', 'roles')
                 : null,
             'flash' => [
-                'success' => fn () => $request->session()->get('success'),
-                'error' => fn () => $request->session()->get('error'),
+                'success' => fn() => $request->session()->get('success'),
+                'error' => fn() => $request->session()->get('error'),
             ],
         ]);
     }

@@ -2,14 +2,11 @@
 
 namespace App\Nova;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Reply extends Resource
@@ -71,8 +68,6 @@ class Reply extends Resource
                 ->readonly()
                 ->sortable(),
             BelongsTo::make(__('thread'), 'thread', Thread::class)->readonly(),
-            // Textarea::make(__('body'), 'body')
-            //     ->rules('required'),
         ];
     }
 

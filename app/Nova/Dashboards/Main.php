@@ -26,10 +26,6 @@ class Main extends Dashboard
      *
      * @return array
      */
-    public function name()
-    {
-        return __('stats');
-    }
     public function cards()
     {
         return [

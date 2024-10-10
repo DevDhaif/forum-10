@@ -1,3 +1,3 @@
 <template>
-    <img src="../../../public/favicon-96x96.png" class="w-8 h-8" />
+    <img src="../../../public/favicon.svg" class="size-12" />
 </template>

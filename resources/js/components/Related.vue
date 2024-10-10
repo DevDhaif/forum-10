@@ -1,6 +1,6 @@
 <template>
-    <h1 class="capitalize">{{ $t('a' + type) }} {{ $t('related') }} </h1>
-    <div class="lg:max-h-[540px] overflow-y-scroll space-y-4 py-2 shadow-md">
+    <h1 class="capitalize text-center">{{ $t('a' + type) }} {{ $t('related') }} </h1>
+    <div class="lg:max-h-screen overflow-y-scroll space-y-4 py-2 shadow-md ltr:border-l-blue-500 ltr:pl-2 rtl:border-r-blue-500 rtl:pr-2">
 
         <div v-if="type === 'threads'">
             <thread-card class="my-2" v-for="item in items" :key="item.id" :thread="item"></thread-card>

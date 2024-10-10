@@ -9,7 +9,7 @@
 
         <div v-if="activeTab === 'threads'">
             <h2 class="text-2xl font-bold mt-8">{{ $t('threads') }}</h2>
-            <div class="mx-auto grid grid-cols-3 gap-4">
+            <div class="mx-auto grid grid-cols-1 lg:grid-cols-3 mt-6 gap-8 lg:gap-4">
                 <thread-card v-for="( thread ) in threads" :key="thread.id" :thread="thread" />
                 <h1 v-if="threads.length === 0">{{ $t('noThreads') }}</h1>
             </div>
@@ -17,7 +17,7 @@
 
         <div v-if="activeTab === 'questions'">
             <h2 class="text-2xl font-bold mt-8">{{ $t('questions') }}</h2>
-            <div class="mx-auto grid grid-cols-3 gap-4">
+            <div class="mx-auto grid grid-cols-1 lg:grid-cols-3 mt-6 gap-8 lg:gap-4">
                 <QuestionCard v-for="( question ) in questions" :key="question.id" :question="question" />
                 <h1 v-if="questions.length === 0">{{ $t('noQuestions') }}</h1>
             </div>
@@ -37,7 +37,7 @@
 
         <div v-if="activeTab === 'answers'">
             <h2 class="text-2xl font-bold mt-8"> {{ $t('answers') }}</h2>
-            <div class="mx-auto grid grid-cols-3 gap-4">
+            <div class="mx-auto grid grid-cols-1 lg:grid-cols-3 mt-6 gap-8 lg:gap-4">
                 <AnswerCard v-for="( answer ) in answers" :key="answer.id" :answer="answer" />
                 <h1 v-if="answers.length === 0">{{ $t('noAnswers') }}</h1>
             </div>
@@ -45,15 +45,16 @@
 
         <div v-if="activeTab === 'replies'">
             <h2 class="text-2xl font-bold mt-8">{{ $t('replies') }}</h2>
-            <div class="mx-auto grid grid-cols-3 gap-4">
+            <div class="mx-auto grid grid-cols-1 lg:grid-cols-3 mt-6 gap-8 lg:gap-4">
                 <ReplyCard v-for="( reply ) in replies" :key="reply.id" :reply="reply" />
                 <h1 v-if="replies.length === 0">{{ $t('noReplies') }}</h1>
+
             </div>
         </div>
 
         <div v-if="activeTab === 'votes'">
             <h2 class="text-2xl font-bold mt-8">{{ $t('votes') }}</h2>
-            <div class="mx-auto grid grid-cols-3 gap-4">
+            <div class="mx-auto grid grid-cols-1 lg:grid-cols-3 mt-6 gap-8 lg:gap-4">
                 <VoteCard v-for="( vote ) in votes" :key="vote.id" :vote="vote" />
                 <h1 v-if="votes.length === 0">{{ $t('noVotes') }}</h1>
             </div>
@@ -61,7 +62,7 @@
 
         <div v-if="activeTab === 'favorites'">
             <h2 class="text-2xl font-bold mt-8">{{ $t('favorites') }}</h2>
-            <div class="mx-auto grid grid-cols-3 gap-4">
+            <div class="mx-auto grid grid-cols-1 lg:grid-cols-3 mt-6 gap-8 lg:gap-4">
                 <FavoriteCard v-for="( favorite ) in favorites" :key="favorite.id" :favorite="favorite" />
                 <h1 v-if="favorites.length === 0">{{ $t('noFavorites') }}</h1>
             </div>
@@ -71,10 +72,10 @@
             <AchievementsList :all-achievements="allAchievements" :unlocked-achievements="unlockedAchievements"
                 :current-progress="currentProgress" />
         </div>
-        <div v-if="activeTab === 'details'">
+        <div v-if="activeTab === 'details'" class="">
             <div class="mt-8">
                 <h2 class="text-2xl font-bold">{{ $t('details') }}</h2>
-                <div class="mt-4">
+                <div class="mt-4   overflow-x-scroll">
                     <div class="flex items-start ">
                         <div class="flex flex-col items-center">
                             <span class="text-2xl font-bold">{{ points }}</span>
@@ -104,13 +105,17 @@
                             <span class="text-2xl font-bold">{{ favorites.length }}</span>
                             <span class="text-sm">{{ $t('favorites') }}</span>
                         </div>
+                        <div class="flex flex-col mx-4 items-center">
+                            <span class="text-2xl font-bold">{{ profileUser.profile_visits }}</span>
+                            <span class="text-sm">{{ $t('profile_visits') }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mt-8">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ $t('profileDetails') }}</h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-4">
                     <!-- Name -->
                     <div class="flex items-center">
                         <strong class="text-gray-700 dark:text-gray-300">{{ $t('name') }}:</strong>
@@ -355,7 +360,7 @@ export default {
         }
     },
     mounted() {
-        console.log(this.level);
+        console.log(this.replies);
         this.canUpdate = (this.$page.props.user.id === this.profileUser.id);
     },
     computed: {

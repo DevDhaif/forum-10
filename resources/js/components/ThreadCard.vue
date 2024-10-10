@@ -1,8 +1,15 @@
 <template>
     <article
-        class="relative h-full overflow-hidden justify-between  flex flex-col group p-4 rounded-md bg-slate-50 dark:bg-slate-900 shadow-lg outline outline-1 outline-slate-200 dark:outline-slate-800"
+        class="relative h-full justify-between  flex flex-col group p-4 rounded-md bg-slate-50 dark:bg-slate-900 shadow-lg outline outline-1 outline-slate-200 dark:outline-slate-800"
         :class="index === 0 ? 'col-span-3 bg-gradient-to-b from-black/50 via-white/50 to-green-500/50 dark:from-black/50 dark:via-white/50 dark:to-green-900/50 shadow-lg' : index === 1 ? 'col-span-2 bg-gradient-to-bl from-indigo-500/30 via-white/10 to-blue-700/10 dark:from-indigo-900/10 dark:via-white/10 dark:to-blue-800/30  shadow-lg' : ''">
+        <div class=" absolute right-0 -top-4 ">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-8 fill-blue-50 text-blue-600">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+            </svg>
 
+        </div>
         <div class="pointer-events-none blur-sm"
             :class="index === 0 ? ' absolute left-0 w-0 h-0 top-0 border-t-[170px] border-t-transparent border-l-[200px] border-l-red-500/30 border-b-[170px] border-b-transparent' : ''">
         </div>

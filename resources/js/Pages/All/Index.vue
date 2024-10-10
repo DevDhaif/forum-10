@@ -1,8 +1,12 @@
 <template>
     <div class="mx-auto">
-        <h1 class="p-6 my-10 text-4xl font-bold text-blue-700 bg-blue-100 border-2 border-blue-200 rounded-md">
-            <span v-if="isArabic"> {{ channel || $t('alls') }} {{ $t('content') }}</span>
-            <span v-else>{{ channel || $t('alls') }} {{ $t('content') }}</span>
+        <h1
+            class="p-6 uppercase my-10 text-4xl font-bold text-blue-700 bg-blue-50 border-2 border-blue-100 text-center rounded-md">
+            <span v-if="isArabic"> {{ $t('acontent') }} {{ channel ? $t('channel') + ' ' + channel : $t('allChannels')
+                }}
+            </span>
+            <span v-else>{{ channel ? (channel + ' Channel ' + $t('acontent')) : ($t('allChannels') + ' ' + $t('acontent')) }}
+            </span>
         </h1>
 
         <div v-if="content.data.length === 0" class="px-4 py-3">

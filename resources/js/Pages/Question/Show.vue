@@ -1,6 +1,6 @@
 <template>
     <div class="container flex flex-col lg:flex-row items-start justify-between mx-auto mt-6 space-x-8">
-        <div class="lg:w-3/4">
+        <div class="lg:lg:w-fit">
             <QuestionDetails :question="question" :user="user"></QuestionDetails>
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
                 <p class="mt-6 text-sm text-gray-600">{{ $t('questionHasAnswers', { count: question.answers_count }) }}
@@ -10,7 +10,7 @@
                 <pagination :links="answers.links"></pagination>
             </div>
         </div>
-        <div class="lg:w-1/4 flex flex-col  w-full">
+        <div class="lg:w-1/4 flex flex-col  w-full lg:mr-3 mt-4 lg:mt-0">
             <!-- <QuestionInfo :question="question" :user="question.creator" /> -->
             <Related :items="relatedQuestions" type="questions" />
         </div>

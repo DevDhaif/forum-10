@@ -1,5 +1,6 @@
 <template v-cloak>
-    <div :id="'reply-' + reply.id" name="fade" class="mt-4 ">
+    <div :id="'reply-' + reply.id" name="fade"
+        class="my-2 relative  border-b border-b-gray-200 py-4 rtl:text-right ltr:text-left ">
         <div class="flex items-center justify-between mt-4">
             <div v-if="editing" class="flex flex-col ">
                 <textarea v-model="editText"></textarea>
@@ -8,14 +9,35 @@
                     <Btn color="red" @click="cancelEdit">{{ $t('cancel') }}</Btn>
                 </div>
             </div>
-            <div v-else class="flex flex-col ">
+            <div v-else class="flex justify-between w-full">
                 <p>{{ reply.body }}</p>
-                <div class="mt-2" v-if="(user?.id === reply.user_id) || this.isAdmin">
-                    <Btn color="blue" @click="editReply">{{ $t('edit') }}</Btn>
-                    <Btn color="red" @click="deleteReply">{{ $t('delete') }}</Btn>
+
+                <div class="flex items-stretch">
+                    <v-menu>
+                        <template v-slot:activator="{ props }">
+                            <button v-bind="props"
+                                class="hover:bg-gray-100 cursor-pointer rounded  p-1 outline outline-gray-200 outline-1 shadow-sm ">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" class="size-6 cursor-pointer hover:cursor-pointer">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+                                </svg>
+
+                            </button>
+                        </template>
+                        <v-list>
+                            <v-list-item class="hover:bg-gray-100 cursor-pointer  px-4 py-2">
+                                <v-list-item-title @click="editReply"> {{ $t('edit') }}</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item class="hover:bg-gray-100 cursor-pointer mt-2 px-4 py-2">
+                                <v-list-item-title @click="deleteReply"> {{ $t('delete') }}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                    <Favorite :item="reply" type="reply" :user="user" />
                 </div>
             </div>
-            <Favorite :item="reply" type="reply" :user="user" />
         </div>
         <!-- <Flash :flash="flashMessage"></Flash> -->
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
@@ -44,7 +66,7 @@ export default {
                     this.$emit('replyDeleted', this.reply.id, response.data.thread, response.data.replies, response.data.flash);
                     let msg = this.$t(response.data.flash)
                     toast.success(msg);
-                    
+
                     this.errorMessage = null;
                 })
                 .catch((error) => {

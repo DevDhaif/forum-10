@@ -77,7 +77,7 @@ class Thread extends Resource
 
             BelongsTo::make(__('channel'), 'channel', Channel::class)->display('name')->readonly(),
             // Display the number of replies
-            Number::make('Replies Count')
+            Number::make(__('replies_count'), 'replies_count')
                 ->onlyOnDetail()
                 ->sortable(),
 

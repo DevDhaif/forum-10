@@ -1,5 +1,5 @@
 <template>
-    <div class="inline-flex p-2 space-x-2 border rounded">
+    <div class="inline-flex p-2 rtl:mr-2 ltr:ml-2 border rounded hover:bg-gray-100 cursor-pointer outline outline-gray-200 outline-1 shadow-sm"  >
         <button @click="toggleFavorite" class="text-sm text-white">
             <svg :class="{
                 ' fill-blue-500': !isFavorited,

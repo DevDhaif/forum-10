@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\BelongsTo;
@@ -16,15 +15,6 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Question extends Resource
 {
-    public static function label()
-    {
-        return App::isLocale('ar') ? 'الأسئلة' : 'Questions';
-    }
-
-    public static function singularLabel()
-    {
-        return App::isLocale('ar') ? 'سؤال' : 'Question';
-    }
     /**
      * The model the resource corresponds to.
      *
@@ -68,13 +58,8 @@ class Question extends Resource
             BelongsTo::make(__('creator'), 'creator', User::class)
                 ->readonly()
                 ->sortable(),
-            Number::make(__('votes_count'), 'votes_count')
-                ->readonly()
-                ->sortable(),
-            Boolean::make(__('has_answers'), 'is_answered')
-                ->sortable(),
-            Boolean::make(__('is_sloved'), 'is_solved')
-                ->sortable(),
+            Number::make(__('votes_count'), 'votes_count')->readonly()->sortable(),
+            Boolean::make(__('is_solved'), 'is_solved')->sortable(),
             Number::make(__('upvotes_count'), function () {
                 return $this->upvotes()->count();
             }),
@@ -84,13 +69,13 @@ class Question extends Resource
             })
                 ->sortable(),
 
-            BelongsTo::make(__('channel'), 'channel', Channel::class)->display('name'),
-            Number::make('Answers Count')
+            BelongsTo::make(__('channel'), 'channel', Channel::class)->display('name')->readonly(),
+            Number::make(__('answers_count'), 'answers_count')
                 ->onlyOnDetail()
                 ->sortable(),
 
             Number::make(__('visits'), 'visits')
-                ->onlyOnDetail()
+                ->readonly()
                 ->sortable(),
         ];
     }

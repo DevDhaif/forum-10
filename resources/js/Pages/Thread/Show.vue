@@ -1,6 +1,6 @@
 <template>
-    <div class="container flex flex-col lg:flex-row items-start justify-between mx-auto mt-6 space-x-8">
-        <div class="lg:w-3/4">
+    <div class="container flex flex-col lg:flex-row items-start justify-between mx-auto mt-6 space-x-12">
+        <div class="lg:w-fit">
             <ThreadDetails :thread="thread" :user="user"></ThreadDetails>
             <div class="p-4 mt-4 bg-slate-50 dark:bg-slate-900 rounded shadow">
                 <p class="mt-6 text-sm text-gray-600"> {{ $t('threadHasReplies', { count: thread.replies_count }) }}
@@ -11,7 +11,7 @@
                 <Pagination :links="replies.links"></Pagination>
             </div>
         </div>
-        <div class="lg:w-1/4 flex flex-col  w-full">
+        <div class="lg:w-1/4 flex flex-col  w-full lg:mr-3 mt-8 lg:mt-0">
             <!-- <ThreadInfo :thread="thread" :user="thread.creator" /> -->
             <Related :items="relatedThreads" type="threads" />
         </div>

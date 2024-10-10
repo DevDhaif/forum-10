@@ -30,8 +30,7 @@ class UserGrowth extends Trend
             6 => __('Last 6 Months'),
             12 => __('Last 12 Months'),
             24 => __('Last 24 Months'),
-            'YTD' => __('Year To Date'),
-            'ALL' => __('All Time'),
+            
         ];
     }
 

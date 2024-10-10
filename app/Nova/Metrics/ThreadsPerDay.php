@@ -33,12 +33,7 @@ class ThreadsPerDay extends Trend
             30 => '30 Days',
             60 => '60 Days',
             90 => '90 Days',
-            365 => '365 Days',
-            'TODAY' => 'Today',
-            'YESTERDAY' => 'Yesterday',
-            'MTD' => 'Month To Date',
-            'QTD' => 'Quarter To Date',
-            'YTD' => 'Year To Date',
+            365 => '365 Days'
         ];
     }
 
