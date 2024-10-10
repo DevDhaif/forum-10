@@ -565,5 +565,7 @@
 
     "Create University": "Create University",
     "Universities": "Universities",
-    "University": "University"
+    "University": "University",
+    "is_solved": "Is Solved",
+    "is_answered": "Is Answered"
 }

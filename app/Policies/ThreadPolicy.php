@@ -19,7 +19,7 @@ class ThreadPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -27,7 +27,7 @@ class ThreadPolicy
      */
     public function view(User $user, Thread $thread)
     {
-        //
+        return true;
     }
 
     /**

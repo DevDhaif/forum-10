@@ -8,6 +8,8 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Support\Str;
+use Laravel\Nova\Fields\Markdown;
 
 class Reply extends Resource
 {
@@ -58,9 +60,12 @@ class Reply extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make(__('body'), 'body')
-                ->sortable()
-                ->rules('required', 'max:255'),
+            Text::make(__('body'), function () {
+                return Str::limit(strip_tags($this->body), limit: 50);
+            })->onlyOnIndex(),
+            Markdown::make(__('body'), 'body')
+                ->rules('required')
+                ->hideFromIndex(),
             BelongsTo::make(__('creator'), 'owner', User::class)
                 ->readonly()
                 ->sortable(),

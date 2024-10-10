@@ -22,17 +22,13 @@ class AnswerPolicy
         }
     }
 
-    public function viewAny(User $user)
-    {
-        //
-    }
 
     /**
      * Determine whether the user can view the model.
      */
     public function view(User $user, Answer $answer)
     {
-        //
+        return true;
     }
 
     /**

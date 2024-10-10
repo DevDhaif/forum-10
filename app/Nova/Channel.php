@@ -75,6 +75,7 @@ class Channel extends Resource
             Number::make(__('total_contributions'), function () {
                 return ($this->threads_count ?? 0) + ($this->questions_count ?? 0);
             })->sortable(),
+            HasMany::make(__('questions'), 'questions', Question::class),
             HasMany::make(__('threads'), 'threads', Thread::class),
         ];
     }

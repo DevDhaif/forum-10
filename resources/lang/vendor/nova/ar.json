@@ -565,6 +565,8 @@
     "Thread": "موضوع",
 
     "Create University": "إنشاء جامعة",
-    "Universities": "الجامعات"
+    "Universities": "الجامعات",
+    "is_solved": "محلول",
+    "is_answered": "مجاب"
 
   }

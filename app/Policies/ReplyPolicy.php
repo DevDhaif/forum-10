@@ -15,6 +15,10 @@ class ReplyPolicy
     {
         //
     }
+    public function view(User $user, Reply $reply)
+    {
+        return true;
+    }
     public function before(User $user, $ability)
     {
         if ($user->name === 'Dhaifallah') {

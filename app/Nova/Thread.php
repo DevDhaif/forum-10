@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Support\Str;
 
 class Thread extends Resource
 {
@@ -66,8 +67,13 @@ class Thread extends Resource
                 ->sortable()
                 ->rules('required', 'max:255'),
 
+            Text::make(__('body'), function () {
+                return Str::limit(strip_tags($this->body), limit: 50);
+            })->onlyOnIndex(),
+
             Markdown::make(__('body'), 'body')
-                ->rules('required'),
+                ->rules('required')
+                ->hideFromIndex(),
 
             // Display the user who created the thread
             BelongsTo::make(__('creator'), 'creator', User::class)

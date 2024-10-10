@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Support\Str;
 
 class Question extends Resource
 {
@@ -52,14 +53,19 @@ class Question extends Resource
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Markdown::make(__('body'), 'body')
-                ->rules('required'),
+            Text::make(__('body'), function () {
+                return Str::limit(strip_tags($this->body), limit: 50);
+            })->onlyOnIndex(),
 
+            Markdown::make(__('body'), 'body')
+                ->rules('required')
+                ->hideFromIndex(),
             BelongsTo::make(__('creator'), 'creator', User::class)
                 ->readonly()
                 ->sortable(),
             Number::make(__('votes_count'), 'votes_count')->readonly()->sortable(),
             Boolean::make(__('is_solved'), 'is_solved')->sortable(),
+            Boolean::make(__('is_answered'), 'is_answered')->sortable(),
             Number::make(__('upvotes_count'), function () {
                 return $this->upvotes()->count();
             }),
