@@ -22,9 +22,8 @@
                     </div>
 
                     <div v-else class="w-full" :class="{ 'flex  space-x-4 justify-between ': !answer.by_ai }">
-                        <!-- show  answer in markdown -->
                         <div class="whitespace-pre-wrap  !self-start !justify-self-start"
-                            :class="getAlignment(answer.body)" v-html="answer.body" />
+                            :class="getAlignment(answer.body)" v-html="highlightedBody" />
 
                         <div v-if="((user?.id === answer.user_id) || this.isAdmin) && !answer.by_ai"
                             class="cursor-pointer">
@@ -58,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
+                <p v-if="errorMessage" class="text-red-500 ">{{ errorMessage }}</p>
             </div>
         </div>
 
@@ -71,7 +70,7 @@ import Vote from "./Vote.vue";
 import Flash from "./Flash.vue";
 import Btn from "./Btn.vue";
 import { useToast } from 'vue-toastification';
-
+import { highlightCode } from "../Utils/highlightCode";
 export default {
     props: ["answer", "user"],
     components: {
@@ -164,13 +163,18 @@ export default {
             this.editing = false;
         },
         getAlignment(text) {
-            // Check if the first character is Arabic
             const arabicPattern = /[\u0600-\u06FF]/;
             if (arabicPattern.test(text)) {
-                return 't-right '; // Apply right alignment for Arabic
+                return 't-right ';
             } else {
-                return 't-left'; // Apply left alignment for English and other languages
+                return 't-left';
             }
+        },
+
+    },
+    computed: {
+        highlightedBody() {
+            return highlightCode(this.answer.body, true);
         },
     },
     mounted() {

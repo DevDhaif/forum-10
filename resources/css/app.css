@@ -10,3 +10,17 @@
 .fade-leave-to {
     opacity: 0;
 }
+code {
+    direction: ltr;
+    text-align: left;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+pre {
+    direction: ltr;
+    width: 100% !important;
+    text-align: left;
+    border-radius: 10px;
+    overflow-x: auto;
+}
