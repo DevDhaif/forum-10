@@ -34,6 +34,11 @@ export default defineConfig({
             '@/Shared' : '/resources/js/Shared',
         }
     },
+    esbuild: {
+        logOverride: {
+            typescript: "silent",
+        },
+    },
     optimizeDeps: {
         include: ["highlight.js"],
     },

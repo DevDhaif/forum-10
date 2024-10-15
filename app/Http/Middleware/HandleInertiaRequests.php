@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
 
         return array_merge(parent::share($request), [
             'channels' => $channels,
+            'locale' => app()->getLocale(),
             // 'universities' => $universities,
             // 'fields' => $fields,
             'user' => fn() => $request->user()

@@ -5,7 +5,9 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Inertia\Inertia;
 use League\CommonMark\Environment\Environment;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -16,9 +18,19 @@ class Handler extends ExceptionHandler
      *
      * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
      */
-     protected $levels = [
+    protected $levels = [
         //
     ];
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof NotFoundHttpException) {
+            return Inertia::render('NotFoundPage')
+                ->toResponse($request)
+                ->setStatusCode(404);
+        }
+
+        return parent::render($request, $exception);
+    }
 
     /**
      * A list of the exception types that are not reported.

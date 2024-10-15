@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AllContentController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ChannelController;
@@ -15,6 +16,7 @@ use App\Models\Reply;
 use App\Models\Thread;
 
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +97,12 @@ Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leade
 Route::get('/profiles/{user:name}', [ProfileController::class, 'show'])->name('profile.show');
 Route::post('/upload-image', [ImageController::class, 'upload'])->name('image.upload');
 Route::delete('/upload-image/{image}', [ImageController::class, 'destroy'])->name('image.destroy');
+
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+Route::fallback(function () {
+    return Inertia::render('NotFoundPage');
+});
+
 Route::get('inertia', function () {
     return inertia('Inertia');
 })->name('inertia');

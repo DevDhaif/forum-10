@@ -67,15 +67,17 @@
         </div>
 
         <!-- Login / Register Links -->
-        <div v-else class="flex justify-center space-x-4">
+        <div v-else class="hidden sm:flex justify-center gap-x-4">
             <a :href="route('login')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{
                 $t('login') }}</a>
             <a :href="route('register')"
                 class="border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 font-bold py-2 px-4 rounded">{{
                     $t('register') }}</a>
         </div>
-        <div v-if="menuOpen" class="sm:hidden absolute top-16 z-50 left-0 w-full bg-slate-50 dark:bg-slate-900 shadow-lg">
+        <div v-if="menuOpen"
+            class="sm:hidden absolute top-16 z-50 left-0 w-full bg-slate-50 dark:bg-slate-900 shadow-lg">
             <div class="grid grid-cols-2 gap-4 px-8 py-4 place-items-center">
+
                 <DropdownLink class="!w-40 flex items-center text-sm px- font-medium space-x-2 !capitalize leading-4
                 bg-slate-50
                 !text-slate-900
@@ -115,6 +117,22 @@
                     <DropdownLink @click="switchLocale('en')" title="English" />
                     <DropdownLink @click="switchLocale('ar')" title="العربية" />
                 </Dropdown>
+                <div v-if="user" class="flex col-span-full sm:items-center sm:ml-6">
+                    <Dropdown :title="user.name">
+                        <DropdownLink :href="route('profile.show', { user: user })" :title="$t('profile')" />
+                        <DropdownLink :href="route('logout')" method="post" :title="$t('logout')" />
+                    </Dropdown>
+                </div>
+
+                <!-- Login / Register Links -->
+                <div v-else class="grid grid-cols-2 gap-4 col-span-full">
+                    <a :href="route('login')"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{
+                            $t('login') }}</a>
+                    <a :href="route('register')"
+                        class="border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 font-bold py-2 px-4 rounded">{{
+                            $t('register') }}</a>
+                </div>
             </div>
         </div>
 
